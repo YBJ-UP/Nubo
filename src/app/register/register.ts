@@ -14,10 +14,10 @@ export class Register {
 
   submit(form: NgForm){
     console.log(form.value)
+    this.onSubmit()
   }
 
   onSubmit(){
-    console.log("hola")
     this.router.navigate(['home']);
   }
 }
