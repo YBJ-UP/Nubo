@@ -6,20 +6,20 @@
         <h1>¡Bienvenido!</h1>
         <p>La paciencia de hoy siembra el aprendizaje del mañana.</p>
 
-        <form action="#">
-            <p>
+        <form #f="ngForm" (ngSubmit)="submit(f)">
+            <p class="input">
                 <img src="" alt="" class="icon">
-                <input type="email" name="" id="" placeholder="Correo electrónico">
+                <input type="email" name="email" id="loginEmail" placeholder="Correo electrónico" ngModel>
             </p>
 
-            <p>
+            <p class="input">
                 <img src="" alt="" class="icon">
-                <input type="password" name="" id="" placeholder="Contraseña">
+                <input type="password" name="psw" id="loginPsw" placeholder="Contraseña" ngModel>
             </p>
 
-            <p>
+            <p class="input">
                 <img src="" alt="" class="icon">
-                <input type="password" name="" id="" placeholder="Confirmar contraseña">
+                <input type="password" name="cPsw" id="loginConf" placeholder="Confirmar contraseña" ngModel>
             </p>
 
             <button>Inicia sesión</button>

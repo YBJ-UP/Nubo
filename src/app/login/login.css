@@ -1,4 +1,19 @@
 section {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    margin: 20px;
+    justify-items: center;
+}
+
+.input {
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+section input {
+    border: none;
+}
+
+section div *{
+    margin-block: 5px;
 }

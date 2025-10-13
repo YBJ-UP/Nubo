@@ -1,13 +1,19 @@
 import { Component } from '@angular/core';
 import { Cloud } from "../components/cloud/cloud";
-import { RouterLink } from "@angular/router";
+import { RouterLink, Router } from "@angular/router";
+import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
-  imports: [Cloud, RouterLink],
+  imports: [Cloud, RouterLink, FormsModule],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
 export class Login {
-
+  constructor(private router: Router){}
+  
+  submit(form: NgForm){
+    console.log(form.value)
+    this.router.navigate(['home'])
+  }
 }

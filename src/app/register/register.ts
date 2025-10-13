@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Cloud } from "../components/cloud/cloud";
-import { FormGroup, FormControl, FormArray, NgForm, FormsModule } from '@angular/forms';
+import { NgForm, FormsModule } from '@angular/forms';
 import { Router, RouterLink } from "@angular/router";
 
 @Component({
@@ -14,10 +14,6 @@ export class Register {
 
   submit(form: NgForm){
     console.log(form.value)
-    this.onSubmit()
-  }
-
-  onSubmit(){
     this.router.navigate(['home']);
   }
 }
