@@ -6,36 +6,38 @@
         <h1>¡Registrate!</h1>
         <p>Crea tu cuenta como educador</p>
 
-        <form action="#">
+        <form #f="ngForm" (ngSubmit)="submit(f)">
             <p>
                 <img src="" alt="" class="icon">
-                <input type="text" name="" id="" placeholder="Nombre">
+                <input type="text" name="name" id="" placeholder="Nombre" ngModel>
             </p>
 
             <p>
                 <img src="" alt="" class="icon">
-                <input type="text" name="" id="" placeholder="Apellidos">
+                <input type="text" name="lastName" id="" placeholder="Apellidos" ngModel>
             </p>
 
             <p>
                 <img src="" alt="" class="icon">
-                <input type="email" name="" id="" placeholder="Correo electrónico">
+                <input type="email" name="email" id="" placeholder="Correo electrónico" ngModel>
             </p>
 
             <p>
                 <img src="" alt="" class="icon">
-                <input type="text" name="" id="" placeholder="Centro educativo">
+                <input type="text" name="school" id="" placeholder="Centro educativo" ngModel>
             </p>
 
             <p>
                 <img src="" alt="" class="icon">
-                <input type="password" name="" id="" placeholder="Contraseña">
+                <input type="password" name="psw" id="" placeholder="Contraseña" ngModel>
             </p>
 
             <p>
                 <img src="" alt="" class="icon">
-                <input type="password" name="" id="" placeholder="Confirmar contraseña">
+                <input type="password" name="cPsw" id="" placeholder="Confirmar contraseña" ngModel>
             </p>
+
+            <button type="submit">Regístrate.</button>
         </form>
 
         <p>¿Ya tienes cuenta? <span routerLink="../login">Inicia sesión.</span></p>
