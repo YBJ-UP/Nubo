@@ -1,30 +1,33 @@
+<head><link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Nunito:wght@400;700&display=swap" rel="stylesheet"></head>
 <section>
     <div>
         <app-cloud />
     </div>
-    <div>
+    <div class="hoja">
         <h1>¡Bienvenido!</h1>
-        <p>La paciencia de hoy siembra el aprendizaje del mañana.</p>
+        <p>La paciencia de hoy siembra<br>el aprendizaje del mañana.</p>
 
-        <form #f="ngForm" (ngSubmit)="submit(f)">
-            <p class="input">
+        <form #f="ngForm" (ngSubmit)="submit(f)" class="formulario">
+            <p>
                 <img src="" alt="" class="icon">
                 <input type="email" name="email" id="loginEmail" placeholder="Correo electrónico" ngModel>
             </p>
 
-            <p class="input">
+            <p>
                 <img src="" alt="" class="icon">
                 <input type="password" name="psw" id="loginPsw" placeholder="Contraseña" ngModel>
             </p>
 
-            <p class="input">
+            <p>
                 <img src="" alt="" class="icon">
                 <input type="password" name="cPsw" id="loginConf" placeholder="Confirmar contraseña" ngModel>
             </p>
 
-            <button>Inicia sesión</button>
+            <button type="submit">Inicia sesión</button>
         </form>
 
-        <p>¿Aún no te registras? <span routerLink="../register">Registrate.</span></p>
+        <div class="redireccion">
+            <p>¿Aún no te registras? <span routerLink="../register">Registrate.</span></p>
+        </div>
     </div>
 </section>

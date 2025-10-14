@@ -7,7 +7,7 @@ import { FormsModule, NgForm } from '@angular/forms';
   selector: 'app-login',
   imports: [Cloud, RouterLink, FormsModule],
   templateUrl: './login.html',
-  styleUrl: './login.css'
+  styleUrl: '../register/register.css'
 })
 export class Login {
   constructor(private router: Router){}
