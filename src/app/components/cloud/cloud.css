@@ -1,3 +1,6 @@
 img {
-    border-radius: 10px;
+    width: 650px;
+    height: 750px;
+    border-radius:8px;
+    border: none;
 }
