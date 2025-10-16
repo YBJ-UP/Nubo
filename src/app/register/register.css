@@ -1,14 +1,3 @@
-:host ::before {
-  position: absolute;
-  right: 0;
-  top: 0;
-  content: '';
-  background-image: url('../../../public/fondo\ login.svg');
-  width: 50%;
-  height: 100%;
-  z-index: 0;
-}
-
 section {
   overflow: hidden;
   display: grid;
@@ -37,7 +26,6 @@ section > div:last-child > p:first-of-type {
   font-weight: 500;
 }
 
-
 .formulario {
     display: flex;
     flex-direction: column;
@@ -46,10 +34,10 @@ section > div:last-child > p:first-of-type {
 }
 
 .formulario p {
-    display: flex;
-    align-items: center;
-    position: relative;
-    margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-bottom: 1rem;
 }
 
 .formulario i {
@@ -65,7 +53,7 @@ section > div:last-child > p:first-of-type {
   padding: 12px 15px 12px 45px;
   border: none;
   border-radius: 8px;
-  background-color: white;
+  background-color: #F0EDDF;
   color: #333;
   font-size: 14px;
   transition: all 0.3s ease;
