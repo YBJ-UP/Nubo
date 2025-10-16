@@ -1,2 +1,28 @@
+:host > div {
+    display: grid;
+    grid-template-rows: 2fr 0.5fr;
+    width: 200px;
+    height: 98%;
+    margin: 10px; margin-right: 50px;
+    justify-content: center;
+    align-items: center;
+    background-color: aquamarine;
+    border-radius: 20px;
+}
 
+div > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
+hr {
+    width: 200px;
+    height: 2px;
+    background-color: black;
+}
+
+img {
+    margin-block: 30px;
+    cursor: pointer;
+}
