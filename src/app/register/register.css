@@ -26,6 +26,12 @@ section > div:last-child > p:first-of-type {
   font-weight: 500;
 }
 
+.hoja {
+  position: absolute;
+  z-index: 1;
+  right: 10vw;
+}
+
 .formulario {
     display: flex;
     flex-direction: column;
