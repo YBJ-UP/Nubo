@@ -27,13 +27,13 @@ export const routes: Routes = [
     {
         path:'home/teacher',
         loadComponent: () => {
-            return import('./home/home').then((m) => m.Home)
+            return import('./teacher/home/home').then((m) => m.Home)
         }
     },
     {
         path:'home/student',
         loadComponent: () => {
-            return import('./student-home/student-home').then((m) => m.StudentHome)
+            return import('./student/home/student-home').then((m) => m.StudentHome)
         }
     }
 ];
