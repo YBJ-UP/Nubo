@@ -25,9 +25,15 @@ export const routes: Routes = [
         }
     },
     {
-        path:'home',
+        path:'home/teacher',
         loadComponent: () => {
             return import('./home/home').then((m) => m.Home)
+        }
+    },
+    {
+        path:'home/student',
+        loadComponent: () => {
+            return import('./student-home/student-home').then((m) => m.StudentHome)
         }
     }
 ];

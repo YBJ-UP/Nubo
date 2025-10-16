@@ -15,6 +15,6 @@ export class Login {
   
   submit(form: NgForm){
     console.log(form.value)
-    this.router.navigate(['home'])
+    this.router.navigate(['home/teacher'])
   }
 }
