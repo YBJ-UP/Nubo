@@ -7,7 +7,7 @@
         <h1>¡Bienvenido!</h1>
         <p>La paciencia de hoy siembra<br>el aprendizaje del mañana.</p>
 
-        <app-login-type />
+        <app-login-type [selection]="selection()" />
 
         <form #f="ngForm" (ngSubmit)="submit(f)" class="formulario">
             <p>

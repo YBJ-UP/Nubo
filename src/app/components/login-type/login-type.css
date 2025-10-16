@@ -1,0 +1,24 @@
+:host{
+    height: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    text-align: center;
+    align-items: center;
+    background: white;
+    border-radius: 10px;
+
+    p {
+        height: 100%;
+        border-radius: inherit;
+        align-content: center;
+    }
+}
+
+:host :hover {
+    background: linear-gradient(135deg, #3a9bc8 0%, #2a8bb8 100%);
+    cursor: pointer;
+}
+
+.selected {
+    background-color: #A2D8F2;
+}

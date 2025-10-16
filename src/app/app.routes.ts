@@ -13,9 +13,15 @@ export const routes: Routes = [
         }
     },
     {
-        path:'login',
+        path:'login/teacher',
         loadComponent: () => {
             return import('./login/login').then((m) => m.Login)
+        }
+    },
+    {
+        path:'login/student',
+        loadComponent: () => {
+            return import('./login/students/students').then((m) => m.Students)
         }
     },
     {
