@@ -1,7 +1,7 @@
 :host > div {
     display: grid;
     grid-template-rows: 2fr 0.5fr;
-    width: 200px;
+    width: 100px;
     height: 98%;
     margin: 10px; margin-right: 50px;
     justify-content: center;
@@ -17,7 +17,7 @@ div > div {
 }
 
 hr {
-    width: 200px;
+    width: 100px;
     height: 2px;
     background-color: black;
 }
