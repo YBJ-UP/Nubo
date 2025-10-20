@@ -28,7 +28,8 @@ hr {
     background-color: black;
 }
 
-img {
+i {
     margin-block: 30px;
     cursor: pointer;
+    color: black;
 }

@@ -2,4 +2,24 @@
     display: flex;
     width: 100vw; height: 100vh;
     background-color: #FFFCF9;
+    justify-content: center;
+    overflow: auto;
+    overflow-y: hidden;
+}
+.cuerpo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 5%;
+}
+.anuncio {
+    width: 90%;
+    margin-top: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+section {
+    width: 90%;
+    margin-top: 2rem;
 }
