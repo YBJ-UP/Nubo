@@ -4,7 +4,7 @@
     grid-template-columns: 1fr 1fr;
     text-align: center;
     align-items: center;
-    background: white;
+    background: whitesmoke;
     border-radius: 10px;
 
     p {
@@ -15,10 +15,10 @@
 }
 
 :host :hover {
-    background: linear-gradient(135deg, #3a9bc8 0%, #2a8bb8 100%);
+    background: linear-gradient(135deg, #ffcb9d 0%, #f0b98a 100%);
     cursor: pointer;
 }
 
 .selected {
-    background-color: #A2D8F2;
+    background-color: #FFD0A7;
 }
