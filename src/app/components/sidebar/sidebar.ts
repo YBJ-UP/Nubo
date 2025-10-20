@@ -10,4 +10,5 @@ import { NgClass } from "@angular/common";
 })
 export class Sidebar {
   color = input("teacher")
+  color1 = input("student")
 }

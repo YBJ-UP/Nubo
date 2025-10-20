@@ -2,6 +2,7 @@
 .categorias-container {
   max-width: 1200px;
   margin: 0 auto;
+  font-family: 'Fredoka',  sans-serif;
 }
 
 .categorias-container h2 {
@@ -37,8 +38,16 @@
 }
 
 .categoria-card.cognitiva {
-  --card-bg: #C4BFEC;
+  --card-bg: #C9C7E9;
 }
+.categoria-card.ludica {
+  --card-bg: #FFD0A7;
+}
+.categoria-card.autonomia {
+  --card-bg: #D6DC82;
+}
+
+
 
 .card-icon {
   width: 120px;
