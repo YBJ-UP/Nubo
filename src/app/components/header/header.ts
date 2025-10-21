@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -7,5 +7,8 @@ import { Component } from '@angular/core';
   styleUrl: './header.css'
 })
 export class Header {
-
+  view = input("Hogar")
+  name = input("Usuario")
+  role = input("Educador")
+  school = input("Escuela")
 }

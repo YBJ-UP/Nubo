@@ -1,0 +1,21 @@
+:host {
+    position: absolute;
+    margin-inline: 50px;
+    margin-block: 20px;
+    width: 90vw;
+}
+
+section {
+    font-family: 'Fredoka',  sans-serif;
+    display: flex;
+    justify-content: space-between;
+}
+
+div {
+    margin-block: 10px;
+    margin-inline: 20px;
+}
+
+hr {
+    width: 100%;
+}
