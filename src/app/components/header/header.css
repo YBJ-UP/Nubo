@@ -9,11 +9,13 @@ section {
     font-family: 'Fredoka',  sans-serif;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 div {
     margin-block: 10px;
     margin-inline: 20px;
+    display: flex;
 }
 
 hr {
