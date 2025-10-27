@@ -5,7 +5,7 @@ import { Header } from "../components/header/header";
 
 @Component({
   selector: 'app-galeria-palabras',
-  imports: [Sidebar, Header],
+  imports: [Header],
   templateUrl: './galeria-palabras.html',
   styleUrl: './galeria-palabras.css'
 })

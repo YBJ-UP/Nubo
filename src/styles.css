@@ -1,3 +1,15 @@
+:root{
+    --color-base:#FFF9F2;
+    --color-barra:#EBE3C0;
+    --color-model:#FFD0A7;
+    --color-model2:#D6DC82;
+    --color-model3:#A2D8F2;
+    --color-etiqueta:#FFC364;
+    --color-etiqueta2:#C9C7E9;
+    --color-font:#3E3300;
+}
+
+
 *{
     margin: 0;
     padding: 0;
