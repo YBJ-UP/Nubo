@@ -41,5 +41,11 @@ export const routes: Routes = [
         loadComponent: () => {
             return import('./student/galeria-palabras/galeria-palabras').then((m) => m.GaleriaPalabras)
         }
+    },
+    {
+        path:'actividad/:id',
+        loadComponent:()=>{
+            return import('./student/actividad-palabras/actividad-palabras').then((m)=> m.ActividadPalabras)
+        }
     }
 ];

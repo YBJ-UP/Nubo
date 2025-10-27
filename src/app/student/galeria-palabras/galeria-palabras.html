@@ -1,6 +1,11 @@
 <app-header></app-header>
+<div class="back-link-container">
+    <a routerLink="/home/student"><i class="fa-solid fa-arrow-left"></i></a>
+</div>
 <div class="grid-cards">
-    <app-cards-palabras></app-cards-palabras>
-    <app-cards-palabras></app-cards-palabras>
-    <app-cards-palabras></app-cards-palabras>
+    <app-cards-palabras 
+        *ngFor="let palabra of palabras"
+        [palabraData]="palabra" 
+    >
+    </app-cards-palabras>
 </div>
