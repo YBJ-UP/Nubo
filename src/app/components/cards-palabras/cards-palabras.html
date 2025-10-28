@@ -1,0 +1,13 @@
+<div 
+  class="cards-ejercicios" 
+  [style.backgroundColor]="palabraData.colorFondo"
+  (click)="navegar()"
+>
+    <div class="img-container">
+        <img *ngIf="palabraData.imagenUrl" [src]="palabraData.imagenUrl" [alt]="palabraData.titulo">
+    </div>
+
+    <p class="activity-title">
+        {{ palabraData.titulo }}
+    </p>
+</div>

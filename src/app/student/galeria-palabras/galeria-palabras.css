@@ -1,0 +1,35 @@
+
+:host {
+    display: flex;
+    flex-direction: column; 
+    width: 100%;
+    min-height: 100vh; 
+}
+
+
+.back-link-container {
+    width: 90%; 
+    max-width: 1200px;
+    margin: 100px auto 0; 
+    padding: 0 5%;
+}
+
+.back-link-container a {
+    text-decoration: none;
+    color: var(--color-font); 
+    font-size: 1.5rem;
+    padding: 10px;
+    display: inline-flex; 
+    align-items: center;
+    cursor: pointer;
+}
+
+.grid-cards { 
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 100px;
+    padding: 30px 5%; 
+    max-width: 1200px;
+    margin: 0 auto; 
+    flex-grow: 1; 
+}
