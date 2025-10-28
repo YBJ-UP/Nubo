@@ -4,6 +4,7 @@ import { LoginType } from "../../components/login-type/login-type";
 import { Cloud } from '../../components/cloud/cloud';
 import { Router } from '@angular/router';
 import { Nube } from "../../components/nube/nube";
+import { Student } from '../../interfaces/student';
 
 @Component({
   selector: 'app-students',

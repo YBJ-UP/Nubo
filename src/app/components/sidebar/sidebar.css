@@ -1,3 +1,11 @@
+:host {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 70%;
+    left: 2%;
+}
+
 .container {
     display: grid;
     grid-template-rows: 2fr 0.5fr;
@@ -11,9 +19,6 @@
 
 .teacher{
     background-color: #A2D8F2;
-}
-.student{
-    background-color: #EBE3C0;
 }
 
 div > div {
