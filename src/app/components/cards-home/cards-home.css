@@ -1,7 +1,10 @@
+:host {
+  display: flex;
+  justify-content: center;
+}
 
 .categorias-container {
-  max-width: 1200px;
-  margin: 0 auto;
+  margin: 0;
   font-family: 'Fredoka',  sans-serif;
 }
 
@@ -13,8 +16,8 @@
 }
 
 .categorias-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  justify-content: space-evenly;
   gap: 2rem;
   margin-top: 1.5rem;
 }

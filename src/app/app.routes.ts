@@ -37,6 +37,12 @@ export const routes: Routes = [
         }
     },
     {
+        path:'home/teacher/students',
+        loadComponent: () => {
+            return import('./teacher/create-student/create-student').then((m) => m.CreateStudent)
+        }
+    },
+    {
         path:'cognitive-abilities',
         loadComponent: () => {
             return import('./student/galeria-palabras/galeria-palabras').then((m) => m.GaleriaPalabras)

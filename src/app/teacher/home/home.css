@@ -1,17 +1,16 @@
 :host {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 0fr 1fr;
     width: 100vw; height: 100vh;
     background-color: #FFFCF9;
     overflow: auto;
     overflow-y: hidden;
 }
 .cuerpo {
-    margin-left: 7.5%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 90%;
+    max-width: 90vw;
 }
 .anuncio {
     width: 90%;
