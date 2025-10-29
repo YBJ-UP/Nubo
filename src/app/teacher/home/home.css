@@ -1,8 +1,8 @@
 :host {
-    display: flex;
+    display: grid;
+    grid-template-columns: 0fr 1fr;
     width: 100vw; height: 100vh;
     background-color: #FFFCF9;
-    justify-content: center;
     overflow: auto;
     overflow-y: hidden;
 }
@@ -10,8 +10,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
-    margin-top: 5%;
+    max-width: 90vw;
 }
 .anuncio {
     width: 90%;

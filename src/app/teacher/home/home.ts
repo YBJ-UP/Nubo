@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { Sidebar } from "../../components/sidebar/sidebar";
 import { Greeting } from "../../components/greeting/greeting";
 import { CardsHome } from "../../components/cards-home/cards-home";
+import { Header } from "../../components/header/header";
 
 @Component({
   selector: 'app-home',
-  imports: [Sidebar, Greeting, CardsHome],
+  imports: [Sidebar, Greeting, CardsHome, Header],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })

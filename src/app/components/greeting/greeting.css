@@ -1,11 +1,16 @@
 section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: #A2D8F2;
     font-family: 'Fredoka',  sans-serif;
     padding: 1rem;
+    padding-inline: 50px;
     border-radius: 10px;
-    height: 90px;
+    height: 150px;
 }
 
 h1 {
     color: #2E5299;
+    margin-block: 5px;
 }

@@ -3,7 +3,8 @@
     grid-template-rows: 2fr 0.5fr;
     width: 100px;
     height: 98%;
-    margin: 10px; margin-right: 50px;
+    margin: 10px;
+    margin-left: 20px;
     justify-content: center;
     align-items: center;
     border-radius: 20px;
@@ -11,9 +12,6 @@
 
 .teacher{
     background-color: #A2D8F2;
-}
-.student{
-    background-color: #EBE3C0;
 }
 
 div > div {
