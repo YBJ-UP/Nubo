@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
+import { Sidebar } from "../../components/sidebar/sidebar";
 
 @Component({
   selector: 'app-create-student',
-  imports: [],
+  imports: [Sidebar],
   templateUrl: './create-student.html',
-  styleUrl: './create-student.css'
+  styleUrl: '../home/home.css'
 })
 export class CreateStudent {
 

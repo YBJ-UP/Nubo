@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { Home } from './teacher/home/home';
 
 export const routes: Routes = [
     {
@@ -53,5 +54,9 @@ export const routes: Routes = [
         loadComponent:()=>{
             return import('./student/actividad-palabras/actividad-palabras').then((m)=> m.ActividadPalabras)
         }
+    },
+    {
+        path:'teacher',
+        component: Home
     }
 ];
