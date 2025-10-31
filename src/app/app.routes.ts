@@ -36,14 +36,16 @@ export const routes: Routes = [
     component: Home,
     children: [
         { path: '', component: CardsHome },
-        { path: 'students', component: CreateStudent }
+        { path: 'students', component: CreateStudent },
+        { path: 'cognitive-abilities', component: GaleriaPalabras }
     ]
    },
    {
     path: 'student',
     component: StudentHome,
     children: [
-        { path: '', component: CardsHome }
+        { path: '', component: CardsHome },
+        { path: 'cognitive-abilities', component: GaleriaPalabras }
     ]
    }
 ];
