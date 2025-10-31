@@ -5,9 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { Login } from './login/login';
 import { Register } from './register/register';
 import { RouterLink } from "@angular/router";
-
 @NgModule({
-  declarations: [Login, Register, Students],
+  declarations: [Login, Register],
   imports: [
     CommonModule,
     SharedModule,

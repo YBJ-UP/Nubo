@@ -6,7 +6,7 @@ import { Greeting } from './greeting/greeting';
 import { CardsHome } from './cards-home/cards-home';
 import { CardsPalabras } from './cards-palabras/cards-palabras';
 import { Nube } from './nube/nube';
-import { Cloud } from './cloud/cloud';
+import { Cloud } from './fondo/cloud';
 import { LoginType } from './login-type/login-type';
 
 @NgModule({
