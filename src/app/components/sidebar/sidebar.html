@@ -1,9 +1,7 @@
 <div class="container" [ngClass]="['container', color()]">
     <div>
-       <a routerLink="../teacher"><i class="fa-solid fa-house"></i></a>
-       @if (color() == "teacher") {
+        <a routerLink="../teacher"><i class="fa-solid fa-house"></i></a>
         <a routerLink="./students"><i class="fa-solid fa-graduation-cap"></i></a>
-       }
     </div>
     <div>
         <hr>
