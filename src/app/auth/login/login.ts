@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { RouterLink, Router } from "@angular/router";
-import { FormsModule, NgForm } from '@angular/forms';
+import { Router } from "@angular/router";
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -9,10 +9,10 @@ import { FormsModule, NgForm } from '@angular/forms';
   standalone: false
 })
 export class Login {
-  constructor(private router: Router){}
+  constructor(private router: Router) {};
   
   submit(form: NgForm){
-    console.log(form.value)
-    this.router.navigate(['home/teacher'])
+    console.log(form.value);
+    this.router.navigate(['home/teacher']);
   }
 }

@@ -11,8 +11,8 @@ export const routes: Routes = [
         redirectTo:'login',
         pathMatch:'full'
     },
-    {path:'login', component:Login},
-    {path:'register', component: Register},
+    { path:'login', component:Login },
+    { path:'register', component: Register },
     {
         path:'teacher',
         loadChildren: () => import('./teacher/teacher-routing-module').then(m => m.TeacherRoutingModule)

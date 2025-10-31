@@ -4,13 +4,15 @@ import { SharedModule } from '../shared/shared-module';
 import { FormsModule } from '@angular/forms';
 import { Login } from './login/login';
 import { Register } from './register/register';
-import { Students } from './login/students/students';
+import { RouterLink } from "@angular/router";
+
 @NgModule({
-  declarations: [Login, Register,Students],
+  declarations: [Login, Register, Students],
   imports: [
-    FormsModule,
-    CommonModule, 
-    SharedModule
-  ]
+    CommonModule,
+    SharedModule,
+    RouterLink,
+    FormsModule
+]
 })
-export class AuthModule { }
+export class AuthModule {  }

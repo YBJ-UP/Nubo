@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { NgForm, FormsModule } from '@angular/forms';
-import { Router, RouterLink } from "@angular/router";
+import { NgForm } from '@angular/forms';
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-register',
@@ -12,7 +12,7 @@ export class Register {
   constructor(private router: Router) {};
 
   submit(form: NgForm){
-    console.log(form.value)
+    console.log(form.value);
     this.router.navigate(['home/teacher']);
   }
 }
