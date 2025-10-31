@@ -1,15 +1,19 @@
 import { Routes } from '@angular/router';
+
+//INICIO DE SESIÓN Y REGISTRO
 import { Login } from './login/login';
 import { Register } from './register/register';
 
+//MAESTRO
 import { Home } from './teacher/home/home';
 import { CreateStudent } from './teacher/create-student/create-student';
 
+//ESTUDIANTE
 import { StudentHome } from './student/home/student-home';
 import { ActividadPalabras } from './student/actividad-palabras/actividad-palabras';
 import { GaleriaPalabras } from './student/galeria-palabras/galeria-palabras';
 
-
+//COMPARTIDOS
 import { CardsHome } from './components/cards-home/cards-home';
 import { CardsPalabras } from './components/cards-palabras/cards-palabras';
 
