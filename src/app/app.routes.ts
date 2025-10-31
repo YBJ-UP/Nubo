@@ -1,8 +1,10 @@
 import { Routes } from '@angular/router';
+import { Login } from './login/login';
+import { Register } from './register/register';
 import { Home } from './teacher/home/home';
 
 export const routes: Routes = [
-    {
+    /*{
         path:'',
         redirectTo:'register',
         pathMatch:'full'
@@ -54,9 +56,18 @@ export const routes: Routes = [
         loadComponent:()=>{
             return import('./student/actividad-palabras/actividad-palabras').then((m)=> m.ActividadPalabras)
         }
-    },
-    {
-        path:'teacher',
-        component: Home
-    }
+    }*/
+   {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+   },
+   {
+    path: 'login',
+    component: Login
+   },
+   {
+    path: 'register',
+    component: Register
+   }
 ];

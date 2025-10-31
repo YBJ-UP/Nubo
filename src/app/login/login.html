@@ -6,7 +6,16 @@
         <h1>¡Bienvenido!</h1>
         <p>La paciencia de hoy siembra<br>el aprendizaje del mañana.</p>
 
-        <app-login-type />
+        <div class="login-type" (click)="swicthRole()">
+            @if (role == "Maestro") {
+                <p class="selected">Maestro</p>
+                <p>Estudiante</p>
+            }@else if (role == "Estudiante") {
+                <p>Maestro</p>
+                <p class="selected">Estudiante</p>
+            }
+            
+        </div>
 
         <form #f="ngForm" (ngSubmit)="submit(f)" class="formulario">
             <p>
@@ -28,7 +37,7 @@
         </form>
 
         <div class="redireccion">
-            <p>¿Aún no te registras? <span routerLink="../../register">Registrate.</span></p>
+            <p>¿Aún no te registras? <span routerLink="../register">Registrate.</span></p>
         </div>
     </div>
 </section>
