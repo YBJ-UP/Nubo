@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Header } from '../../components/header/header';
-import { CardsPalabras } from "../../components/cards-palabras/cards-palabras";
-
 
 export interface PalabraData {
   id: number;
@@ -14,9 +11,9 @@ export interface PalabraData {
 }
 @Component({
   selector: 'app-galeria-palabras',
-  imports: [Header,CardsPalabras, CommonModule, RouterModule],
   templateUrl: './galeria-palabras.html',
-  styleUrl: './galeria-palabras.css'
+  styleUrl: './galeria-palabras.css',
+  standalone: false
 })
 
 export class GaleriaPalabras {

@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Header } from "../../components/header/header";
 
 @Component({
   selector: 'app-actividad-palabras',
-  imports: [RouterLink, Header],
   templateUrl: './actividad-palabras.html',
-  styleUrl: './actividad-palabras.css'
+  styleUrl: './actividad-palabras.css',
+  standalone: false
 })
 export class ActividadPalabras implements OnInit {
   actividadId: string | null = null;
