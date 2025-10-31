@@ -18,20 +18,33 @@
         </div>
 
         <form #f="ngForm" (ngSubmit)="submit(f)" class="formulario">
-            <p>
-                <i class="fa-solid fa-user"></i>
-                <input type="email" name="email" id="loginEmail" placeholder="Correo electrónico" ngModel>
-            </p>
 
-            <p>
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" name="psw" id="loginPsw" placeholder="Contraseña" ngModel>
-            </p>
+            @if (role == "Maestro") {
+                <p>
+                    <i class="fa-solid fa-user"></i>
+                    <input type="email" name="email" id="loginEmail" placeholder="Correo electrónico" ngModel>
+                </p>
 
-            <p>
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" name="cPsw" id="loginConf" placeholder="Confirmar contraseña" ngModel>
-            </p>
+                <p>
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="psw" id="loginPsw" placeholder="Contraseña" ngModel>
+                </p>
+
+                <p>
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="cPsw" id="loginConf" placeholder="Confirmar contraseña" ngModel>
+                </p>
+            }@else if (role == "Estudiante") {
+                <p>
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" name="firstName" id="loginFirstName" placeholder="Nomre" ngModel>
+                </p>
+
+                <p>
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" name="psw" id="loginLastName" placeholder="Apellidos" ngModel>
+                </p>
+            }
 
             <button type="submit">Inicia sesión</button>
         </form>

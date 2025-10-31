@@ -25,8 +25,15 @@ export class Login {
   constructor(private router: Router){}
   
   submit(form: NgForm){
-    console.log(this.role)
-    console.log(form.value)
-    this.router.navigate(['home/teacher'])
+    if (this.role == "Maestro"){
+      console.log(this.role)
+      console.log(form.value)
+      this.router.navigate(['teacher'])
+    }else{
+      console.log(this.role)
+      console.log(form.value)
+      this.router.navigate(['student'])
+    }
+    
   }
 }
