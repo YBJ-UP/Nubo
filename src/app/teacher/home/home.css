@@ -2,7 +2,7 @@
     display: grid;
     grid-template-columns: 0fr 1fr;
     width: 100vw; height: 100vh;
-    background-color: #FFFCF9;
+    background-color: #FFF9F2;
     overflow: auto;
     overflow-y: hidden;
 }

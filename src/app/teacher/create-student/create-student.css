@@ -24,6 +24,11 @@
 section {
     display: flex;
     justify-content: center;
+    margin-inline-end: 20px;
+}
+
+.creation-panel {
+    background-color: #ffffff;
 }
 
 .img-container {
