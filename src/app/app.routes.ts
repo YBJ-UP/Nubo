@@ -1,62 +1,51 @@
 import { Routes } from '@angular/router';
+
+//INICIO DE SESIÓN Y REGISTRO
+import { Login } from './auth/login/login';
+import { Register } from './auth/register/register';
+
+//MAESTRO
 import { Home } from './teacher/home/home';
+import { CreateStudent } from './teacher/create-student/create-student';
+
+//ESTUDIANTE
+import { StudentHome } from './student/home/student-home';
+import { ActividadPalabras } from './student/actividad-palabras/actividad-palabras';
+import { GaleriaPalabras } from './student/galeria-palabras/galeria-palabras';
+
+//COMPARTIDOS
+import { CardsHome } from './components/cards-home/cards-home';
+import { CardsPalabras } from './components/cards-palabras/cards-palabras';
 
 export const routes: Routes = [
-    {
-        path:'',
-        redirectTo:'register',
-        pathMatch:'full'
-    },
-    {
-        path:'register',
-        loadComponent: () => {
-            return import('./auth/register/register').then((m) => m.Register)
-        }
-    },
-    {
-        path:'login/teacher',
-        loadComponent: () => {
-            return import('./login/login').then((m) => m.Login)
-        }
-    },
-    {
-        path:'login/student',
-        loadComponent: () => {
-            return import('./login/students/students').then((m) => m.Students)
-        }
-    },
-    {
-        path:'home/teacher',
-        loadComponent: () => {
-            return import('./teacher/home/home').then((m) => m.Home)
-        }
-    },
-    {
-        path:'home/student',
-        loadComponent: () => {
-            return import('./student/home/student-home').then((m) => m.StudentHome)
-        }
-    },
-    {
-        path:'home/teacher/students',
-        loadComponent: () => {
-            return import('./teacher/create-student/create-student').then((m) => m.CreateStudent)
-        }
-    },
-    {
-        path:'cognitive-abilities',
-        loadComponent: () => {
-            return import('./student/galeria-palabras/galeria-palabras').then((m) => m.GaleriaPalabras)
-        }
-    },
-    {
-        path:'actividad/:id',
-        loadComponent:()=>{
-            return import('./student/actividad-palabras/actividad-palabras').then((m)=> m.ActividadPalabras)
-        }
-    },
-    {
-        path:'teacher',
-        component: Home
-    }
+   {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+   },
+   {
+    path: 'login',
+    component: Login
+   },
+   {
+    path: 'register',
+    component: Register
+   },
+   {
+    path: 'teacher',
+    component: Home,
+    children: [
+        { path: '', component: CardsHome },
+        { path: 'students', component: CreateStudent },
+        { path: 'cognitive-abilities', component: GaleriaPalabras }
+    ]
+   },
+   {
+    path: 'student',
+    component: StudentHome,
+    children: [
+        { path: '', component: CardsHome },
+        { path: 'cognitive-abilities', component: GaleriaPalabras }
+    ]
+   }
 ];

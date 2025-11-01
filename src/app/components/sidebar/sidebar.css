@@ -10,8 +10,12 @@
     border-radius: 20px;
 }
 
-.teacher{
+.teacher {
     background-color: #A2D8F2;
+}
+
+.selected {
+    background-color: #347492;
 }
 
 div > div {
@@ -44,5 +48,3 @@ hr {
 }
 .teacher a:hover {background-color: #1A547E;}
 .teacher a:hover i {color: white; }
-.student a:hover {background-color: #d8cd99; }
-.student a:hover i {color: white;}

@@ -6,29 +6,51 @@
         <h1>¡Bienvenido!</h1>
         <p>La paciencia de hoy siembra<br>el aprendizaje del mañana.</p>
 
-        <app-login-type />
+        <div class="login-type" (click)="swicthRole()">
+            @if (role == "Maestro") {
+                <p class="selected">Maestro</p>
+                <p>Estudiante</p>
+            }@else if (role == "Estudiante") {
+                <p>Maestro</p>
+                <p class="selected">Estudiante</p>
+            }
+            
+        </div>
 
         <form #f="ngForm" (ngSubmit)="submit(f)" class="formulario">
-            <p>
-                <i class="fa-solid fa-user"></i>
-                <input type="email" name="email" id="loginEmail" placeholder="Correo electrónico" ngModel>
-            </p>
 
-            <p>
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" name="psw" id="loginPsw" placeholder="Contraseña" ngModel>
-            </p>
+            @if (role == "Maestro") {
+                <p>
+                    <i class="fa-solid fa-user"></i>
+                    <input type="email" name="email" id="loginEmail" placeholder="Correo electrónico" ngModel>
+                </p>
 
-            <p>
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" name="cPsw" id="loginConf" placeholder="Confirmar contraseña" ngModel>
-            </p>
+                <p>
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="psw" id="loginPsw" placeholder="Contraseña" ngModel>
+                </p>
+
+                <p>
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="cPsw" id="loginConf" placeholder="Confirmar contraseña" ngModel>
+                </p>
+            }@else if (role == "Estudiante") {
+                <p>
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" name="firstName" id="loginFirstName" placeholder="Nomre" ngModel>
+                </p>
+
+                <p>
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" name="psw" id="loginLastName" placeholder="Apellidos" ngModel>
+                </p>
+            }
 
             <button type="submit">Inicia sesión</button>
         </form>
 
         <div class="redireccion">
-            <p>¿Aún no te registras? <span routerLink="../../register">Registrate.</span></p>
+            <p>¿Aún no te registras? <span routerLink="../register">Registrate.</span></p>
         </div>
     </div>
 </section>
