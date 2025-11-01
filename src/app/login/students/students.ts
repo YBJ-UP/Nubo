@@ -10,7 +10,7 @@ import { Student } from '../../interfaces/student';
   selector: 'app-students',
   imports: [LoginType, Cloud, FormsModule, Nube],
   templateUrl: './students.html',
-  styleUrl: '../../register/register.css'
+  styleUrl: '../../auth/register/register.css'
 })
 export class Students {
   constructor(private router: Router){}

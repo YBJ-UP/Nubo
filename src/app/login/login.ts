@@ -9,7 +9,7 @@ import { Nube } from "../components/nube/nube";
   selector: 'app-login',
   imports: [Cloud, RouterLink, FormsModule, LoginType, Nube],
   templateUrl: './login.html',
-  styleUrl: '../register/register.css'
+  styleUrl: '../auth/register/register.css'
 })
 export class Login {
   constructor(private router: Router){}
