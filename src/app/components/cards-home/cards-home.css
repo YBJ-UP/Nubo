@@ -1,6 +1,12 @@
 :host {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  width: 80vw;
+}
+
+.anuncio {
+  padding-block: 40px;
 }
 
 .categorias-container {

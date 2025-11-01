@@ -1,0 +1,26 @@
+:host {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.back-link-container {
+    width: 90%; 
+    max-width: 1200px;
+    padding: 0 5%;
+}
+
+.back-link-container a {
+    text-decoration: none;
+    color: var(--color-font); 
+    font-size: 1.5rem;
+    padding: 10px;
+    display: inline-flex; 
+    align-items: center;
+    cursor: pointer;
+}
+
+section {
+    display: flex;
+    justify-content: center;
+}

@@ -3,14 +3,13 @@
     display: flex;
     flex-direction: column; 
     width: 100%;
-    min-height: 100vh; 
+    min-height: 90vh; 
 }
 
 
 .back-link-container {
     width: 90%; 
     max-width: 1200px;
-    margin: 100px auto 0; 
     padding: 0 5%;
 }
 
