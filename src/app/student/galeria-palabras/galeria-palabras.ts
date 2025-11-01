@@ -25,7 +25,7 @@ export class GaleriaPalabras {
       id: 1, 
       titulo: 'Actividad 1: Fonemas', 
       colorFondo: '#BDE0FE', 
-      imagenUrl: '1.svg', // Ruta de la imagen del perro
+      imagenUrl: '1', // Ruta de la imagen del perro
       enlace: '/juegos/actividad-1' 
     },
     { 
