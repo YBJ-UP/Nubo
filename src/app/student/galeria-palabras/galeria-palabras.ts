@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Header } from '../../components/header/header';
 import { CardsPalabras } from "../../components/cards-palabras/cards-palabras";
 
 
@@ -14,7 +13,7 @@ export interface PalabraData {
 }
 @Component({
   selector: 'app-galeria-palabras',
-  imports: [Header,CardsPalabras, CommonModule, RouterModule],
+  imports: [CardsPalabras, CommonModule, RouterModule],
   templateUrl: './galeria-palabras.html',
   styleUrl: './galeria-palabras.css'
 })
@@ -45,19 +44,7 @@ export class GaleriaPalabras {
       titulo: 'Actividad 1: Fonemas', 
       colorFondo: '#FEF9C3', 
       enlace: '/juegos/actividad-1b' 
-    },
-    { 
-      id: 5, 
-      titulo: 'Actividad 2: Fonemas y Sílabas', 
-      colorFondo: '#D9F7C4', 
-      enlace: '/juegos/actividad-2b' 
-    },
-    { 
-      id: 6, 
-      titulo: 'Actividad 3: Sílabas y palabras', 
-      colorFondo: '#C3D4FE', 
-      enlace: '/juegos/actividad-3b' 
-    },
+    }
   ];
   ngOnInit():void{}
 }
