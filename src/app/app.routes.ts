@@ -45,8 +45,9 @@ export const routes: Routes = [
     component: StudentHome,
     children: [
         { path: '', component: CardsHome },
-        { path: 'cognitive-abilities', component: GaleriaPalabras },
-        {path: 'actividad', component: ActividadPalabras}
+        { path: 'cognitive-abilities', component: GaleriaPalabras},
+        { path: 'actividad/:id', component: ActividadPalabras}    
+        
     ]
    }
 ];

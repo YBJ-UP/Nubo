@@ -22,9 +22,7 @@ export class CardsPalabras implements OnInit{
   constructor(private router: Router) { }
   ngOnInit(): void { }
   navegar(): void {
-    console.log(`Iniciando navegación a: ${this.palabraData.enlace}`);
-    this.router.navigate([this.palabraData.enlace]);
-    const rutaEjercicio = `/actividad/${this.palabraData.id}`;
+    const rutaEjercicio = `/student/actividad/${this.palabraData.id}`;
     console.log(`Navegando al ejercicio: ${rutaEjercicio}`);
     this.router.navigate([rutaEjercicio]);
   }

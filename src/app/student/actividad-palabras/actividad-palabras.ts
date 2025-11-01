@@ -4,7 +4,7 @@ import { Header } from "../../components/header/header";
 
 @Component({
   selector: 'app-actividad-palabras',
-  imports: [RouterLink, Header],
+  imports: [RouterLink],
   templateUrl: './actividad-palabras.html',
   styleUrl: './actividad-palabras.css'
 })
