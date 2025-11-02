@@ -12,10 +12,10 @@ import { CreateStudent } from './teacher/create-student/create-student';
 import { StudentHome } from './student/home/student-home';
 import { ActividadPalabras } from './student/actividad-palabras/actividad-palabras';
 import { GaleriaPalabras } from './student/galeria-palabras/galeria-palabras';
+import { GaleriaJuegos } from './student/galeria-juegos/galeria-juegos';
 
 //COMPARTIDOS
 import { CardsHome } from './components/cards-home/cards-home';
-import { CardsPalabras } from './components/cards-palabras/cards-palabras';
 import { Shell } from './student/shell';
 
 export const routes: Routes = [
@@ -53,7 +53,8 @@ export const routes: Routes = [
                 { path: '', component: GaleriaPalabras },
                 { path: 'actividad/:id', component: ActividadPalabras}
             ]
-        }   
+        },
+        {path: 'active-ludica', component: GaleriaJuegos}
         
     ]
    }

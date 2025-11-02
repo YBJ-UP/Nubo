@@ -1,0 +1,32 @@
+:host {
+    display: flex;
+    flex-direction: column; 
+    width: 100%;
+    min-height: 100vh; 
+}
+
+.memorama-grid {
+    max-width: 1200px; 
+    margin: 30px auto; 
+    padding: 0 5%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 80px 150px; 
+    justify-items: center; 
+}
+
+.back-link-container {
+    width: 90%; 
+    max-width: 1200px;
+    padding: 0 5%;
+}
+
+.back-link-container a {
+    text-decoration: none;
+    color: var(--color-font); 
+    font-size: 1.9rem;
+    padding: 10px;
+    display: inline-flex; 
+    align-items: center;
+    cursor: pointer;
+}

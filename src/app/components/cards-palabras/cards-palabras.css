@@ -19,8 +19,8 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
-.img-container {
-    width: 85%;
+.img-container{
+    width: 95%;
     height: 100px;
     min-height: 250px;
     flex-grow: 1; 
