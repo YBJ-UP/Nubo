@@ -32,5 +32,11 @@
         <button type="button" class="add">Crear</button>
     </div>
     <hr>
-    <p>hola</p>
+    @for (student of data; track student.id) {
+        <div>
+            <span>{{student.id}}</span>
+            <img src="{{student.pfp}}" alt="">
+            <span>{{student.name + ' ' + student.firstName + ' ' + student.lastName}}</span>
+        </div>
+    }
 </section>

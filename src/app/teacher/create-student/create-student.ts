@@ -12,6 +12,7 @@ import studentData from '../../../../public/placeholderData/studentData.json'
 export class CreateStudent {
   inputTextFields: string[] = ['','','']
   inputText: string = ''
+  data: Student[] = studentData
 
   addValue(inputValue : string, field: number){
     this.inputTextFields[field] = inputValue
