@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-actividad-palabras',
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './actividad-palabras.html',
   styleUrl: './actividad-palabras.css'
 })

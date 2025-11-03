@@ -1,14 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-
-export interface PalabraData {
-  id: number;
-  titulo: string;
-  colorFondo: string; 
-  imagenUrl?: string;
-  enlace: string; 
-}
+import { PalabraData } from '../../interfaces/PalabraData';
 
 @Component({
   selector: 'app-cards-palabras',

@@ -1,11 +1,4 @@
-
-export interface MemoramaData {
-  id: number;
-  titulo: string;
-  colorFondo: string; 
-  imagenUrl: string; 
-  rondaId: number;   
-}
+import { MemoramaData } from "../interfaces/memorama";
 export const MEMORAMA_DATA_MOCK: MemoramaData[] = [
     { 
       id: 1, 
@@ -43,6 +36,20 @@ export const MEMORAMA_DATA_MOCK: MemoramaData[] = [
       rondaId: 105 
     },
     { 
+      id: 6, 
+      titulo: 'Profesiones', 
+      colorFondo: '#C3D4FE', 
+      imagenUrl: '/assets/memorama/profesiones.png', 
+      rondaId: 106 
+    },
+     { 
+      id: 6, 
+      titulo: 'Profesiones', 
+      colorFondo: '#C3D4FE', 
+      imagenUrl: '/assets/memorama/profesiones.png', 
+      rondaId: 106 
+    },
+     { 
       id: 6, 
       titulo: 'Profesiones', 
       colorFondo: '#C3D4FE', 
