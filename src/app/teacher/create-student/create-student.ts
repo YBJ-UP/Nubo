@@ -1,31 +1,16 @@
 import { Component} from '@angular/core';
-import { Student } from '../../interfaces/student';
 import studentData from '../../../../public/placeholderData/studentData.json'
+import { FormsModule, NgForm } from "@angular/forms";
+import { RouterModule } from "@angular/router";
+import { Student } from '../../interfaces/student';
 
 @Component({
   selector: 'app-create-student',
-  imports: [],
+  imports: [FormsModule, RouterModule],
   templateUrl: './create-student.html',
   styleUrl: './create-student.css'
 })
 
 export class CreateStudent {
-  inputTextFields: string[] = ['','','']
-  inputText: string = ''
   data: Student[] = studentData
-
-  ngOnInit(){
-    for (var i=0 ; i<this.inputTextFields.length ; i++){
-      this.inputTextFields[i] = ''
-    }
-  }
-
-  addValue(inputValue : string, field: number){
-    this.inputTextFields[field] = inputValue
-    if (this.inputTextFields[0] || this.inputTextFields[1] || this.inputTextFields[2]){
-      this.inputText = this.inputTextFields.join(' ')
-    }else{
-      this.inputText = ''
-    }
-  }
 }

@@ -7,6 +7,8 @@ import { Register } from './auth/register/register';
 //MAESTRO
 import { Home } from './teacher/home/home';
 import { CreateStudent } from './teacher/create-student/create-student';
+import { ViewStudent } from './teacher/view-student/view-student';
+import { NewStudent } from './teacher/new-student/new-student';
 
 //ESTUDIANTE
 import { StudentHome } from './student/home/student-home';
@@ -36,7 +38,7 @@ export const routes: Routes = [
     component: Home,
     children: [
         { path: '', component: CardsHome },
-        { path: 'students', component: CreateStudent },
+        { path: 'students', component: CreateStudent, children: [ { path: '', component: ViewStudent }, { path: 'new', component: NewStudent } ] },
         { path: 'cognitive-abilities', component: GaleriaPalabras }
     ]
    },
