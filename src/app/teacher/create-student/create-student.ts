@@ -1,4 +1,6 @@
 import { Component} from '@angular/core';
+import { Student } from '../../interfaces/student';
+import studentData from '../../../../public/placeholderData/studentData.json'
 
 @Component({
   selector: 'app-create-student',
@@ -9,7 +11,7 @@ import { Component} from '@angular/core';
 
 export class CreateStudent {
   inputTextFields: string[] = ['','','']
-  inputText = ''
+  inputText: string = ''
 
   addValue(inputValue : string, field: number){
     this.inputTextFields[field] = inputValue
@@ -18,9 +20,5 @@ export class CreateStudent {
     }else{
       this.inputText = ''
     }
-  }
-
-  cancel(){
-    this.inputText = ''
   }
 }
