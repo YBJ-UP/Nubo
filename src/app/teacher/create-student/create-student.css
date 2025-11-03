@@ -1,6 +1,6 @@
 :host {
     margin-block: 5vh;
-    width: 100%;
+    width: 90%;
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
@@ -23,19 +23,31 @@
 
 section {
     display: flex;
-    justify-content: center;
-    margin-inline-end: 20px;
+    flex-direction: column;
+    justify-self: center;
+    align-items: center;
+    margin-inline: 20px;
+    width: 90%;
+    padding-block: 30px;
+    border-radius: 20px;
+    height: fit-content;
 }
 
 .creation-panel {
     background-color: #ffffff;
 }
 
+.management-panel {
+    background-color: #E7D7F0;
+}
+
 .img-container {
     width: 30%;
     height: auto;
+    margin-block: 30px;
 
     .pfp-preview {
         width: 100%;
+        border-radius: 50%;
     }
 }

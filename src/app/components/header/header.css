@@ -1,11 +1,12 @@
 :host {
     margin-inline: 50px;
     margin-block: 20px;
-    width: 90vw;
+    width: 100%;
+    max-width: 90vw;
 }
 
 section {
-    font-family: 'Fredoka',  sans-serif;
+    max-width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;

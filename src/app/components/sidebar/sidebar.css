@@ -1,5 +1,6 @@
 :host {
     max-height: 99vh;
+    margin-inline: 20px;
 }
 
 .container {
