@@ -27,15 +27,15 @@
 </section>
 
 <section class="management-panel">
-    <div>
+    <div class="title">
         <h2>Perfiles de alumnos</h2>
         <button type="button" class="add">Crear</button>
     </div>
     <hr>
     @for (student of data; track student.id) {
-        <div>
+        <div class="student-container">
             <span>{{student.id}}</span>
-            <img src="{{student.pfp}}" alt="">
+            <img src="{{student.pfp}}" alt="{{student.name}}" class="data-img">
             <span>{{student.name + ' ' + student.firstName + ' ' + student.lastName}}</span>
         </div>
     }

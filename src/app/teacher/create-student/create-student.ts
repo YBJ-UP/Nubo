@@ -14,6 +14,12 @@ export class CreateStudent {
   inputText: string = ''
   data: Student[] = studentData
 
+  ngOnInit(){
+    for (var i=0 ; i<this.inputTextFields.length ; i++){
+      this.inputTextFields[i] = ''
+    }
+  }
+
   addValue(inputValue : string, field: number){
     this.inputTextFields[field] = inputValue
     if (this.inputTextFields[0] || this.inputTextFields[1] || this.inputTextFields[2]){
