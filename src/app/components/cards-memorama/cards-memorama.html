@@ -1,0 +1,12 @@
+<div 
+  class="cards-memorama" 
+  [style.backgroundColor]="data.colorFondo" 
+  (click)="iniciarRonda()"
+>
+    <div class="memorama-img-container">
+        <img *ngIf="data.imagenUrl" [src]="data.imagenUrl" [alt]="data.titulo">
+    </div>
+    <p class="activity-title">
+        {{ data.titulo }}
+    </p>
+</div>

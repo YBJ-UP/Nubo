@@ -1,9 +1,19 @@
-
 :host {
     display: flex;
     flex-direction: column; 
     width: 100%;
-    min-height: 90vh; 
+    min-height: 100vh; 
+    overflow-y: scroll;
+}
+
+.memorama-grid {
+    max-width: 1200px; 
+    margin: 30px auto; 
+    padding: 0 5%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 80px 150px; 
+    justify-items: center; 
 }
 
 .back-link-container {
@@ -20,14 +30,4 @@
     display: inline-flex; 
     align-items: center;
     cursor: pointer;
-}
-
-.grid-cards { 
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 100px;
-    padding: 30px 5%; 
-    max-width: 1200px;
-    margin: 0 auto; 
-    flex-grow: 1; 
 }

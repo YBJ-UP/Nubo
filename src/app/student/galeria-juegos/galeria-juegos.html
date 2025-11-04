@@ -1,0 +1,9 @@
+<div class="back-link-container">
+    <a routerLink="../"><i class="fa-solid fa-arrow-left"></i></a>
+</div>
+<div class="memorama-grid">
+    <app-cards-memorama 
+        *ngFor="let ronda of rondas"
+        [data]="ronda"  >
+    </app-cards-memorama>
+</div>
