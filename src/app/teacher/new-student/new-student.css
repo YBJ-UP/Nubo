@@ -1,0 +1,91 @@
+:host {
+    width: 80%;
+}
+
+.img-container {
+    width: 100%;
+    height: auto;
+    margin-block: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    p {
+        border: 0;
+        text-align: center;
+        font-size: 25px;
+    }
+}
+
+.pfp-preview {
+    width: 30%;
+    border-radius: 50%;
+    margin-bottom: 30px;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.formulario p {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.formulario i {
+  position: absolute;
+  left: 15px;
+  color: #999;
+  font-size: 16px;
+  z-index: 1;
+}
+
+.formulario input {
+  width: 250px;
+  padding: 12px 15px 12px 45px;
+  border: none;
+  border-radius: 8px;
+  background-color: #F0EDDF;
+  color: #333;
+  font-size: 20px;
+  transition: all 0.3s ease;
+  border: 1px solid #ededed;
+}
+.formulario input::placeholder {
+  color: #999;
+}
+
+.button-container {
+    width: 100%;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+button {
+    padding-inline: 30px;
+    padding-block: 15px;
+    border: 0;
+    border-radius: 10px;
+    font-size: large;
+}
+
+.cancel {
+    background-color: #D96073;
+}
+.cancel:hover {
+    background-color: #b44858;
+}
+
+.add {
+    background-color: #D6DC82;
+}
+.add:hover {
+    background-color: #b3b95f;
+}

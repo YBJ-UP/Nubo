@@ -6,8 +6,8 @@
 }
 
 .actividad-container {
-    font-family: 'Fredoka',  sans-serif;
-    width: 100%;
+    margin-top: 140px;
+    width: 90%;
     max-width: 800px; 
     display: flex;
     flex-direction: column;

@@ -1,3 +1,8 @@
+:host {
+    max-height: 99vh;
+    margin-inline: 20px;
+}
+
 .container {
     display: grid;
     grid-template-rows: 2fr 0.5fr;
@@ -11,7 +16,7 @@
 }
 
 .teacher {
-    background-color: #A2D8F2;
+    background-color: #EBE3C0;
 }
 
 .selected {

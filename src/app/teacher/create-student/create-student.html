@@ -1,3 +1,18 @@
-<div>
-    <p>aca van los almnos</p>
-</div>
+<section class="creation-panel">
+    <router-outlet />
+</section>
+
+<section class="management-panel">
+    <div class="title">
+        <h2>Perfiles de alumnos</h2>
+        <button type="button" class="add" routerLink="./new">Crear</button>
+    </div>
+    <hr>
+    @for (student of data; track student.id) {
+        <div class="student-container">
+            <span>{{student.id}}</span>
+            <img src="{{student.pfp}}" alt="{{student.name}}" class="data-img">
+            <span>{{student.name + ' ' + student.firstName + ' ' + student.lastName}}</span>
+        </div>
+    }
+</section>
