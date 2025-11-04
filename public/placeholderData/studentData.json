@@ -1,6 +1,7 @@
 [
     {
       "id": 1,
+      "teacher_id":1,
       "pfp": "raul.jpg",
       "name": "Yael",
       "firstName": "Betanzos",
@@ -9,6 +10,7 @@
     },
     {
       "id": 2,
+      "teacher_id":1,
       "pfp": "raul.jpg",
       "name": "Mishell",
       "firstName": "Prado",
@@ -17,6 +19,7 @@
     },
     {
       "id": 3,
+      "teacher_id":1,
       "pfp": "raul.jpg",
       "name": "José María",
       "firstName": "Moreno",
@@ -25,6 +28,7 @@
     },
     {
       "id": 4,
+      "teacher_id":1,
       "pfp": "raul.jpg",
       "name": "Ayelen Montserrath",
       "firstName": "Rodríguez",
@@ -33,6 +37,7 @@
     },
     {
       "id": 5,
+      "teacher_id":1,
       "pfp": "raul.jpg",
       "name": "raul",
       "firstName": "raulez",

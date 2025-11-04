@@ -10,6 +10,7 @@ import { RouterLink } from "@angular/router";
   templateUrl: './new-student.html',
   styleUrl: './new-student.css'
 })
+
 export class NewStudent {
   inputTextFields: string[] = ['','','']
   inputText: string = ''

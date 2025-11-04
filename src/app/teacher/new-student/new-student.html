@@ -1,25 +1,25 @@
 <div class="img-container">
-        <img src="raul.jpg" alt="Foto de perfil del alumno" class="pfp-preview">
-        <p id="pName">{{inputText || 'Nombre del alumno...'}}</p>
+    <img src="raul.jpg" alt="Foto de perfil del alumno" class="pfp-preview">
+    <p id="pName">{{inputText || 'Nombre del alumno...'}}</p>
+</div>
+<form class="formulario" #f="ngForm" (ngSubmit)="submit(f)">
+    <p>
+        <i class="fa-solid fa-user"></i>
+        <input type="text" #newName name="newName" placeholder="Nombre del alumno" ngModel (keyup)="addValue(newName.value, 0)">
+    </p>
+
+    <p>
+        <i class="fa-solid fa-user"></i>
+        <input type="text" #newFirstName name="newFirstName" placeholder="Apellido paterno" ngModel (keyup)="addValue(newFirstName.value, 1)">
+    </p>
+
+    <p>
+        <i class="fa-solid fa-user"></i>
+        <input type="text" #newLastName name="newLastName" placeholder="Apellido materno" ngModel (keyup)="addValue(newLastName.value, 2)">
+    </p>
+
+    <div class="button-container">
+        <button type="button" class="cancel" routerLink="../">Cancelar</button>
+        <button type="submit" class="add">Agregar</button>
     </div>
-    <form class="formulario" #f="ngForm" (ngSubmit)="submit(f)">
-        <p>
-            <i class="fa-solid fa-user"></i>
-            <input type="text" #newName name="newName" placeholder="Nombre del alumno" ngModel (keyup)="addValue(newName.value, 0)">
-        </p>
-
-        <p>
-            <i class="fa-solid fa-user"></i>
-            <input type="text" #newFirstName name="newFirstName" placeholder="Apellido paterno" ngModel (keyup)="addValue(newFirstName.value, 1)">
-        </p>
-
-        <p>
-            <i class="fa-solid fa-user"></i>
-            <input type="text" #newLastName name="newLastName" placeholder="Apellido materno" ngModel (keyup)="addValue(newLastName.value, 2)">
-        </p>
-
-        <div class="button-container">
-            <button type="button" class="cancel" routerLink="../">Cancelar</button>
-            <button type="submit" class="add">Agregar</button>
-        </div>
-    </form>
+</form>
