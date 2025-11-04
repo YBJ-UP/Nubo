@@ -1,5 +1,6 @@
 :host {
-    width: 100%;
+    margin-block: 5vh;
+    width: 90%;
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
@@ -22,5 +23,80 @@
 
 section {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-self: center;
+    align-items: center;
+    margin-inline: 20px;
+    width: 90%;
+    max-height: 90%;
+    padding-block: 30px;
+    border-radius: 20px;
+    height: fit-content;
+}
+
+.creation-panel {
+    background-color: #ffffff;
+}
+
+.management-panel {
+    background-color: #E7D7F0;
+
+    hr {
+        width: 90%;
+        align-self: center;
+        border: 1px solid black;
+        margin-block: 10px;
+    }
+}
+
+button {
+    padding-inline: 30px;
+    padding-block: 15px;
+    border: 0;
+    border-radius: 10px;
+    font-size: large;
+}
+
+.cancel {
+    background-color: #D96073;
+}
+.cancel:hover {
+    background-color: #b44858;
+}
+
+.add {
+    background-color: #D6DC82;
+}
+.add:hover {
+    background-color: #b3b95f;
+}
+
+.title {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-block: 10px;
+}
+
+.student-container{
+    width: 90%;
+    height: 50px;
+    padding-inline: 20px;
+    padding-block: 10px;
+    margin: 5px;
+    display: grid;
+    grid-template-columns: 0.15fr 0.1fr 1fr;
+    align-items: center;
+    border-radius: 20px;
+
+    span {
+        margin-inline: 20px;
+        font-size: large;
+    }
+}
+
+.data-img {
+    width: 50px;
+    border-radius: 50%;
 }

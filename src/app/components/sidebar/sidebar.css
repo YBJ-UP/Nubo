@@ -1,5 +1,6 @@
 :host {
     max-height: 99vh;
+    margin-inline: 20px;
 }
 
 .container {
@@ -15,7 +16,7 @@
 }
 
 .teacher {
-    background-color: #A2D8F2;
+    background-color: #EBE3C0;
 }
 
 .selected {

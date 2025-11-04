@@ -1,0 +1,47 @@
+[
+    {
+      "id": 1,
+      "teacher_id":1,
+      "pfp": "raul.jpg",
+      "name": "Yael",
+      "firstName": "Betanzos",
+      "lastName": "Jiménez",
+      "password": "12345678"
+    },
+    {
+      "id": 2,
+      "teacher_id":1,
+      "pfp": "raul.jpg",
+      "name": "Mishell",
+      "firstName": "Prado",
+      "lastName": "Gordillo",
+      "password": "12345678"
+    },
+    {
+      "id": 3,
+      "teacher_id":1,
+      "pfp": "raul.jpg",
+      "name": "José María",
+      "firstName": "Moreno",
+      "lastName": "Pérez",
+      "password": "12345678"
+    },
+    {
+      "id": 4,
+      "teacher_id":1,
+      "pfp": "raul.jpg",
+      "name": "Ayelen Montserrath",
+      "firstName": "Rodríguez",
+      "lastName": "Flores",
+      "password": "12345678"
+    },
+    {
+      "id": 5,
+      "teacher_id":1,
+      "pfp": "raul.jpg",
+      "name": "raul",
+      "firstName": "raulez",
+      "lastName": "raul",
+      "password": "12345678"
+    }
+  ]
