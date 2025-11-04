@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apartado de Cartas Interactivo</title>
+    <!-- CORRECCIÓN: Quité la barra '/' al inicio. Es más seguro. -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="title-section">
+      <label for="activity-title" class="title-label">Titulo</label>
+      <textarea id="activity-title" class="title-input" rows="2" placeholder="Paso a paso..."></textarea>
+      <hr class="title-divider">
+    </div>
+
+    <!-- Sección de cartas -->
+    <div class="card-section-container">
+      <h4 class="card-section-title">Cartas :</h4>
+      
+      <div class="cards-row">
+    
+        <div class="card-item-wrapper" id="add-card-wrapper">
+          <div class="card-item add-card">
+            <span class="plus-icon">+</span>
+          </div>
+          <div class="card-badge">0/5</div> 
+        </div>
+    
+      </div>
+    </div>
+
+
+    <script src="app.js"></script> 
+</body>
+</html>
