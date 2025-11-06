@@ -1,18 +1,27 @@
-
 :host {
     display: flex;
     flex-direction: column; 
     width: 100%;
-    min-height: 90vh; 
+    min-height: 100vh; 
 }
 
-.back-link-container {
-    width: 90%; 
+.galeria-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-container {
+    width: 90%;
     max-width: 1200px;
     padding: 0 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-.back-link-container a {
+.back-link {
     text-decoration: none;
     color: var(--color-font); 
     font-size: 1.9rem;
@@ -20,6 +29,65 @@
     display: inline-flex; 
     align-items: center;
     cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.back-link:hover {
+    transform: translateX(-5px);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.btn-crear,
+.btn-eliminar {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-crear {
+    background-color: #A2D8F2;
+    color: #2E5299;
+}
+
+.btn-crear:hover {
+    background-color: #8BC9E8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(162, 216, 242, 0.4);
+}
+
+.btn-eliminar {
+    background-color: #F28B8B;
+    color: #8B2E2E;
+}
+
+.btn-eliminar:hover {
+    background-color: #E67373;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(242, 139, 139, 0.4);
+}
+
+.btn-eliminar.active {
+    background-color: #D64545;
+    color: white;
+}
+
+.btn-crear i,
+.btn-eliminar i {
+    font-size: 1.1rem;
 }
 
 .grid-cards { 
@@ -30,4 +98,35 @@
     max-width: 1200px;
     margin: 0 auto; 
     flex-grow: 1; 
+}
+
+@media (max-width: 1200px) {
+    .grid-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 60px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .action-buttons {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .grid-cards {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .btn-crear,
+    .btn-eliminar {
+        padding: 10px 18px;
+        font-size: 0.9rem;
+    }
 }
