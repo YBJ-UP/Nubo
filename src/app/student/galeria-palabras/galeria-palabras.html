@@ -1,10 +1,25 @@
-<div class="back-link-container">
-    <a routerLink="../"><i class="fa-solid fa-arrow-left"></i></a>
-</div>
-<div class="grid-cards">
-    <app-cards-palabras 
-        *ngFor="let palabra of palabras"
-        [palabraData]="palabra" 
-    >
-    </app-cards-palabras>
+<div class="galeria-container">
+    <div class="header-container">
+        <a routerLink="../" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <div class="action-buttons">
+            <button class="btn-crear" (click)="irACrearActividad()">
+                <i class="fa-solid fa-circle-plus"></i>
+                Crear
+            </button>
+            <button class="btn-eliminar" [class.active]="modoEliminar" (click)="toggleModoEliminar()">
+                <i class="fa-solid fa-trash"></i>
+                Eliminar
+            </button>
+        </div>
+    </div>
+
+    <div class="grid-cards">
+        <app-cards-palabras 
+            *ngFor="let palabra of palabras"
+            [palabraData]="palabra"
+        >
+        </app-cards-palabras>
+    </div>
 </div>
