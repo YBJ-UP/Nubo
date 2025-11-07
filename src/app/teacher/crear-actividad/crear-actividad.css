@@ -1,0 +1,353 @@
+.crear-actividad-container {
+  font-family: 'Fredoka', sans-serif;
+  background-color: #FFFCF9;
+  min-height: 100vh;
+  padding: 20px 50px;
+  padding-bottom: 120px; /* Espacio para el botón flotante */
+  position: relative;
+}
+
+.header-section {
+  margin-bottom: 30px;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--color-font);
+  padding: 10px;
+  transition: transform 0.2s ease;
+}
+
+.back-button:hover {
+  transform: translateX(-5px);
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 500px;
+  gap: 50px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* SECCIÓN DEL FORMULARIO */
+.form-section {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.section-label {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-font);
+  display: block;
+  margin-bottom: 15px;
+}
+
+.titulo-section {
+  margin-bottom: 30px;
+}
+
+.titulo-input {
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 1rem;
+  font-family: 'Fredoka', sans-serif;
+  border: 2px solid #E5E5E5;
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  background-color: #FAFAFA;
+}
+
+.titulo-input:focus {
+  border-color: #A2D8F2;
+  background-color: white;
+}
+
+.titulo-input::placeholder {
+  color: #BDBDBD;
+}
+
+.divider {
+  border: none;
+  height: 3px;
+  background: linear-gradient(to right, #8B5A3C, transparent);
+  margin: 30px 0;
+}
+
+.palabras-section {
+  margin-top: 30px;
+}
+
+.palabras-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.palabra-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.imagen-button {
+  width: 50px;
+  height: 50px;
+  background-color: #FFD0A7;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: #8B5A3C;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.imagen-button:hover {
+  background-color: #FFC08A;
+  transform: scale(1.05);
+}
+
+.imagen-button:active {
+  transform: scale(0.98);
+}
+
+.palabra-input {
+  flex-grow: 1;
+  padding: 15px 20px;
+  font-size: 1rem;
+  font-family: 'Fredoka', sans-serif;
+  border: 2px solid #E5E5E5;
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  background-color: #FAFAFA;
+}
+
+.palabra-input:focus {
+  border-color: #A2D8F2;
+  background-color: white;
+}
+
+.palabra-input::placeholder {
+  color: #BDBDBD;
+}
+
+.delete-button {
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: 2px solid #E5E5E5;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: #999;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.delete-button:hover:not(:disabled) {
+  border-color: #FF6B6B;
+  color: #FF6B6B;
+  background-color: #FFF5F5;
+  transform: rotate(90deg);
+}
+
+.delete-button:active:not(:disabled) {
+  transform: rotate(90deg) scale(0.95);
+}
+
+.delete-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.agregar-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #D6DC82;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #3E3300;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  font-family: 'Fredoka', sans-serif;
+}
+
+.agregar-button:hover {
+  background-color: #C8D26D;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.agregar-button:active {
+  transform: translateY(0);
+}
+
+.agregar-button i {
+  font-size: 1.3rem;
+}
+
+/* SECCIÓN IMAGEN PRINCIPAL */
+.imagen-principal-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imagen-principal-container {
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.imagen-principal {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* BOTÓN GUARDAR */
+.guardar-section {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(255, 252, 249, 0.98), transparent);
+  padding: 20px 50px 30px;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.guardar-button {
+  pointer-events: all;
+  padding: 18px 80px;
+  background: linear-gradient(135deg, #A2D8F2 0%, #7FC4E8 100%);
+  border: none;
+  border-radius: 15px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2E5299;
+  cursor: pointer;
+  font-family: 'Fredoka', sans-serif;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(162, 216, 242, 0.4);
+}
+
+.guardar-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(162, 216, 242, 0.6);
+  background: linear-gradient(135deg, #7FC4E8 0%, #A2D8F2 100%);
+}
+
+.guardar-button:active {
+  transform: translateY(-1px);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+
+  .imagen-principal-section {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .crear-actividad-container {
+    padding: 20px;
+  }
+
+  .form-section {
+    padding: 25px;
+  }
+
+  .section-label {
+    font-size: 1.3rem;
+  }
+
+  .palabra-item {
+    flex-wrap: wrap;
+  }
+
+  .palabra-input {
+    flex-basis: 100%;
+  }
+
+  .guardar-section {
+    padding: 15px 20px 20px;
+  }
+
+  .guardar-button {
+    padding: 15px 50px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .back-button {
+    font-size: 1.5rem;
+  }
+
+  .titulo-input,
+  .palabra-input {
+    font-size: 0.9rem;
+    padding: 12px 15px;
+  }
+
+  .imagen-button {
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+  }
+
+  .delete-button {
+    width: 35px;
+    height: 35px;
+    font-size: 1.1rem;
+  }
+
+  .agregar-button {
+    font-size: 1rem;
+    padding: 12px;
+  }
+}
