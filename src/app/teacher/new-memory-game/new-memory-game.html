@@ -1,13 +1,13 @@
 
 <div class="help-box">
     <div class="help-title">
-        <span>¿Cómo crear una actividad?</span>
+        <span>¿Cómo puedo crear una actividad?</span>
         <button class="help-toggle">⌃</button>
     </div>
     <ol class="help-list">
-        <li>Escribe el título de tu actividad</li>
-        <li>Sube una imagen representativa de la palabra</li>
-        <li>Agrega manualmente la palabra referente a la imagen</li>
+        <li>Escribe el titulo de la actividad en el espacio indicado</li>
+        <li>Sube una imagen representativa al tema seleccionado previamente</li>
+        <li>Carga la imagen de manera manual desde tu dispositivo</li>
     </ol>
 </div>
 
@@ -19,7 +19,7 @@
     </div>
 
     <div class="memorame-section">
-        <label class="section-label">Memórame :</label>
+        <label class="section-label">Memorama :</label>
         <div class="cards-grid">
             <!-- Card template -->
             <div class="memory-card" *ngFor="let card of cards">
@@ -34,8 +34,8 @@
                 </div>
             </div>
 
-            <!-- Add card button -->
-            <div class="memory-card add-card" (click)="triggerFileInput()">
+            <!-- Add card button - solo se muestra si no se ha alcanzado el límite -->
+            <div class="memory-card add-card" (click)="triggerFileInput()" *ngIf="currentCardCount < MAX_CARDS">
                 <span class="add-icon">+</span>
             </div>
 
@@ -47,5 +47,14 @@
                    (change)="onImageSelected($event)">
         </div>
         <div class="cards-counter">{{currentCardCount}}/5</div>
+    </div>
+</div>
+
+<!-- Modal de límite alcanzado -->
+<div class="modal-overlay" *ngIf="showMaxCardsModal">
+    <div class="modal-content">
+        <h3>Límite de imágenes alcanzado</h3>
+        <p>Has alcanzado el límite máximo de 5 imágenes.</p>
+        <button class="modal-button" (click)="closeMaxCardsModal()">Aceptar</button>
     </div>
 </div>

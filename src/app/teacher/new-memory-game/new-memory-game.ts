@@ -19,13 +19,18 @@ export class NewMemoryGame {
   MAX_CARDS = 5;
   cards: MemoryCard[] = [];
   currentCardCount = 0;
+  showMaxCardsModal = false;
 
   triggerFileInput() {
     if (this.cards.length >= this.MAX_CARDS) {
-      alert('Has alcanzado el límite máximo de cartas (5)');
+      this.showMaxCardsModal = true;
       return;
     }
     document.getElementById('imageUpload')?.click();
+  }
+
+  closeMaxCardsModal() {
+    this.showMaxCardsModal = false;
   }
 
   onImageSelected(event: Event) {
