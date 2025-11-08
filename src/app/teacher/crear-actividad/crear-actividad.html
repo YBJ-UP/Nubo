@@ -1,0 +1,152 @@
+<div class="crear-actividad-wrapper">
+  <div class="header-top">
+    <button (click)="regresar()" class="back-button">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+    <div class="header-info">
+      <span class="etiqueta">Educador</span>
+      <span class="user-name">Luna Valeria</span>
+      <span class="school-name">Esc. José Maria Morelos y Pavón</span>
+      <img src="perfil.jpg" alt="Usuario" class="user-avatar">
+    </div>
+  </div>
+
+  <div class="main-container">
+    <div class="content-card">
+      <div class="card-header">
+        <h2>Actividad Cognitiva</h2>
+      </div>
+
+      <div class="instrucciones-section">
+        <button class="instrucciones-toggle" (click)="toggleInstrucciones()">
+          <i class="fa-solid fa-circle-info"></i>
+          ¿Cómo crear una actividad?
+          <i class="fa-solid" [ngClass]="mostrarInstrucciones ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+        </button>
+        
+        <div class="instrucciones-content" *ngIf="mostrarInstrucciones">
+          <ol>
+            <li>Escribe el título de tu actividad</li>
+            <li>Sube una imagen representativa de la palabra</li>
+            <li>Agrega manualmente las sílabas de cada palabra</li>
+            <li>Agrega manualmente la descomposición de las sílabas en fonemas</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Título de la actividad</label>
+        <input 
+          type="text" 
+          [(ngModel)]="titulo"
+          placeholder="Ej: Animales acuáticos"
+          class="form-input"
+        />
+      </div>
+
+      <hr class="divider">
+
+      <div class="palabras-section">
+        <label class="form-label">Lista de palabras :</label>
+
+        <div class="palabras-container">
+          <div class="imagen-upload-container">
+            <button 
+              class="imagen-upload-button"
+              (click)="triggerImagenPrincipal()"
+              type="button"
+            >
+              <i class="fa-solid fa-arrow-up-from-bracket"></i>
+            </button>
+            <input 
+              type="file" 
+              #imagenPrincipalInput
+              (change)="onImagenPrincipalSeleccionada($event)"
+              accept="image/*"
+              style="display: none;"
+            />
+            <span class="upload-label">Subir imagen</span>
+            
+            <div class="imagen-preview" *ngIf="imagenPrincipalUrl && imagenPrincipalUrl !== 'perfil.jpg'">
+              <img [src]="imagenPrincipalUrl" alt="Vista previa">
+            </div>
+          </div>
+
+          <div class="palabras-list">
+            <div *ngFor="let palabra of palabras; let i = index" class="palabra-row">
+              <input 
+                type="text" 
+                [(ngModel)]="palabra.texto"
+                placeholder="p"
+                class="palabra-input"
+                maxlength="3"
+              />
+              <button 
+                class="btn-add-circle"
+                (click)="agregarPalabra()"
+                type="button"
+              >
+                <i class="fa-solid fa-circle-plus"></i>
+              </button>
+              <button 
+                class="btn-delete-circle"
+                (click)="eliminarPalabra(palabra.id)"
+                type="button"
+                [disabled]="palabras.length === 1"
+              >
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="fonemas-section">
+          <label class="form-label fonemas-title">Fonemas</label>
+          
+          <div class="fonemas-container">
+            <div *ngFor="let fonema of fonemas; let i = index" class="fonema-item">
+              <div class="fonema-circle">
+                <input 
+                  type="text" 
+                  [(ngModel)]="fonema.texto"
+                  placeholder="/"
+                  class="fonema-input"
+                  maxlength="2"
+                />
+              </div>
+              <div class="fonema-actions">
+                <button 
+                  class="btn-add-fonema"
+                  (click)="agregarFonema()"
+                  type="button"
+                >
+                  <i class="fa-solid fa-circle-plus"></i>
+                </button>
+                <button 
+                  class="btn-delete-fonema"
+                  (click)="eliminarFonema(fonema.id)"
+                  type="button"
+                  [disabled]="fonemas.length === 1"
+                >
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-agregar-palabra" (click)="agregarNuevaPalabra()" type="button">
+          <i class="fa-solid fa-circle-plus"></i>
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="floating-button-container">
+    <button class="btn-crear-actividad" (click)="guardarActividad()" type="button">
+      <i class="fa-solid fa-circle-plus"></i>
+      Crear actividad
+    </button>
+  </div>
+</div>
