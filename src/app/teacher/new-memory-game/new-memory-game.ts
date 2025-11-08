@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MemoryGameService, MemoryGame } from '../../services/memory-game.service';
 
 interface MemoryCard {
   imageUrl: string;
@@ -23,7 +24,10 @@ export class NewMemoryGame {
   showMaxCardsModal = false;
   showInstructions = true; // Mostrar instrucciones por defecto
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private gameService: MemoryGameService
+  ) {}
 
   triggerFileInput() {
     if (this.cards.length >= this.MAX_CARDS) {
@@ -42,28 +46,21 @@ export class NewMemoryGame {
   }
 
   saveMemoryGame() {
-    // Obtener juegos existentes del localStorage
-    let savedGames = [];
-    const existingGames = localStorage.getItem('memoryGames');
-    if (existingGames) {
-      savedGames = JSON.parse(existingGames);
+    if (this.cards.length === 0) {
+      console.error('No hay tarjetas para guardar');
+      return;
     }
 
-    // Crear nuevo juego con título y tarjetas
-    const newGame = {
-      title: document.querySelector<HTMLInputElement>('.title-input')?.value || 'Sin título',
-      cards: this.cards,
+    const titleInput = document.querySelector<HTMLInputElement>('.title-input');
+    const title = titleInput?.value?.trim() || 'Sin título';
+
+    const newGame: MemoryGame = {
+      title: title,
+      cards: [...this.cards], // Crear una copia del array de tarjetas
       color: this.getRandomColor()
     };
     
-    // Agregar el nuevo juego a la lista
-    savedGames.push(newGame);
-    
-    // Guardar en localStorage
-    localStorage.setItem('memoryGames', JSON.stringify(savedGames));
-    
-    console.log('Nuevo juego guardado:', newGame);
-    // Navegar de vuelta al menú de juegos
+    this.gameService.addGame(newGame);
     this.router.navigate(['/teacher/menu-memory-game']);
   }
 

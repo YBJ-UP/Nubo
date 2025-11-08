@@ -12,15 +12,37 @@
     </div>
 
     <div class="games-grid">
-        <div class="game-card" *ngFor="let game of games">
+        <div class="game-card" *ngFor="let game of games; let i = index" 
+             [class.selected]="selectedGameIndex === i"
+             (click)="selectGame(i)">
+            <div class="selection-indicator" *ngIf="isDeleting">
+                <input type="radio" [checked]="selectedGameIndex === i" (click)="selectGame(i)">
+            </div>
+            <h3 class="game-title">{{ game.title }}</h3>
             <div class="card-stack">
                 <div class="card front" [style.background-color]="game.color">
+                    <img *ngIf="game.cards[0]?.imageUrl" [src]="game.cards[0].imageUrl" 
+                         class="card-preview" alt="Primera tarjeta">
                     <button class="btn-start">start</button>
                 </div>
                 <div class="card middle"></div>
                 <div class="card back"></div>
             </div>
-            <h3 class="game-title">{{ game.title }}</h3>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminar -->
+    <div class="modal-overlay" *ngIf="isDeleting">
+        <div class="modal-content">
+            <h3>Eliminar juego</h3>
+            <p *ngIf="selectedGameIndex === -1">Selecciona el juego que deseas eliminar</p>
+            <p *ngIf="selectedGameIndex !== -1">¿Estás seguro de que deseas eliminar "{{games[selectedGameIndex]?.title}}"?</p>
+            <div class="modal-actions">
+                <button class="btn-cancel" (click)="cancelDelete()">Cancelar</button>
+                <button class="btn-delete" (click)="confirmDelete()" [disabled]="selectedGameIndex === -1">
+                    Eliminar
+                </button>
+            </div>
         </div>
     </div>
 </div>

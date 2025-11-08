@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MemoryGameService, MemoryGame } from '../../services/memory-game.service';
 
 @Component({
   selector: 'app-menu-memory-game',
@@ -9,18 +10,27 @@ import { CommonModule } from '@angular/common';
   templateUrl: './menu-memory-game.html',
   styleUrl: './menu-memory-game.css'
 })
-export class MenuMemoryGame implements OnInit {
-  games: any[] = []; // Aquí almacenaremos los juegos
+export class MenuMemoryGame implements OnInit, OnDestroy {
+  games: MemoryGame[] = [];
   isTeacherView: boolean = false;
+  isDeleting: boolean = false;
+  selectedGameIndex: number = -1;
 
-  constructor(private router: Router) {
-    // Determinar si estamos en la vista de maestro o estudiante
+  constructor(
+    private router: Router,
+    private gameService: MemoryGameService
+  ) {
     this.isTeacherView = this.router.url.startsWith('/teacher');
   }
 
   ngOnInit() {
-    // Aquí podemos cargar los juegos cuando se inicializa el componente
+    this.gameService.getGames().subscribe(games => {
+      console.log('Juegos actualizados:', games);
+      this.games = games;
+    });
   }
+
+  ngOnDestroy() {}
 
   goBack() {
     if (this.isTeacherView) {
@@ -31,16 +41,33 @@ export class MenuMemoryGame implements OnInit {
   }
 
   createGame() {
-    // Navegar a la vista de nuevo juego
     this.router.navigate(['/teacher/new-memory-game']);
   }
 
   deleteGame() {
-    console.log('Eliminar juego');
-    // Aquí irá la lógica para eliminar un juego
+    this.isDeleting = true;
+    this.selectedGameIndex = -1;
   }
 
-  // Método para recibir el nuevo juego cuando se guarda
+  selectGame(index: number) {
+    if (this.isDeleting) {
+      this.selectedGameIndex = index;
+    }
+  }
+
+  cancelDelete() {
+    this.isDeleting = false;
+    this.selectedGameIndex = -1;
+  }
+
+  confirmDelete() {
+    if (this.selectedGameIndex !== -1) {
+      this.gameService.deleteGame(this.selectedGameIndex);
+      this.isDeleting = false;
+      this.selectedGameIndex = -1;
+    }
+  }
+
   onGameSaved(newGame: any) {
     this.games.push(newGame);
   }
