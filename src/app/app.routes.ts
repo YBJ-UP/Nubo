@@ -17,6 +17,7 @@ import { GaleriaPalabras } from './student/galeria-palabras/galeria-palabras';
 
 //COMPARTIDOS
 import { CardsHome } from './components/cards-home/cards-home';
+import { NewMemoryGame } from './teacher/new-memory-game/new-memory-game';
 import { CardsPalabras } from './components/cards-palabras/cards-palabras';
 
 export const routes: Routes = [
@@ -38,6 +39,7 @@ export const routes: Routes = [
     component: Home,
     children: [
         { path: '', component: CardsHome },
+    { path: 'new-memory-game', component: NewMemoryGame },
         { path: 'students', component: CreateStudent, children: [ { path: '', component: ViewStudent }, { path: 'new', component: NewStudent } ] },
         { path: 'cognitive-abilities', component: GaleriaPalabras }
     ]

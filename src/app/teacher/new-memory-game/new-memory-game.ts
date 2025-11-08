@@ -1,88 +1,64 @@
 import { Component } from '@angular/core';
-import { Card } from '../../interfaces/card';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+interface MemoryCard {
+  imageUrl: string;
+  word: string;
+  file?: File;
+}
 
 @Component({
   selector: 'app-new-memory-game',
-  imports: [],
   templateUrl: './new-memory-game.html',
-  styleUrl: './new-memory-game.css'
+  styleUrl: './new-memory-game.css',
+  standalone: true,
+  imports: [CommonModule, FormsModule]
 })
 export class NewMemoryGame {
-  // --- 2. Constantes y Estado ---
   MAX_CARDS = 5;
-  cards: Card[] = [];
+  cards: MemoryCard[] = [];
+  currentCardCount = 0;
 
-  // --- 3. Seleccionadores del DOM (Corregidos) ---
-  cardRow = document.querySelector<HTMLElement>('.cards-row')!;
-  addButtonWrapper = document.getElementById('add-card-wrapper')!;
-  addButton: HTMLElement | null = this.addButtonWrapper?.querySelector('.add-card');
-  cardBadge = this.addButtonWrapper?.querySelector('.card-badge');
-
-  renderCards() {
-  if (!this.cardRow || !this.addButtonWrapper) {
-    console.error("Error: No se encontraron .cards-row o #add-card-wrapper");
-    return;
+  triggerFileInput() {
+    if (this.cards.length >= this.MAX_CARDS) {
+      alert('Has alcanzado el límite máximo de cartas (5)');
+      return;
+    }
+    document.getElementById('imageUpload')?.click();
   }
 
-  const existingCards = this.cardRow.querySelectorAll('.card-item-wrapper:not(#add-card-wrapper)');
-  existingCards.forEach(card => card.remove());
+  onImageSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor, selecciona un archivo de imagen válido');
+        return;
+      }
 
-  this.cards.forEach((card, index) => {
-    const cardHtml = `
-      <div class="card-item-wrapper">
-        <div class="card-item image-card">
-          <button class="delete-btn" data-index="${index}">×</button>
-          <img src="${card.imageUrl}" alt="${card.name}">
-        </div>
-        <div class="card-label">${card.name}</div>
-      </div>
-    `;
-    
-    this.addButtonWrapper.insertAdjacentHTML('beforebegin', cardHtml);
-  });
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageUrl = e.target?.result as string;
+        this.cards.push({
+          imageUrl,
+          word: '',
+          file
+        });
+        this.currentCardCount = this.cards.length;
+      };
+      reader.readAsDataURL(file);
+    }
+    // Reset input value to allow selecting the same file again
+    input.value = '';
   }
 
-  updateBadgeAndButton() {
-  if (!this.cardBadge || !this.addButton) return;
-
-  this.cardBadge.textContent = `${this.cards.length}/${this.MAX_CARDS}`;
-
-  if (this.cards.length >= this.MAX_CARDS) {
-    this.addButton.classList.add('disabled');
-  } else {
-    this.addButton.classList.remove('disabled');
-  }
-  }
-
-  addCard() {
-  if (this.cards.length >= this.MAX_CARDS) {
-    alert("¡Límite alcanzado! No puedes agregar más de 5 cartas.");
-    return;
-  }
-
-  const imageUrl = prompt("Por favor, pega la URL de la imagen:");
-  if (!imageUrl) return; 
-
-  const name = prompt("¿Qué nombre le pones a la carta?");
-  if (!name) return;
-
-  this.cards.push({ imageUrl, name });
-  this.renderCards();
-  }
-
-  handleCardRowClick(event: MouseEvent) {
-  const target = event.target;
-
-  if (!(target instanceof HTMLElement)) return;
-
-  if (target.classList.contains('delete-btn')) {
-    const indexAttr = target.getAttribute('data-index');
-    if (indexAttr === null) return; 
-
-    const index = parseInt(indexAttr, 10);
-    this.cards.splice(index, 1);
-    this.renderCards();
-  }
+  deleteCard(cardToDelete: MemoryCard) {
+    const index = this.cards.indexOf(cardToDelete);
+    if (index > -1) {
+      this.cards.splice(index, 1);
+      this.currentCardCount = this.cards.length;
+    }
   }
 
 }
