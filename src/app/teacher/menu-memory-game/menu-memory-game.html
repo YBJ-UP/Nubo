@@ -2,11 +2,14 @@
     <div class="header">
         <button class="btn-back" (click)="goBack()">←</button>
         <div class="action-buttons">
-            <button class="btn-create" (click)="createGame()">
+            <button class="btn-create" (click)="createGame()" *ngIf="!isDeleting">
                 <span class="icon">⊕</span> Crear
             </button>
-            <button class="btn-delete" (click)="deleteGame()">
-                <span class="icon">🗑</span> Eliminar
+            <button class="btn-delete" (click)="deleteGame()" [disabled]="isDeleting && selectedGameIndex === -1">
+                <span class="icon">🗑</span> {{ isDeleting ? 'Confirmar' : 'Eliminar' }}
+            </button>
+            <button class="btn-cancel" (click)="cancelDelete()" *ngIf="isDeleting">
+                Cancelar
             </button>
         </div>
     </div>
@@ -16,32 +19,17 @@
              [class.selected]="selectedGameIndex === i"
              (click)="selectGame(i)">
             <div class="selection-indicator" *ngIf="isDeleting">
-                <input type="radio" [checked]="selectedGameIndex === i" (click)="selectGame(i)">
+                <input type="radio" [checked]="selectedGameIndex === i" (click)="$event.stopPropagation(); selectGame(i)">
             </div>
             <h3 class="game-title">{{ game.title }}</h3>
             <div class="card-stack">
                 <div class="card front" [style.background-color]="game.color">
                     <img *ngIf="game.cards[0]?.imageUrl" [src]="game.cards[0].imageUrl" 
                          class="card-preview" alt="Primera tarjeta">
-                    <button class="btn-start">start</button>
+                    <button class="btn-start" *ngIf="!isDeleting">start</button>
                 </div>
-                <div class="card middle"></div>
-                <div class="card back"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de confirmación para eliminar -->
-    <div class="modal-overlay" *ngIf="isDeleting">
-        <div class="modal-content">
-            <h3>Eliminar juego</h3>
-            <p *ngIf="selectedGameIndex === -1">Selecciona el juego que deseas eliminar</p>
-            <p *ngIf="selectedGameIndex !== -1">¿Estás seguro de que deseas eliminar "{{games[selectedGameIndex]?.title}}"?</p>
-            <div class="modal-actions">
-                <button class="btn-cancel" (click)="cancelDelete()">Cancelar</button>
-                <button class="btn-delete" (click)="confirmDelete()" [disabled]="selectedGameIndex === -1">
-                    Eliminar
-                </button>
+                <div class="card middle" [style.background-color]="game.color"></div>
+                <div class="card back" [style.background-color]="game.color"></div>
             </div>
         </div>
     </div>
