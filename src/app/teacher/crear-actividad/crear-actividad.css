@@ -1,5 +1,3 @@
-/* REEMPLAZAR TODO EL CONTENIDO DE crear-actividad.css CON ESTE CÓDIGO */
-
 .crear-actividad-wrapper {
   font-family: 'Fredoka', sans-serif;
   background-color: #F0EDDF;
@@ -9,7 +7,6 @@
   padding-bottom: 100px;
 }
 
-/* HEADER TOP */
 .header-top {
   background-color: white;
   padding: 15px 30px;
@@ -70,7 +67,6 @@
   border: 2px solid #FFC364;
 }
 
-/* MAIN CONTAINER */
 .main-container {
   max-width: 900px;
   margin: 30px auto;
@@ -97,7 +93,6 @@
   background: #B5B3D8;
 }
 
-/* CONTENT CARD */
 .content-card {
   background: white;
   border-radius: 20px;
@@ -112,7 +107,6 @@
   margin-bottom: 20px;
 }
 
-/* INSTRUCCIONES */
 .instrucciones-section {
   margin-bottom: 25px;
 }
@@ -164,17 +158,12 @@
   }
 }
 
-.instrucciones-content ol {
-  margin-left: 20px;
-  color: #5A4A3C;
-}
 
 .instrucciones-content li {
   margin-bottom: 8px;
   line-height: 1.5;
 }
 
-/* FORM GROUPS */
 .form-group {
   margin-bottom: 25px;
 }
@@ -215,7 +204,6 @@
   margin: 30px 0;
 }
 
-/* PALABRAS SECTION */
 .palabras-section {
   margin-top: 30px;
 }
@@ -226,7 +214,6 @@
   margin-bottom: 30px;
 }
 
-/* IMAGEN UPLOAD */
 .imagen-upload-container {
   display: flex;
   flex-direction: column;
@@ -277,7 +264,6 @@
   object-fit: cover;
 }
 
-/* PALABRAS LIST */
 .palabras-list {
   flex: 1;
   display: flex;
@@ -349,7 +335,6 @@
   cursor: not-allowed;
 }
 
-/* FONEMAS SECTION */
 .fonemas-section {
   margin-top: 30px;
   margin-bottom: 25px;
@@ -440,7 +425,6 @@
   cursor: not-allowed;
 }
 
-/* BOTÓN AGREGAR PALABRA */
 .btn-agregar-palabra {
   width: 100%;
   padding: 15px;
@@ -470,7 +454,6 @@
   font-size: 1.3rem;
 }
 
-/* BOTÓN FLOTANTE */
 .floating-button-container {
   position: fixed;
   bottom: 30px;
@@ -509,7 +492,6 @@
   font-size: 1.3rem;
 }
 
-/* RESPONSIVE */
 @media (max-width: 768px) {
   .header-top {
     flex-direction: column;
