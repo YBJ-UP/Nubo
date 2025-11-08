@@ -173,7 +173,7 @@
 /* Estilo base para botones de acción */
 .action-btn {
   background: rgba(255, 255, 255, 0.9); /* Fondo semi-transparente */
-  border: 1px solid #e0e0e0;
+  border: 1px solid #ee0000;
   border-radius: 4px;
   width: 24px;
   height: 24px;
@@ -185,7 +185,7 @@
 
 /* Botón de eliminar */
 .action-btn.delete {
-  color: #ef5350; /* Color rojo para indicar eliminación */
+  color: #ff0400; /* Color rojo para indicar eliminación */
 }
 
 /* Icono de agregar (+) */

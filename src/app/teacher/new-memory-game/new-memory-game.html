@@ -1,10 +1,12 @@
 
 <div class="help-box">
-    <div class="help-title">
+    <div class="help-title" (click)="toggleInstructions()">
         <span>¿Cómo puedo crear una actividad?</span>
-        <button class="help-toggle">⌃</button>
+        <button class="help-toggle" [class.collapsed]="!showInstructions">
+            {{ showInstructions ? '⌃' : '⌄' }}
+        </button>
     </div>
-    <ol class="help-list">
+    <ol class="help-list" [class.collapsed]="!showInstructions">
         <li>Escribe el titulo de la actividad en el espacio indicado</li>
         <li>Sube una imagen representativa al tema seleccionado previamente</li>
         <li>Carga la imagen de manera manual desde tu dispositivo</li>
@@ -47,6 +49,18 @@
                    (change)="onImageSelected($event)">
         </div>
         <div class="cards-counter">{{currentCardCount}}/5</div>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="form-actions">
+        <button class="action-button cancel-button" (click)="cancelMemoryGame()">
+            <span class="button-icon">✕</span>
+            Cancelar
+        </button>
+        <button class="action-button save-button" (click)="saveMemoryGame()">
+            <span class="button-icon">💾</span>
+            Guardar
+        </button>
     </div>
 </div>
 

@@ -20,6 +20,7 @@ export class NewMemoryGame {
   cards: MemoryCard[] = [];
   currentCardCount = 0;
   showMaxCardsModal = false;
+  showInstructions = true; // Mostrar instrucciones por defecto
 
   triggerFileInput() {
     if (this.cards.length >= this.MAX_CARDS) {
@@ -31,6 +32,24 @@ export class NewMemoryGame {
 
   closeMaxCardsModal() {
     this.showMaxCardsModal = false;
+  }
+
+  toggleInstructions() {
+    this.showInstructions = !this.showInstructions;
+  }
+
+  saveMemoryGame() {
+    // Aquí irá la lógica para guardar el juego de memoria
+    console.log('Guardando juego de memoria...');
+    // Por ahora solo mostraremos un console.log, pero aquí se implementará
+    // la lógica real de guardado cuando se necesite
+  }
+
+  cancelMemoryGame() {
+    // Aquí irá la lógica para cancelar la creación del juego
+    console.log('Cancelando creación del juego de memoria...');
+    // Por ahora solo mostraremos un console.log, pero aquí se implementará
+    // la lógica de cancelación cuando se necesite
   }
 
   onImageSelected(event: Event) {
