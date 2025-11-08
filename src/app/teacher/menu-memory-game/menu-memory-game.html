@@ -1,0 +1,26 @@
+<div class="container">
+    <div class="header">
+        <button class="btn-back" (click)="goBack()">←</button>
+        <div class="action-buttons">
+            <button class="btn-create" (click)="createGame()">
+                <span class="icon">⊕</span> Crear
+            </button>
+            <button class="btn-delete" (click)="deleteGame()">
+                <span class="icon">🗑</span> Eliminar
+            </button>
+        </div>
+    </div>
+
+    <div class="games-grid">
+        <div class="game-card" *ngFor="let game of games">
+            <div class="card-stack">
+                <div class="card front" [style.background-color]="game.color">
+                    <button class="btn-start">start</button>
+                </div>
+                <div class="card middle"></div>
+                <div class="card back"></div>
+            </div>
+            <h3 class="game-title">{{ game.title }}</h3>
+        </div>
+    </div>
+</div>

@@ -17,8 +17,9 @@ import { GaleriaPalabras } from './student/galeria-palabras/galeria-palabras';
 
 //COMPARTIDOS
 import { CardsHome } from './components/cards-home/cards-home';
-import { NewMemoryGame } from './teacher/new-memory-game/new-memory-game';
 import { CardsPalabras } from './components/cards-palabras/cards-palabras';
+import { MenuMemoryGame } from './teacher/menu-memory-game/menu-memory-game';
+import { NewMemoryGame } from './teacher/new-memory-game/new-memory-game';
 
 export const routes: Routes = [
    {
@@ -39,7 +40,8 @@ export const routes: Routes = [
     component: Home,
     children: [
         { path: '', component: CardsHome },
-    { path: 'new-memory-game', component: NewMemoryGame },
+        { path: 'menu-memory-game', component: MenuMemoryGame },
+        { path: 'new-memory-game', component: NewMemoryGame },
         { path: 'students', component: CreateStudent, children: [ { path: '', component: ViewStudent }, { path: 'new', component: NewStudent } ] },
         { path: 'cognitive-abilities', component: GaleriaPalabras }
     ]
@@ -49,7 +51,8 @@ export const routes: Routes = [
     component: StudentHome,
     children: [
         { path: '', component: CardsHome },
-        { path: 'cognitive-abilities', component: GaleriaPalabras, children: [] }
+        { path: 'cognitive-abilities', component: GaleriaPalabras, children: [] },
+        { path: 'menu-memory-game', component: MenuMemoryGame }
     ]
    }
 ];
