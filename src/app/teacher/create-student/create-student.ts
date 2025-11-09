@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from "@angular/router";
 import { Student } from '../../interfaces/student';
 import studentData from '../../../../public/placeholderData/studentData.json';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-student',
@@ -16,10 +15,10 @@ export class CreateStudent implements OnInit {
   mostrarVistaHija: boolean = false;
 
   constructor(private router: Router) {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      this.actualizarVistaHija();
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.actualizarVistaHija();
+      }
     });
   }
 
@@ -40,7 +39,8 @@ export class CreateStudent implements OnInit {
 
   actualizarVistaHija(): void {
     const url = this.router.url;
-    this.mostrarVistaHija = url.includes('/new') || url.includes('/view/');
+    this.mostrarVistaHija = url.includes('/students/new') || url.includes('/students/view/');
+    console.log('URL actual:', url, 'Mostrar vista hija:', this.mostrarVistaHija);
   }
 
   crearNuevoAlumno(): void {
