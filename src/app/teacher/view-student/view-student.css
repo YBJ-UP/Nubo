@@ -1,0 +1,271 @@
+:host {
+    width: 100%;
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.view-student-container {
+    width: 100%;
+    max-width: 900px;
+    font-family: 'Fredoka', sans-serif;
+}
+
+.header-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--color-font);
+    padding: 5px;
+    transition: transform 0.2s ease;
+}
+
+.back-button:hover {
+    transform: translateX(-5px);
+}
+
+.header-section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-font);
+    margin: 0;
+}
+
+.student-profile-card {
+    background: white;
+    border-radius: 20px;
+    padding: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.profile-header {
+    background: linear-gradient(135deg, #F0EDDF 0%, #E5E2D0 100%);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+}
+
+.profile-avatar {
+    width: 180px;
+    height: 180px;
+    border-radius: 20px;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.profile-info {
+    width: 100%;
+}
+
+.profile-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-font);
+    margin-bottom: 8px;
+}
+
+.profile-fullname {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+.modules-section {
+    padding: 40px;
+}
+
+.modules-header {
+    margin-bottom: 30px;
+}
+
+.modules-header h4 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--color-font);
+}
+
+.module-progress {
+    margin-bottom: 25px;
+}
+
+.module-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-font);
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.module-percentage {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-font);
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 30px;
+    background-color: #E8EFFF;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 15px;
+    transition: width 0.8s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 15px;
+    color: white;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.progress-bar-fill.module-1 {
+    background: linear-gradient(90deg, #A2D8F2 0%, #7FC4E8 100%);
+}
+
+.progress-bar-fill.module-2 {
+    background: linear-gradient(90deg, #FFD0A7 0%, #FFC08A 100%);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 35px;
+    padding-top: 30px;
+    border-top: 2px solid #f0f0f0;
+}
+
+.btn-delete,
+.btn-login {
+    flex: 1;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    font-family: 'Fredoka', sans-serif;
+}
+
+.btn-delete {
+    background-color: #F28B8B;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #E67373;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(242, 139, 139, 0.4);
+}
+
+.btn-login {
+    background-color: #A2D8F2;
+    color: white;
+}
+
+.btn-login:hover {
+    background-color: #8BC9E8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(162, 216, 242, 0.4);
+}
+
+.btn-delete i,
+.btn-login i {
+    font-size: 1.2rem;
+}
+
+.not-found {
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    padding: 60px 40px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.not-found i {
+    font-size: 5rem;
+    color: #E67373;
+    margin-bottom: 20px;
+}
+
+.not-found h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-font);
+    margin-bottom: 30px;
+}
+
+.btn-back {
+    padding: 12px 30px;
+    background-color: #A2D8F2;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Fredoka', sans-serif;
+}
+
+.btn-back:hover {
+    background-color: #8BC9E8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(162, 216, 242, 0.4);
+}
+
+@media (max-width: 768px) {
+    .profile-header {
+        padding: 30px 20px;
+    }
+
+    .profile-avatar {
+        width: 140px;
+        height: 140px;
+    }
+
+    .profile-name {
+        font-size: 1.5rem;
+    }
+
+    .modules-section {
+        padding: 30px 20px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn-delete,
+    .btn-login {
+        width: 100%;
+    }
+}
