@@ -1,18 +1,27 @@
-<section class="creation-panel">
-    <router-outlet />
-</section>
-
-<section class="management-panel">
-    <div class="title">
-        <h2>Perfiles de alumnos</h2>
-        <button type="button" class="add" routerLink="./new">Crear</button>
-    </div>
-    <hr>
-    @for (student of data; track student.id) {
-        <div class="student-container">
-            <span>{{student.id}}</span>
-            <img src="{{student.pfp}}" alt="{{student.name}}" class="data-img">
-            <span>{{student.name + ' ' + student.firstName + ' ' + student.lastName}}</span>
+<div class="students-main-container">
+    <section class="management-panel">
+        <div class="title">
+            <h2>Perfiles de alumnos</h2>
+            <button type="button" class="add" (click)="crearNuevoAlumno()">
+                <i class="fa-solid fa-user-plus"></i>
+                Crear
+            </button>
         </div>
-    }
-</section>
+        <hr>
+        
+        <div class="students-grid">
+            <div 
+                *ngFor="let student of data" 
+                class="student-card"
+                (click)="verDetalleAlumno(student.id)"
+            >
+                <img [src]="student.pfp" [alt]="student.name" class="student-avatar">
+                <div class="student-info">
+                    <h3 class="student-name">{{student.name}}</h3>
+                    <p class="student-fullname">{{student.firstName}} {{student.lastName}}</p>
+                </div>
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+        </div>
+    </section>
+</div>
