@@ -1,5 +1,6 @@
 <div class="students-main-container">
-    <section class="management-panel">
+    <router-outlet></router-outlet>
+    <section class="management-panel" *ngIf="!mostrarVistaHija">
         <div class="title">
             <h2>Perfiles de alumnos</h2>
             <button type="button" class="add" (click)="crearNuevoAlumno()">
