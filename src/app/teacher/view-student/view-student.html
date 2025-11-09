@@ -3,7 +3,7 @@
         <button (click)="regresar()" class="back-button">
             <i class="fa-solid fa-arrow-left"></i>
         </button>
-        <h2>Registro de nuevo alumno</h2>
+        <h2>Perfil del alumno</h2>
     </div>
 
     <div class="student-profile-card">
@@ -16,26 +16,30 @@
         </div>
 
         <div class="modules-header">
-            <h4>Nombre del alumno</h4>
+            <h4>Progreso de módulos</h4>
         </div>
 
         <div class="module-progress">
-            <div class="module-label">Módulo 1:</div>
+            <div class="module-label">Módulo 1: {{progresoModulo1}}%</div>
             <div class="progress-bar-container">
                 <div 
                     class="progress-bar-fill module-1" 
                     [style.width.%]="progresoModulo1"
-                ></div>
+                >
+                    <span *ngIf="progresoModulo1 > 10">{{progresoModulo1}}%</span>
+                </div>
             </div>
         </div>
 
         <div class="module-progress">
-            <div class="module-label">Módulo 2:</div>
+            <div class="module-label">Módulo 2: {{progresoModulo2}}%</div>
             <div class="progress-bar-container">
                 <div 
                     class="progress-bar-fill module-2" 
                     [style.width.%]="progresoModulo2"
-                ></div>
+                >
+                    <span *ngIf="progresoModulo2 > 10">{{progresoModulo2}}%</span>
+                </div>
             </div>
         </div>
 
