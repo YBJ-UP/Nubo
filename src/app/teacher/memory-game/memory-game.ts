@@ -27,6 +27,17 @@ export class MemoryGame implements OnInit {
   isChecking: boolean = false;
   gameCompleted: boolean = false;
   totalPairs: number = 0;
+  selectedVictoryMessage: string = '';
+  private victoryMessages: string[] = [
+    '¡Excelente trabajo! ¡Lo lograste!',
+    '¡Fantástico! Tu memoria está en forma.',
+    '¡Muy bien! ¡Sigue así!',
+    '¡Lo hiciste de maravilla!',
+    '¡Imparable! ¡Gran memoria!',
+    '¡Genial! ¡Actividad completada!'
+  ];
+  private accentColors: string[] = ['#c8b8db', '#b8cde8', '#e5e7eb', '#a5d6a7', '#ffe082'];
+  accentColor: string = '#c8b8db';
 
   constructor(
     private router: Router,
@@ -106,6 +117,8 @@ export class MemoryGame implements OnInit {
 
       // Verificar si el juego está completo
       if (this.matches === this.totalPairs) {
+        this.selectedVictoryMessage = this.getRandomItem(this.victoryMessages);
+        this.accentColor = this.getRandomItem(this.accentColors);
         this.gameCompleted = true;
       }
     } else {
@@ -117,6 +130,10 @@ export class MemoryGame implements OnInit {
         this.isChecking = false;
       }, 1000);
     }
+  }
+
+  private getRandomItem<T>(arr: T[]): T {
+    return arr[Math.floor(Math.random() * arr.length)];
   }
 
   restartGame() {

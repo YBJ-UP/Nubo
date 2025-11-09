@@ -29,12 +29,12 @@
 
     <!-- Modal de victoria -->
     <div class="victory-modal" *ngIf="gameCompleted">
-        <div class="modal-content">
-            <h2>¡Felicidades! 🎉</h2>
-            <p>Has completado el juego en <strong>{{ moves }}</strong> movimientos</p>
+        <div class="modal-content" [style.border-color]="accentColor">
+            <h2>{{ selectedVictoryMessage }}</h2>
+            <p>Completaste el juego en <strong>{{ moves }}</strong> movimientos.</p>
             <div class="modal-buttons">
-                <button class="btn-play-again" (click)="restartGame()">Jugar de nuevo</button>
-                <button class="btn-menu" (click)="goBack()">Volver al menú</button>
+                <button class="btn-play-again" [style.background-color]="accentColor" (click)="restartGame()">Repetir</button>
+                <button class="btn-menu" (click)="goBack()">Menú</button>
             </div>
         </div>
     </div>

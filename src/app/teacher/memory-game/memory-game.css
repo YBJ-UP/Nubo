@@ -7,7 +7,8 @@
 }
 
 .game-container {
-    padding: 16px 24px;
+    padding: 10px 12px;
+    background: #f5f5f0;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -68,11 +69,11 @@
 /* Fixed 4 x 3 layout (12 cards) with responsive fallback */
 .game-board {
     display: grid;
-    grid-template-columns: repeat(4, minmax(150px, 1fr));
-    gap: 18px 26px;
-    padding: 10px 20px 20px;
+    grid-template-columns: repeat(4, minmax(108px, 1fr)); /* additional 10% reduction from 120px */
+    gap: 8px 22px; /* vertical gap reduced by 50%, horizontal preserved */
+    padding: 8px 18px 16px;
     flex: 1;
-    width: min(1100px, 100%);
+    width: min(960px, 100%);
     margin: 0 auto;
     align-content: start;
 }
@@ -96,7 +97,7 @@
     aspect-ratio: 1 / 1.05; /* slightly taller */
     width: 100%;
     position: relative;
-    max-width: 230px;
+    max-width: 166px; /* further ~10% smaller than 184px */
 }
 
 /* Card */
