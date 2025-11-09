@@ -7,6 +7,8 @@ import { Register } from './auth/register/register';
 //MAESTRO
 import { Home } from './teacher/home/home';
 import { CreateStudent } from './teacher/create-student/create-student';
+import { NewStudent } from './teacher/new-student/new-student';
+import { ViewStudent } from './teacher/view-student/view-student';
 import { CrearActividadComponent } from './teacher/crear-actividad/crear-actividad';
 
 //ESTUDIANTE
@@ -40,7 +42,14 @@ export const routes: Routes = [
     component: Home,
     children: [
         { path: '', component: CardsHome },
-        { path: 'students', component: CreateStudent },
+        { 
+            path: 'students', 
+            component: CreateStudent,
+            children: [
+                { path: 'new', component: NewStudent },
+                { path: 'view/:id', component: ViewStudent }
+            ]
+        },
         { 
             path: 'cognitive-abilities', 
             component: Shell,
