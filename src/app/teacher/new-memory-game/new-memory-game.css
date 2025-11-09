@@ -1,35 +1,28 @@
-/* Configuración del componente principal */
 :host {
   display: block;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  width: 100%; /* Usar todo el ancho disponible */
-  max-width: 1200px; /* Ancho máximo aumentado para pantallas grandes */
-  min-width: 320px; /* Ancho mínimo para móviles pequeños */
-  margin: 0 auto; /* Centrar el componente en la página */
+  width: 100%;
+  max-width: 1200px;
+  min-width: 320px;
+  margin: 0 auto;
   padding: 20px;
-  box-sizing: border-box; /* Incluir padding en el ancho total */
+  box-sizing: border-box;
 }
-
-/* Caja de ayuda con instrucciones */
 .help-box {
-  background: #FFD899; /* Color naranja claro para destacar */
+  background: #FFD899;
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 20px;
   width: 100%;
   box-sizing: border-box;
 } 
-
-/* Título de la caja de ayuda con botón de alternar */
 .help-title {
   display: flex;
-  justify-content: space-between; /* Separa el título y el botón */
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
   font-weight: 600;
 }
-
-/* Botón para mostrar/ocultar instrucciones */
 .help-toggle {
   background: none;
   border: none;
@@ -37,19 +30,13 @@
   font-size: 1.2rem;
   color: #666;
 }
-
-/* Lista de instrucciones */
 .help-list {
   margin: 0;
-  padding-left: 24px; /* Espacio para los números de la lista */
+  padding-left: 24px;
 }
-
-/* Elementos de la lista de instrucciones */
 .help-list li {
-  margin-bottom: 4px; /* Espaciado entre instrucciones */
+  margin-bottom: 4px;
 }
-
-/* Contenedor principal del formulario */
 .main-content {
   background: white;
   border-radius: 8px;
@@ -58,15 +45,11 @@
   box-sizing: border-box;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
-
-/* Etiquetas de sección (Título, Memórame) */
 .section-label {
   display: block;
   font-weight: 600;
   margin-bottom: 8px;
 }
-
-/* Campo de entrada para el título */
 .title-input {
   width: 100%;
   padding: 8px 12px;
@@ -114,34 +97,25 @@
 .icon {
     font-size: 1.2rem;
 }
-
-/* Línea divisora negra */
 .divider {
   height: 2px;
   background: #000;
   margin: 16px 0;
 }
-
-/* Sección de tarjetas de memoria */
 .memorame-section {
   margin-top: 20px;
 }
-
-/* Cuadrícula de tarjetas */
 .cards-grid {
   display: grid;
-  /* Cuadrícula responsiva que se ajusta al tamaño de la pantalla */
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 20px; /* Espacio aumentado entre tarjetas */
+  gap: 20px;
   margin-top: 12px;
   width: 100%;
   box-sizing: border-box;
 }
-
-/* Tarjeta de memoria individual */
 .memory-card {
   position: relative;
-  aspect-ratio: 1; /* Mantiene forma cuadrada */
+  aspect-ratio: 1;
   background: #f5f5f5;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
@@ -149,59 +123,45 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 150px; /* Altura mínima para las tarjetas */
-  width: 100%; /* Ocupa todo el ancho disponible en su celda */
-  transition: transform 0.2s ease; /* Animación suave al hover */
+  min-height: 150px;
+  width: 100%;
+  transition: transform 0.2s ease;
 }
-
-/* Efecto hover en las tarjetas */
 .memory-card:hover {
-  transform: translateY(-2px); /* Ligera elevación al pasar el mouse */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra suave */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
-
-/* Estilo especial para el botón de agregar tarjeta */
 .memory-card.add-card {
-  border-style: dashed; /* Borde punteado para indicar área de carga */
+  border-style: dashed;
   cursor: pointer;
-  transition: background-color 0.2s; /* Animación suave al hover */
+  transition: background-color 0.2s;
 }
-
-/* Efecto hover en el botón de agregar */
 .memory-card.add-card:hover {
   background: #eeeeee;
 }
-
-/* Imagen dentro de la tarjeta */
 .memory-card img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Mantiene proporción de la imagen */
+  object-fit: contain;
   padding: 8px;
 }
-
-/* Overlay para el campo de texto de la palabra */
 .card-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   padding: 8px;
-  background: rgba(255, 255, 255, 0.9); /* Fondo semi-transparente */
+  background: rgba(255, 255, 255, 0.9);
   border-top: 1px solid #e0e0e0;
 }
-
-/* Campo de entrada para la palabra */
 .word-input {
   width: 100%;
   padding: 4px;
   border: none;
   background: transparent;
-  text-align: center; /* Centrar el texto */
+  text-align: center;
   font-size: 0.9rem;
 }
-
-/* Contenedor de botones de acción (eliminar) */
 .card-actions {
   position: absolute;
   top: 4px;
@@ -209,10 +169,8 @@
   display: flex;
   gap: 4px;
 }
-
-/* Estilo base para botones de acción */
 .action-btn {
-  background: rgba(255, 255, 255, 0.9); /* Fondo semi-transparente */
+  background: rgba(255, 255, 255, 0.9);
   border: 1px solid #ee0000;
   border-radius: 4px;
   width: 24px;
@@ -222,22 +180,16 @@
   justify-content: center;
   cursor: pointer;
 }
-
-/* Botón de eliminar */
 .action-btn.delete {
-  color: #ff0400; /* Color rojo para indicar eliminación */
+  color: #ff0400;
 }
-
-/* Icono de agregar (+) */
 .add-icon {
   font-size: 2rem;
-  color: #9e9e9e; /* Color gris */
+  color: #9e9e9e;
 }
-
-/* Contador de tarjetas (3/5) */
 .cards-counter {
   display: inline-block;
-  background: #fff3e0; /* Mismo color que el box de ayuda */
+  background: #fff3e0;
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.8rem;
@@ -245,9 +197,8 @@
   margin-top: 8px;
 }
 
-
 .card-section-title {
-  display: inline-block; /* Para que el borde se ajuste al texto */
+  display: inline-block;
   border: 2px dotted #9e9e9e;
   padding: 4px 8px;
   margin: 0 0 16px 0;
@@ -296,7 +247,6 @@
   color: var(--card-add-icon);
   line-height: 1;
 }
-
 
 .card-badge {
   background-color: var(--badge-bg);
@@ -364,7 +314,7 @@
 }
 
 .add-card.disabled {
-  background-color: #e0e0e0; /* Gris */
+  background-color: #e0e0e0;
   cursor: not-allowed;
   opacity: 0.6;
 }

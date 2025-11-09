@@ -46,11 +46,9 @@ export class MenuMemoryGame implements OnInit, OnDestroy {
 
   deleteGame() {
     if (!this.isDeleting) {
-      // Primera vez: activar modo selección
       this.isDeleting = true;
       this.selectedGameIndex = -1;
     } else {
-      // Segunda vez: eliminar si hay algo seleccionado
       if (this.selectedGameIndex !== -1 && this.selectedGameIndex < this.games.length) {
         console.log('Eliminando juego en índice:', this.selectedGameIndex);
         this.gameService.deleteGame(this.selectedGameIndex);

@@ -56,7 +56,7 @@ export class NewMemoryGame {
 
     const newGame: MemoryGame = {
       title: title,
-      cards: [...this.cards], // Crear una copia del array de tarjetas
+      cards: [...this.cards],
       color: this.getRandomColor()
     };
     
@@ -70,34 +70,38 @@ export class NewMemoryGame {
   }
 
   cancelMemoryGame() {
-    // Navegar de vuelta al menú sin guardar
     this.router.navigate(['/teacher/menu-memory-game']);
-    // Por ahora solo mostraremos un console.log, pero aquí se implementará
-    // la lógica de cancelación cuando se necesite
   }
 
   onImageSelected(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
+    const files = input.files;
+    if (!files || files.length === 0) {
+      input.value = '';
+      return;
+    }
+
+    let added = 0;
+    const remainingSlots = this.MAX_CARDS - this.cards.length;
+
+    Array.from(files).slice(0, remainingSlots).forEach((file) => {
       if (!file.type.startsWith('image/')) {
-        alert('Por favor, selecciona un archivo de imagen válido');
         return;
       }
-
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageUrl = e.target?.result as string;
-        this.cards.push({
-          imageUrl,
-          word: '',
-          file
-        });
+        this.cards.push({ imageUrl, word: '', file });
         this.currentCardCount = this.cards.length;
       };
       reader.readAsDataURL(file);
+      added++;
+    });
+
+    if (files.length > remainingSlots) {
+      this.showMaxCardsModal = true;
     }
-    // Reset input value to allow selecting the same file again
+
     input.value = '';
   }
 

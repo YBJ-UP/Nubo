@@ -5,8 +5,6 @@
     flex-direction: column;
     overflow: hidden;
 }
-
-/* Mantener el header fijo en la parte superior */
 .header {
     display: flex;
     justify-content: space-between;

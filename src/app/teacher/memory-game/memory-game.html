@@ -1,7 +1,6 @@
 <app-header view="Juegos" name="Yael Beranzos" role="Estudiante" school="" />
 
 <div class="game-container">
-    <!-- Header with back button and centered title -->
     <div class="game-header-section">
         <button class="btn-back" (click)="goBack()">←</button>
         <div class="game-title-box">
@@ -9,15 +8,12 @@
         </div>
     </div>
 
-    <!-- Game Board -->
     <div class="game-board">
         <div class="card-container" *ngFor="let card of cards" (click)="flipCard(card)">
             <div class="card" 
                  [class.flipped]="card.isFlipped || card.isMatched"
                  [class.matched]="card.isMatched">
-                <!-- Cara frontal (oculta / placeholder) -->
                 <div class="card-face card-front"></div>
-                <!-- Cara trasera (imagen) -->
                 <div class="card-face card-back" [class.highlighted]="card.isFlipped && !card.isMatched">
                     <img [src]="card.imageUrl" [alt]="'Carta ' + card.id">
                 </div>
@@ -25,13 +21,10 @@
         </div>
     </div>
 
-    
-
-    <!-- Modal de victoria -->
     <div class="victory-modal" *ngIf="gameCompleted">
         <div class="modal-content" [style.border-color]="accentColor">
             <h2>{{ selectedVictoryMessage }}</h2>
-            <p>Completaste el juego en <strong>{{ moves }}</strong> movimientos.</p>
+            <p>{{ selectedMotivationMessage }}</p>
             <div class="modal-buttons">
                 <button class="btn-play-again" [style.background-color]="accentColor" (click)="restartGame()">Repetir</button>
                 <button class="btn-menu" (click)="goBack()">Menú</button>

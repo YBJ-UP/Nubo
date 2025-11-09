@@ -28,6 +28,7 @@ export class MemoryGame implements OnInit {
   gameCompleted: boolean = false;
   totalPairs: number = 0;
   selectedVictoryMessage: string = '';
+  selectedMotivationMessage: string = '';
   private victoryMessages: string[] = [
     '¡Excelente trabajo! ¡Lo lograste!',
     '¡Fantástico! Tu memoria está en forma.',
@@ -35,6 +36,14 @@ export class MemoryGame implements OnInit {
     '¡Lo hiciste de maravilla!',
     '¡Imparable! ¡Gran memoria!',
     '¡Genial! ¡Actividad completada!'
+  ];
+  private motivationMessages: string[] = [
+    'Cada intento te hace más fuerte 💪',
+    'Tu constancia es tu superpoder ✨',
+    '¡Qué buena concentración! 🔍',
+    'Aprender jugando es el mejor camino 🎯',
+    '¡Sigue explorando, vas increíble! 🚀',
+    'Tu memoria hoy brilló con todo ⭐'
   ];
   private accentColors: string[] = ['#c8b8db', '#b8cde8', '#e5e7eb', '#a5d6a7', '#ffe082'];
   accentColor: string = '#c8b8db';
@@ -46,7 +55,6 @@ export class MemoryGame implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Obtener el índice del juego de los parámetros de la ruta
     const gameIndex = this.route.snapshot.queryParams['index'];
     
     if (gameIndex !== undefined) {
@@ -62,10 +70,8 @@ export class MemoryGame implements OnInit {
   }
 
   initializeGame(gameCards: any[]) {
-    // Duplicar las cartas para crear pares
     const duplicatedCards = [...gameCards, ...gameCards];
     
-    // Mezclar las cartas
     this.cards = this.shuffleArray(duplicatedCards).map((card, index) => ({
       id: index,
       imageUrl: card.imageUrl,
@@ -89,7 +95,6 @@ export class MemoryGame implements OnInit {
   }
 
   flipCard(card: Card) {
-    // No permitir voltear si ya hay 2 cartas volteadas o si la carta ya está volteada/emparejada
     if (this.isChecking || card.isFlipped || card.isMatched || this.flippedCards.length >= 2) {
       return;
     }
@@ -108,21 +113,19 @@ export class MemoryGame implements OnInit {
     const [card1, card2] = this.flippedCards;
 
     if (card1.imageUrl === card2.imageUrl) {
-      // ¡Es un par!
       card1.isMatched = true;
       card2.isMatched = true;
       this.matches++;
       this.flippedCards = [];
       this.isChecking = false;
 
-      // Verificar si el juego está completo
       if (this.matches === this.totalPairs) {
         this.selectedVictoryMessage = this.getRandomItem(this.victoryMessages);
+        this.selectedMotivationMessage = this.getRandomItem(this.motivationMessages);
         this.accentColor = this.getRandomItem(this.accentColors);
         this.gameCompleted = true;
       }
     } else {
-      // No es un par, voltear de regreso después de un retraso
       setTimeout(() => {
         card1.isFlipped = false;
         card2.isFlipped = false;
@@ -152,7 +155,6 @@ export class MemoryGame implements OnInit {
   }
 
   previousGame() {
-    // Navegar al juego anterior si existe
     const currentIndex = parseInt(this.route.snapshot.queryParams['index'] || '0');
     if (currentIndex > 0) {
       const route = this.router.url.startsWith('/teacher') ? '/teacher/memory-game' : '/student/memory-game';
@@ -161,7 +163,6 @@ export class MemoryGame implements OnInit {
   }
 
   nextGame() {
-    // Navegar al siguiente juego si existe
     const currentIndex = parseInt(this.route.snapshot.queryParams['index'] || '0');
     this.gameService.getGames().subscribe(games => {
       if (currentIndex < games.length - 1) {
@@ -172,7 +173,6 @@ export class MemoryGame implements OnInit {
   }
 
   playAudio() {
-    // Reproducir audio cuando esté implementado
     console.log('Reproducir audio');
   }
 

@@ -1,4 +1,3 @@
-
 <div class="help-box">
     <div class="help-title" (click)="toggleInstructions()">
         <span>¿Cómo puedo crear una actividad?</span>
@@ -23,7 +22,6 @@
     <div class="memorame-section">
         <label class="section-label">Memorama :</label>
         <div class="cards-grid">
-            <!-- Card template -->
             <div class="memory-card" *ngFor="let card of cards">
                 <img [src]="card.imageUrl" [alt]="card.word">
                 <div class="card-overlay">
@@ -35,23 +33,18 @@
                     </button>
                 </div>
             </div>
-
-            <!-- Add card button - solo se muestra si no se ha alcanzado el límite -->
             <div class="memory-card add-card" (click)="triggerFileInput()" *ngIf="currentCardCount < MAX_CARDS">
                 <span class="add-icon">+</span>
             </div>
-
-            <!-- Hidden file input -->
-            <input type="file" 
-                   id="imageUpload" 
-                   accept="image/*" 
-                   style="display: none;"
-                   (change)="onImageSelected($event)">
+         <input type="file" 
+             id="imageUpload" 
+             accept="image/*" 
+             multiple
+             style="display: none;"
+             (change)="onImageSelected($event)">
         </div>
     <div class="cards-counter">{{currentCardCount}}/{{MAX_CARDS}}</div>
     </div>
-
-    <!-- Botones de acción -->
     <div class="form-actions">
         <button class="btn-action btn-cancel" (click)="cancelMemoryGame()">
             <span class="icon">✕</span>
@@ -63,8 +56,6 @@
         </button>
     </div>
 </div>
-
-<!-- Modal de límite alcanzado -->
 <div class="modal-overlay" *ngIf="showMaxCardsModal">
     <div class="modal-content">
         <h3>Límite de imágenes alcanzado</h3>
