@@ -1,0 +1,41 @@
+<app-header view="Juegos" name="Yael Beranzos" role="Estudiante" school="" />
+
+<div class="game-container">
+    <!-- Header with back button and centered title -->
+    <div class="game-header-section">
+        <button class="btn-back" (click)="goBack()">←</button>
+        <div class="game-title-box">
+            <h2 class="game-title">{{ gameTitle }}</h2>
+        </div>
+    </div>
+
+    <!-- Game Board -->
+    <div class="game-board">
+        <div class="card-container" *ngFor="let card of cards" (click)="flipCard(card)">
+            <div class="card" 
+                 [class.flipped]="card.isFlipped || card.isMatched"
+                 [class.matched]="card.isMatched">
+                <!-- Cara frontal (oculta / placeholder) -->
+                <div class="card-face card-front"></div>
+                <!-- Cara trasera (imagen) -->
+                <div class="card-face card-back" [class.highlighted]="card.isFlipped && !card.isMatched">
+                    <img [src]="card.imageUrl" [alt]="'Carta ' + card.id">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <!-- Modal de victoria -->
+    <div class="victory-modal" *ngIf="gameCompleted">
+        <div class="modal-content">
+            <h2>¡Felicidades! 🎉</h2>
+            <p>Has completado el juego en <strong>{{ moves }}</strong> movimientos</p>
+            <div class="modal-buttons">
+                <button class="btn-play-again" (click)="restartGame()">Jugar de nuevo</button>
+                <button class="btn-menu" (click)="goBack()">Volver al menú</button>
+            </div>
+        </div>
+    </div>
+</div>

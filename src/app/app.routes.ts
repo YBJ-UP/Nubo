@@ -20,6 +20,7 @@ import { CardsHome } from './components/cards-home/cards-home';
 import { CardsPalabras } from './components/cards-palabras/cards-palabras';
 import { MenuMemoryGame } from './teacher/menu-memory-game/menu-memory-game';
 import { NewMemoryGame } from './teacher/new-memory-game/new-memory-game';
+import { MemoryGame } from './teacher/memory-game/memory-game';
 
 export const routes: Routes = [
    {
@@ -47,6 +48,10 @@ export const routes: Routes = [
     ]
    },
    {
+    path: 'teacher/memory-game',
+    component: MemoryGame
+   },
+   {
     path: 'student',
     component: StudentHome,
     children: [
@@ -54,5 +59,9 @@ export const routes: Routes = [
         { path: 'cognitive-abilities', component: GaleriaPalabras, children: [] },
         { path: 'menu-memory-game', component: MenuMemoryGame }
     ]
+   },
+   {
+    path: 'student/memory-game',
+    component: MemoryGame
    }
 ];

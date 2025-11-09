@@ -48,7 +48,7 @@
                    style="display: none;"
                    (change)="onImageSelected($event)">
         </div>
-        <div class="cards-counter">{{currentCardCount}}/5</div>
+    <div class="cards-counter">{{currentCardCount}}/{{MAX_CARDS}}</div>
     </div>
 
     <!-- Botones de acción -->
@@ -68,7 +68,7 @@
 <div class="modal-overlay" *ngIf="showMaxCardsModal">
     <div class="modal-content">
         <h3>Límite de imágenes alcanzado</h3>
-        <p>Has alcanzado el límite máximo de 5 imágenes.</p>
+    <p>Has alcanzado el límite máximo de {{MAX_CARDS}} imágenes.</p>
         <button class="modal-button" (click)="closeMaxCardsModal()">Aceptar</button>
     </div>
 </div>

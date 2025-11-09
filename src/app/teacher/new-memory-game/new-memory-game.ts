@@ -18,7 +18,7 @@ interface MemoryCard {
   imports: [CommonModule, FormsModule]
 })
 export class NewMemoryGame {
-  MAX_CARDS = 5;
+  MAX_CARDS = 6;
   cards: MemoryCard[] = [];
   currentCardCount = 0;
   showMaxCardsModal = false;
