@@ -1,9 +1,10 @@
+// src/app/teacher/view-student/view-student.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Student } from '../../interfaces/student';
-import studentData from '../../../../public/placeholderData/studentData.json';
+import { StudentService } from '../../services/sstudent.service';
 
 @Component({
   selector: 'app-view-student',
@@ -15,55 +16,42 @@ export class ViewStudent implements OnInit {
   student: Student | undefined;
   progresoModulo1: number = 0;
   progresoModulo2: number = 0;
+  
+  private readonly TOTAL_ACTIVIDADES = 10;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private studentService: StudentService
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.cargarEstudiante(parseInt(id));
-      this.cargarProgreso(parseInt(id));
     }
   }
 
   cargarEstudiante(id: number): void {
-    const estudiantesGuardados = localStorage.getItem('students');
-    const estudiantes = estudiantesGuardados 
-      ? JSON.parse(estudiantesGuardados) 
-      : studentData;
-
-    this.student = estudiantes.find((s: Student) => s.id === id);
+    this.student = this.studentService.getStudentById(id);
     
     if (!this.student) {
       console.error('Estudiante no encontrado');
+      return;
     }
+
+    const progreso = this.studentService.getProgress(id);
+    this.progresoModulo1 = progreso.modulo1;
+    this.progresoModulo2 = progreso.modulo2;
   }
 
-  cargarProgreso(id: number): void {
-    const progresoGuardado = localStorage.getItem(`progreso_${id}`);
-    
-    if (progresoGuardado) {
-      const progreso = JSON.parse(progresoGuardado);
-      this.progresoModulo1 = progreso.modulo1 || 0;
-      this.progresoModulo2 = progreso.modulo2 || 0;
-    } else {
-      this.progresoModulo1 = Math.floor(Math.random() * 101);
-      this.progresoModulo2 = Math.floor(Math.random() * 101);
-      
-      this.guardarProgreso(id);
-    }
+  calcularActividadesCompletadas(progreso: number): number {
+    return Math.floor((progreso / 100) * this.TOTAL_ACTIVIDADES);
   }
 
-  guardarProgreso(id: number): void {
-    const progreso = {
-      modulo1: this.progresoModulo1,
-      modulo2: this.progresoModulo2
-    };
-    localStorage.setItem(`progreso_${id}`, JSON.stringify(progreso));
+  calcularActividadesFaltantes(progreso: number): number {
+    return this.TOTAL_ACTIVIDADES - this.calcularActividadesCompletadas(progreso);
   }
 
   regresar(): void {
@@ -74,23 +62,23 @@ export class ViewStudent implements OnInit {
     if (!this.student) return;
 
     const confirmacion = confirm(
-      `¿Estás seguro de que deseas eliminar a ${this.student.name}?\n\nEsta acción no se puede deshacer.`
+      `¿Estás seguro de que deseas eliminar a ${this.student.name}?\n\n` +
+      `Esta acción eliminará:\n` +
+      `• El perfil del estudiante\n` +
+      `• Todo su progreso\n` +
+      `• Sus datos de acceso\n\n` +
+      `Esta acción no se puede deshacer.`
     );
 
     if (confirmacion) {
-      const estudiantesGuardados = localStorage.getItem('students');
-      if (estudiantesGuardados) {
-        const estudiantes = JSON.parse(estudiantesGuardados);
-        const estudiantesFiltrados = estudiantes.filter(
-          (s: Student) => s.id !== this.student!.id
-        );
-        localStorage.setItem('students', JSON.stringify(estudiantesFiltrados));
+      const eliminado = this.studentService.deleteStudent(this.student.id);
+      
+      if (eliminado) {
+        alert(`${this.student.name} ha sido eliminado exitosamente.`);
+        this.router.navigate(['/teacher/students']);
+      } else {
+        alert('Error al eliminar el estudiante. Intenta de nuevo.');
       }
-
-      localStorage.removeItem(`progreso_${this.student.id}`);
-
-      alert(`${this.student.name} ha sido eliminado exitosamente.`);
-      this.router.navigate(['/teacher/students']);
     }
   }
 
@@ -98,7 +86,8 @@ export class ViewStudent implements OnInit {
     if (!this.student) return;
 
     const confirmacion = confirm(
-      `¿Deseas ingresar como ${this.student.name}?`
+      `¿Deseas ingresar como ${this.student.name}?\n\n` +
+      `Esto te permitirá ver la plataforma desde su perspectiva.`
     );
 
     if (confirmacion) {
