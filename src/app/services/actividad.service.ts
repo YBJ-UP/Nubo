@@ -10,12 +10,18 @@ export interface Fonema {
   texto: string;
 }
 
+export interface PalabraCompleta {
+  id: number;
+  palabra: string;
+  imagenUrl: string;
+  silabas: Palabra[];
+  fonemas: Fonema[];
+}
+
 export interface ActividadCompleta {
   id: number;
   titulo: string;
-  imagenPrincipal: string;
-  palabras: Palabra[];
-  fonemas: Fonema[];
+  palabrasCompletas: PalabraCompleta[];
   fechaCreacion: Date;
 }
 
@@ -23,6 +29,7 @@ interface ResultadoOperacion {
   exito: boolean;
   mensaje: string;
   url?: string;
+  data?: any;
 }
 
 @Injectable({
@@ -31,10 +38,9 @@ interface ResultadoOperacion {
 export class ActividadFormService {
   private readonly STORAGE_KEY = 'actividades_cognitivas';
   private readonly IMAGEN_DEFAULT = 'perfil.jpg';
-  private readonly MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+  private readonly MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
-  // === GENERACIÓN DE DATOS ===
-  private generarId(): number {
+  generarId(): number {
     return Date.now() + Math.random();
   }
 
@@ -44,6 +50,16 @@ export class ActividadFormService {
 
   crearFonemaVacio(): Fonema {
     return { id: this.generarId(), texto: '' };
+  }
+
+  crearPalabraCompleta(): PalabraCompleta {
+    return {
+      id: this.generarId(),
+      palabra: '',
+      imagenUrl: this.IMAGEN_DEFAULT,
+      silabas: this.inicializarPalabras(3),
+      fonemas: this.inicializarFonemas(4)
+    };
   }
 
   inicializarPalabras(cantidad: number): Palabra[] {
@@ -76,10 +92,31 @@ export class ActividadFormService {
     return { exito: true, mensaje: 'Imagen válida' };
   }
 
+  private validarPalabraCompleta(palabraCompleta: PalabraCompleta): string | null {
+    if (!palabraCompleta.palabra.trim()) {
+      return 'La palabra principal no puede estar vacía';
+    }
+
+    const silabasCompletas = palabraCompleta.silabas.filter(s => s.texto.trim());
+    if (silabasCompletas.length === 0) {
+      return 'Debes agregar al menos una sílaba';
+    }
+
+    const fonemasCompletos = palabraCompleta.fonemas.filter(f => f.texto.trim());
+    if (fonemasCompletos.length === 0) {
+      return 'Debes agregar al menos un fonema';
+    }
+
+    if (palabraCompleta.imagenUrl === this.IMAGEN_DEFAULT) {
+      return 'Debes subir una imagen para esta palabra';
+    }
+
+    return null;
+  }
+
   private validarFormulario(
     titulo: string,
-    palabras: Palabra[],
-    fonemas: Fonema[]
+    palabrasCompletas: PalabraCompleta[]
   ): ResultadoOperacion {
     if (!titulo.trim()) {
       return {
@@ -88,20 +125,21 @@ export class ActividadFormService {
       };
     }
 
-    const palabrasCompletas = palabras.filter(p => p.texto.trim());
     if (palabrasCompletas.length === 0) {
       return {
         exito: false,
-        mensaje: 'Por favor, agrega al menos una sílaba'
+        mensaje: 'Debes agregar al menos una palabra a la actividad'
       };
     }
 
-    const fonemasCompletos = fonemas.filter(f => f.texto.trim());
-    if (fonemasCompletos.length === 0) {
-      return {
-        exito: false,
-        mensaje: 'Por favor, agrega al menos un fonema'
-      };
+    for (let i = 0; i < palabrasCompletas.length; i++) {
+      const error = this.validarPalabraCompleta(palabrasCompletas[i]);
+      if (error) {
+        return {
+          exito: false,
+          mensaje: `Palabra ${i + 1}: ${error}`
+        };
+      }
     }
 
     return { exito: true, mensaje: 'Formulario válido' };
@@ -141,18 +179,23 @@ export class ActividadFormService {
     });
   }
 
+  private limpiarPalabraCompleta(palabra: PalabraCompleta): PalabraCompleta {
+    return {
+      ...palabra,
+      palabra: palabra.palabra.trim(),
+      silabas: palabra.silabas.filter(s => s.texto.trim()),
+      fonemas: palabra.fonemas.filter(f => f.texto.trim())
+    };
+  }
+
   private crearObjetoActividad(
     titulo: string,
-    palabras: Palabra[],
-    fonemas: Fonema[],
-    imagenUrl: string
+    palabrasCompletas: PalabraCompleta[]
   ): ActividadCompleta {
     return {
       id: this.generarId(),
       titulo: titulo.trim(),
-      imagenPrincipal: imagenUrl,
-      palabras: palabras.filter(p => p.texto.trim()),
-      fonemas: fonemas.filter(f => f.texto.trim()),
+      palabrasCompletas: palabrasCompletas.map(p => this.limpiarPalabraCompleta(p)),
       fechaCreacion: new Date()
     };
   }
@@ -175,27 +218,22 @@ export class ActividadFormService {
 
   async guardarActividadCompleta(
     titulo: string,
-    palabras: Palabra[],
-    fonemas: Fonema[],
-    imagenUrl: string
+    palabrasCompletas: PalabraCompleta[]
   ): Promise<ResultadoOperacion> {
-    const validacion = this.validarFormulario(titulo, palabras, fonemas);
+    const validacion = this.validarFormulario(titulo, palabrasCompletas);
     if (!validacion.exito) {
       return validacion;
     }
 
-    if (imagenUrl === this.IMAGEN_DEFAULT) {
-      const continuar = confirm('No has subido una imagen. ¿Deseas continuar sin imagen?');
-      if (!continuar) {
-        return { exito: false, mensaje: 'Guardado cancelado por el usuario' };
-      }
-    }
-
-    const actividad = this.crearObjetoActividad(titulo, palabras, fonemas, imagenUrl);
+    const actividad = this.crearObjetoActividad(titulo, palabrasCompletas);
     const guardado = this.guardarEnStorage(actividad);
 
     if (guardado) {
-      return { exito: true, mensaje: 'Actividad guardada exitosamente' };
+      return { 
+        exito: true, 
+        mensaje: `Actividad creada exitosamente con ${palabrasCompletas.length} palabra(s)`,
+        data: actividad
+      };
     } else {
       return {
         exito: false,
@@ -204,17 +242,44 @@ export class ActividadFormService {
     }
   }
 
+  getAllActividades(): ActividadCompleta[] {
+    const stored = localStorage.getItem(this.STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  getActividadById(id: number): ActividadCompleta | undefined {
+    const actividades = this.getAllActividades();
+    return actividades.find(a => a.id === id);
+  }
+
+  deleteActividad(id: number): boolean {
+    try {
+      const actividades = this.getAllActividades();
+      const filtered = actividades.filter(a => a.id !== id);
+      
+      if (filtered.length === actividades.length) {
+        return false;
+      }
+      
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(filtered));
+      return true;
+    } catch (error) {
+      console.error('Error al eliminar actividad:', error);
+      return false;
+    }
+  }
+
   hayaCambiosSinGuardar(
     titulo: string,
-    palabras: Palabra[],
-    fonemas: Fonema[],
-    imagenUrl: string
+    palabrasCompletas: PalabraCompleta[]
   ): boolean {
-    return (
-      titulo.trim() !== '' ||
-      imagenUrl !== this.IMAGEN_DEFAULT ||
-      palabras.some(p => p.texto.trim()) ||
-      fonemas.some(f => f.texto.trim())
+    if (titulo.trim() !== '') return true;
+    
+    return palabrasCompletas.some(p => 
+      p.palabra.trim() !== '' ||
+      p.imagenUrl !== this.IMAGEN_DEFAULT ||
+      p.silabas.some(s => s.texto.trim()) ||
+      p.fonemas.some(f => f.texto.trim())
     );
   }
 }
