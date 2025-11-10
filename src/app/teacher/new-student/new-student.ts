@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+// src/app/teacher/new-student/new-student.ts
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Location } from '@angular/common';
-import { Student } from '../../interfaces/student';
-import studentData from '../../../../public/placeholderData/studentData.json';
+import { ImageService } from '../../services/image.service';
+import { StudentService } from '../../services/sstudent.service';
 
 @Component({
   selector: 'app-new-student',
@@ -13,14 +14,21 @@ import studentData from '../../../../public/placeholderData/studentData.json';
   styleUrl: './new-student.css'
 })
 export class NewStudent implements OnInit {
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
   inputTextFields: string[] = ['', '', ''];
   inputText: string = '';
-  imagenPreview: string = 'raul.jpg';
+  imagenPreview: string;
+  isUploading: boolean = false;
 
   constructor(
     private router: Router,
-    private location: Location
-  ) {}
+    private location: Location,
+    private imageService: ImageService,
+    private studentService: StudentService
+  ) {
+    this.imagenPreview = this.imageService.getDefaultAvatar();
+  }
 
   ngOnInit(): void {
     this.inputTextFields = ['', '', ''];
@@ -32,67 +40,81 @@ export class NewStudent implements OnInit {
     this.inputText = nombreCompleto || 'Nombre del alumno...';
   }
 
+  cambiarImagen(): void {
+    this.fileInput?.nativeElement.click();
+  }
+
+  async onFileSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    
+    if (!input.files || !input.files[0]) {
+      return;
+    }
+
+    this.isUploading = true;
+    const file = input.files[0];
+
+    try {
+      const result = await this.imageService.processImage(file);
+      
+      if (result.valid && result.imageUrl) {
+        this.imagenPreview = result.imageUrl;
+      } else {
+        alert(result.message);
+      }
+    } catch (error) {
+      console.error('Error al cargar imagen:', error);
+      alert('Error inesperado al cargar la imagen');
+    } finally {
+      this.isUploading = false;
+      input.value = '';
+    }
+  }
+
   submit(form: NgForm): void {
     const { newName, newFirstName, newLastName } = form.value;
 
-    if (!newName?.trim()) {
-      alert('Por favor ingresa el nombre del alumno');
+    const validationError = this.studentService.validateStudentData(
+      newName, 
+      newFirstName, 
+      newLastName
+    );
+
+    if (validationError) {
+      alert(validationError);
       return;
     }
 
-    if (!newFirstName?.trim() || !newLastName?.trim()) {
-      alert('Por favor ingresa los apellidos completos del alumno');
-      return;
-    }
+    const password = this.studentService.generatePassword(newName.trim());
 
-    const nuevoEstudiante: Student = {
-      id: Date.now(), 
+    const nuevoEstudiante = this.studentService.createStudent({
       teacher_id: 1,
       pfp: this.imagenPreview,
       name: newName.trim(),
       firstName: newFirstName.trim(),
       lastName: newLastName.trim(),
-      password: this.generarPassword() 
-    };
+      password
+    });
 
-    this.guardarEstudiante(nuevoEstudiante);
-
-    alert(`Alumno ${nuevoEstudiante.name} creado exitosamente\n\nContraseña generada: ${nuevoEstudiante.password}`);
+    alert(
+      `Alumno ${nuevoEstudiante.name} creado exitosamente\n\n` +
+      `Contraseña generada: ${password}\n\n` +
+      `Guarda esta contraseña para que el alumno pueda ingresar.`
+    );
     
     this.router.navigate(['/teacher/students']);
   }
 
-  guardarEstudiante(estudiante: Student): void {
-    try {
-      const estudiantesGuardados = localStorage.getItem('students');
-      const estudiantes = estudiantesGuardados ? JSON.parse(estudiantesGuardados) : [...studentData];
-      
-      estudiantes.push(estudiante);
-      localStorage.setItem('students', JSON.stringify(estudiantes));
-      
-      console.log('Estudiante guardado:', estudiante);
-    } catch (error) {
-      console.error('Error al guardar estudiante:', error);
-      alert('Error al guardar el estudiante. Por favor intenta de nuevo.');
-    }
-  }
-
-  generarPassword(): string {
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
-    return `${this.inputTextFields[0].toLowerCase()}${randomNum}`;
-  }
-
   cancelar(): void {
-    if (this.inputTextFields.some(field => field.trim())) {
+    const hasChanges = this.inputTextFields.some(field => field.trim()) ||
+                       this.imagenPreview !== this.imageService.getDefaultAvatar();
+
+    if (hasChanges) {
       if (confirm('¿Estás seguro de que deseas cancelar? Los datos ingresados se perderán.')) {
         this.location.back();
       }
     } else {
       this.location.back();
     }
-  }
-
-  cambiarImagen(): void {
-    console.log('Cambiar imagen del perfil');
   }
 }
