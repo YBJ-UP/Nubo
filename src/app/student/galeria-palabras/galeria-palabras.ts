@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CardsPalabras } from "../../components/cards-palabras/cards-palabras";
 import { PalabraData } from '../../interfaces/PalabraData';
 import { PALABRAS_DATA_MOCK } from '../../data/palabra-data';
+import { ActividadFormService } from '../../services/actividad.service';
 
 @Component({
   selector: 'app-galeria-palabras',
@@ -14,24 +15,26 @@ import { PALABRAS_DATA_MOCK } from '../../data/palabra-data';
 export class GaleriaPalabras implements OnInit {
   palabras: PalabraData[] = [];
   modoEliminar: boolean = false;
+  actividadesSeleccionadas: Set<number> = new Set();
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private actividadService: ActividadFormService
+  ) {}
 
   ngOnInit(): void {
     this.cargarActividades();
   }
 
   cargarActividades(): void {
-    const actividadesGuardadas = localStorage.getItem('actividades_cognitivas');
+    const actividadesGuardadas = this.actividadService.getAllActividades();
     
-    if (actividadesGuardadas) {
-      const actividades = JSON.parse(actividadesGuardadas);
-    
-      const actividadesConvertidas: PalabraData[] = actividades.map((act: any) => ({
+    if (actividadesGuardadas.length > 0) {
+      const actividadesConvertidas: PalabraData[] = actividadesGuardadas.map((act: any) => ({
         id: act.id,
         titulo: act.titulo,
         colorFondo: this.obtenerColorAleatorio(),
-        imagenUrl: act.imagenPrincipal || '/crds.webp',
+        imagenUrl: act.palabrasCompletas?.[0]?.imagenUrl || '/crds.webp',
         enlace: `/student/cognitive-abilities/actividad/${act.id}`
       }));
 
@@ -55,21 +58,56 @@ export class GaleriaPalabras implements OnInit {
 
   toggleModoEliminar(): void {
     this.modoEliminar = !this.modoEliminar;
+    
+    if (!this.modoEliminar) {
+      this.actividadesSeleccionadas.clear();
+    }
+    
     console.log("Modo eliminar:", this.modoEliminar);
   }
 
-  eliminarActividad(id: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar esta actividad?')) {
-      const actividadesGuardadas = localStorage.getItem('actividades_cognitivas');
-      
-      if (actividadesGuardadas) {
-        const actividades = JSON.parse(actividadesGuardadas);
-        const actividadesFiltradas = actividades.filter((act: any) => act.id !== id);
-        localStorage.setItem('actividades_cognitivas', JSON.stringify(actividadesFiltradas));
-      }
+  toggleSeleccion(id: number): void {
+    if (!this.modoEliminar) return;
 
-      this.palabras = this.palabras.filter(p => p.id !== id);
-      console.log("Actividad eliminada:", id);
+    if (this.actividadesSeleccionadas.has(id)) {
+      this.actividadesSeleccionadas.delete(id);
+    } else {
+      this.actividadesSeleccionadas.add(id);
+    }
+  }
+
+  isSeleccionada(id: number): boolean {
+    return this.actividadesSeleccionadas.has(id);
+  }
+
+  eliminarSeleccionadas(): void {
+    if (this.actividadesSeleccionadas.size === 0) {
+      alert('Por favor selecciona al menos una actividad para eliminar');
+      return;
+    }
+
+    const cantidad = this.actividadesSeleccionadas.size;
+    const confirmacion = confirm(
+      `¿Estás seguro de que deseas eliminar ${cantidad} actividad(es)?\n\n` +
+      `Esta acción no se puede deshacer.`
+    );
+
+    if (!confirmacion) return;
+
+    let eliminadas = 0;
+    this.actividadesSeleccionadas.forEach(id => {
+      if (this.actividadService.deleteActividad(id)) {
+        eliminadas++;
+      }
+    });
+
+    if (eliminadas > 0) {
+      alert(`${eliminadas} actividad(es) eliminada(s) exitosamente`);
+      this.actividadesSeleccionadas.clear();
+      this.modoEliminar = false;
+      this.cargarActividades();
+    } else {
+      alert('Error al eliminar las actividades');
     }
   }
 
