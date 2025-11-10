@@ -43,7 +43,8 @@
 }
 
 .btn-crear,
-.btn-eliminar {
+.btn-eliminar,
+.btn-confirmar-eliminar {
     padding: 12px 24px;
     border: none;
     border-radius: 10px;
@@ -85,8 +86,30 @@
     color: white;
 }
 
+.btn-confirmar-eliminar {
+    background-color: #4CAF50;
+    color: white;
+    animation: pulse 1.5s infinite;
+}
+
+.btn-confirmar-eliminar:hover {
+    background-color: #45A049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
 .btn-crear i,
-.btn-eliminar i {
+.btn-eliminar i,
+.btn-confirmar-eliminar i {
     font-size: 1.1rem;
 }
 
@@ -98,6 +121,60 @@
     max-width: 1200px;
     margin: 0 auto; 
     flex-grow: 1; 
+}
+
+.card-wrapper {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.card-wrapper.selectable {
+    cursor: pointer;
+}
+
+.card-wrapper.selectable:hover {
+    transform: translateY(-5px);
+}
+
+.card-wrapper.selected {
+    transform: scale(0.95);
+}
+
+.selection-overlay {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.checkbox-container {
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.checkbox-container i {
+    font-size: 2rem;
+    color: #F28B8B;
+    transition: all 0.3s ease;
+}
+
+.card-wrapper.selected .checkbox-container i {
+    color: #4CAF50;
+}
+
+.card-wrapper app-cards-palabras {
+    pointer-events: none;
+}
+
+.card-wrapper:not(.selectable) app-cards-palabras {
+    pointer-events: auto;
 }
 
 @media (max-width: 1200px) {
@@ -117,6 +194,7 @@
     .action-buttons {
         width: 100%;
         justify-content: flex-end;
+        flex-wrap: wrap;
     }
 
     .grid-cards {
@@ -125,7 +203,8 @@
     }
 
     .btn-crear,
-    .btn-eliminar {
+    .btn-eliminar,
+    .btn-confirmar-eliminar {
         padding: 10px 18px;
         font-size: 0.9rem;
     }
