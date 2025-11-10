@@ -1,87 +1,32 @@
 .crear-actividad-wrapper {
   font-family: 'Fredoka', sans-serif;
   background-color: #F0EDDF;
-  min-height: 100vh;
+  height: calc(100vh - 100px);
   width: 100%;
   position: relative;
-  padding-bottom: 100px;
-}
-
-.header-top {
-  background-color: white;
-  padding: 15px 30px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.back-button {
-  background: none;
-  border: none;
-  font-size: 1.8rem;
-  cursor: pointer;
-  color: var(--color-font);
-  padding: 10px;
-  transition: transform 0.2s ease;
-}
-
-.back-button:hover {
-  transform: translateX(-5px);
-}
-
-.header-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.etiqueta {
-  background-color: #FFC364;
-  color: white;
-  padding: 6px 16px;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.user-name {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--color-font);
-}
-
-.school-name {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.user-avatar {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #FFC364;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .main-container {
-  max-width: 900px;
-  margin: 30px auto;
-  padding: 0 20px;
-  max-height: calc(100vh - 200px);
+  flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
+  padding: 30px 20px 120px;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .main-container::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 .main-container::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 10px;
+  margin: 10px 0;
 }
 
 .main-container::-webkit-scrollbar-thumb {
@@ -93,34 +38,50 @@
   background: #B5B3D8;
 }
 
+.back-button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--color-font);
+  padding: 10px;
+  margin-bottom: 20px;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+.back-button:hover {
+  transform: translateX(-5px);
+}
+
 .content-card {
   background: white;
-  border-radius: 20px;
-  padding: 40px;
+  border-radius: 25px;
+  padding: 50px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .card-header h2 {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--color-font);
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .instrucciones-section {
-  margin-bottom: 25px;
+  margin-bottom: 30px;
 }
 
 .instrucciones-toggle {
   width: 100%;
   background-color: #FFD0A7;
   border: none;
-  border-radius: 12px;
-  padding: 15px 20px;
+  border-radius: 15px;
+  padding: 18px 25px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 1rem;
+  gap: 12px;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #8B5A3C;
   cursor: pointer;
@@ -129,10 +90,11 @@
 
 .instrucciones-toggle:hover {
   background-color: #FFC08A;
+  transform: translateY(-2px);
 }
 
 .instrucciones-toggle i:first-child {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
 }
 
 .instrucciones-toggle i:last-child {
@@ -141,10 +103,11 @@
 
 .instrucciones-content {
   background-color: #FFF9F2;
-  border-radius: 12px;
-  padding: 20px 25px;
-  margin-top: 10px;
+  border-radius: 15px;
+  padding: 25px 30px;
+  margin-top: 15px;
   animation: slideDown 0.3s ease;
+  line-height: 1.8;
 }
 
 @keyframes slideDown {
@@ -159,29 +122,29 @@
 }
 
 .instrucciones-content li {
-  margin-bottom: 8px;
-  line-height: 1.5;
+  margin-bottom: 10px;
+  font-size: 1rem;
 }
 
 .form-group {
-  margin-bottom: 25px;
+  margin-bottom: 30px;
 }
 
 .form-label {
   display: block;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--color-font);
-  margin-bottom: 12px;
+  margin-bottom: 15px;
 }
 
 .form-input {
   width: 100%;
-  padding: 15px 20px;
-  font-size: 1rem;
+  padding: 18px 25px;
+  font-size: 1.1rem;
   font-family: 'Fredoka', sans-serif;
   border: 2px solid #E5E5E5;
-  border-radius: 12px;
+  border-radius: 15px;
   outline: none;
   transition: border-color 0.3s ease;
   background-color: #FAFAFA;
@@ -200,61 +163,64 @@
   border: none;
   height: 3px;
   background: linear-gradient(to right, #8B5A3C, transparent);
-  margin: 30px 0;
+  margin: 40px 0;
 }
 
 .palabras-section {
-  margin-top: 30px;
+  margin-top: 35px;
 }
 
 .palabras-container {
   display: flex;
-  gap: 20px;
-  margin-bottom: 30px;
+  gap: 30px;
+  margin-bottom: 35px;
+  align-items: flex-start;
 }
 
 .imagen-upload-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
+  flex-shrink: 0;
 }
 
 .imagen-upload-button {
-  width: 90px;
-  height: 90px;
+  width: 120px;
+  height: 120px;
   background-color: #FFD0A7;
   border: none;
-  border-radius: 15px;
+  border-radius: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: #8B5A3C;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .imagen-upload-button:hover {
   background-color: #FFC08A;
   transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 .upload-label {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   color: #666;
   text-align: center;
+  font-weight: 500;
 }
 
 .imagen-preview {
-  width: 90px;
-  height: 90px;
-  border-radius: 15px;
+  width: 120px;
+  height: 120px;
+  border-radius: 20px;
   overflow: hidden;
-  margin-top: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .imagen-preview img {
@@ -267,23 +233,23 @@
   flex: 1;
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 20px;
   align-content: flex-start;
 }
 
 .palabra-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .palabra-input {
-  width: 80px;
-  padding: 12px 15px;
-  font-size: 1.1rem;
+  width: 100px;
+  padding: 15px 18px;
+  font-size: 1.3rem;
   font-family: 'Fredoka', sans-serif;
   border: 2px solid #E5E5E5;
-  border-radius: 10px;
+  border-radius: 12px;
   outline: none;
   text-align: center;
   transition: border-color 0.3s ease;
@@ -297,15 +263,15 @@
 
 .btn-add-circle,
 .btn-delete-circle {
-  width: 35px;
-  height: 35px;
+  width: 40px;
+  height: 40px;
   border: none;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   transition: all 0.2s ease;
 }
 
@@ -316,7 +282,7 @@
 
 .btn-add-circle:hover {
   background-color: #E8F5E9;
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
 
 .btn-delete-circle {
@@ -326,7 +292,7 @@
 
 .btn-delete-circle:hover:not(:disabled) {
   background-color: #FFEBEE;
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
 
 .btn-delete-circle:disabled {
@@ -335,45 +301,45 @@
 }
 
 .fonemas-section {
-  margin-top: 30px;
-  margin-bottom: 25px;
+  margin-top: 35px;
+  margin-bottom: 30px;
 }
 
 .fonemas-title {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .fonemas-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 25px;
 }
 
 .fonema-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .fonema-circle {
-  width: 70px;
-  height: 70px;
+  width: 85px;
+  height: 85px;
   border-radius: 50%;
   background-color: #E8E8E8;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
 .fonema-input {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   border: none;
   background: transparent;
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-family: 'Fredoka', sans-serif;
   font-weight: 700;
   color: #333;
@@ -382,20 +348,20 @@
 
 .fonema-actions {
   display: flex;
-  gap: 8px;
+  gap: 10px;
 }
 
 .btn-add-fonema,
 .btn-delete-fonema {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border: none;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: 1.1rem;
   transition: all 0.2s ease;
 }
 
@@ -406,7 +372,7 @@
 
 .btn-add-fonema:hover {
   background-color: #E8F5E9;
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
 
 .btn-delete-fonema {
@@ -416,7 +382,7 @@
 
 .btn-delete-fonema:hover:not(:disabled) {
   background-color: #FFEBEE;
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
 
 .btn-delete-fonema:disabled {
@@ -426,60 +392,60 @@
 
 .btn-agregar-palabra {
   width: 100%;
-  padding: 15px;
+  padding: 18px;
   background-color: #D6DC82;
   border: none;
-  border-radius: 12px;
-  font-size: 1.1rem;
+  border-radius: 15px;
+  font-size: 1.2rem;
   font-weight: 600;
   color: #3E3300;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
   transition: all 0.3s ease;
   font-family: 'Fredoka', sans-serif;
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 .btn-agregar-palabra:hover {
   background-color: #C8D26D;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .btn-agregar-palabra i {
-  font-size: 1.3rem;
+  font-size: 1.4rem;
 }
 
 .floating-button-container {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  z-index: 100;
+  bottom: 40px;
+  right: 40px;
+  z-index: 1000;
 }
 
 .btn-crear-actividad {
-  padding: 18px 35px;
+  padding: 20px 40px;
   background: linear-gradient(135deg, #A2D8F2 0%, #7FC4E8 100%);
   border: none;
   border-radius: 50px;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #2E5299;
   cursor: pointer;
   font-family: 'Fredoka', sans-serif;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(162, 216, 242, 0.5);
+  box-shadow: 0 8px 24px rgba(162, 216, 242, 0.5);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .btn-crear-actividad:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(162, 216, 242, 0.7);
+  box-shadow: 0 10px 30px rgba(162, 216, 242, 0.7);
   background: linear-gradient(135deg, #7FC4E8 0%, #A2D8F2 100%);
 }
 
@@ -488,31 +454,22 @@
 }
 
 .btn-crear-actividad i {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
 }
 
 @media (max-width: 768px) {
-  .header-top {
-    flex-direction: column;
-    gap: 15px;
-    padding: 15px;
-  }
-
-  .header-info {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
   .content-card {
-    padding: 25px 20px;
+    padding: 30px 25px;
   }
 
   .palabras-container {
     flex-direction: column;
+    align-items: center;
   }
 
   .palabras-list {
     justify-content: center;
+    width: 100%;
   }
 
   .fonemas-container {
@@ -520,19 +477,19 @@
   }
 
   .floating-button-container {
-    bottom: 20px;
-    right: 20px;
+    bottom: 25px;
+    right: 25px;
   }
 
   .btn-crear-actividad {
-    padding: 15px 25px;
-    font-size: 1rem;
+    padding: 16px 30px;
+    font-size: 1.1rem;
   }
 }
 
 @media (max-width: 480px) {
   .card-header h2 {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
 
   .form-label {
@@ -540,25 +497,25 @@
   }
 
   .imagen-upload-button {
-    width: 75px;
-    height: 75px;
-    font-size: 1.5rem;
+    width: 100px;
+    height: 100px;
+    font-size: 2rem;
   }
 
   .palabra-input {
-    width: 70px;
-    padding: 10px 12px;
-    font-size: 1rem;
+    width: 85px;
+    padding: 12px 15px;
+    font-size: 1.1rem;
   }
 
   .fonema-circle {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
   }
 
   .fonema-input {
-    width: 40px;
-    height: 40px;
-    font-size: 1rem;
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
   }
 }
