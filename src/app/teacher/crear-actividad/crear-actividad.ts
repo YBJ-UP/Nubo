@@ -1,12 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { 
   ActividadFormService, 
-  Palabra, 
-  Fonema 
+  PalabraCompleta
 } from '../../services/actividad.service';
 
 @Component({
@@ -17,12 +16,8 @@ import {
   styleUrls: ['./crear-actividad.css']
 })
 export class CrearActividadComponent implements OnInit {
-  @ViewChild('imagenPrincipalInput') imagenPrincipalInput!: ElementRef<HTMLInputElement>;
-
   titulo = '';
-  imagenPrincipalUrl = 'perfil.jpg';
-  palabras: Palabra[] = [];
-  fonemas: Fonema[] = [];
+  palabrasCompletas: PalabraCompleta[] = [];
   mostrarInstrucciones = false;
   
   constructor(
@@ -35,64 +30,94 @@ export class CrearActividadComponent implements OnInit {
   }
 
   inicializarFormulario(): void {
-    this.palabras = this.actividadFormService.inicializarPalabras(3);
-    this.fonemas = this.actividadFormService.inicializarFonemas(4);
+    // Crear la primera palabra completa
+    this.palabrasCompletas.push(this.actividadFormService.crearPalabraCompleta());
   }
 
   toggleInstrucciones(): void {
     this.mostrarInstrucciones = !this.mostrarInstrucciones;
   }
 
-  triggerImagenPrincipal(): void {
-    this.imagenPrincipalInput?.nativeElement.click();
+  // Métodos para manejar la imagen de cada palabra
+  triggerImagenInput(index: number): void {
+    const input = document.getElementById(`imagenInput-${index}`) as HTMLInputElement;
+    input?.click();
   }
 
-  async onImagenPrincipalSeleccionada(event: Event): Promise<void> {
+  async onImagenSeleccionada(event: Event, palabraIndex: number): Promise<void> {
     const resultado = await this.actividadFormService.procesarImagenSeleccionada(event);
-    if (resultado.exito) {
-      this.imagenPrincipalUrl = resultado.url!;
+    if (resultado.exito && resultado.url) {
+      this.palabrasCompletas[palabraIndex].imagenUrl = resultado.url;
     } else {
       alert(resultado.mensaje);
     }
   }
 
-  agregarPalabra(): void {
-    this.palabras.push(this.actividadFormService.crearPalabraVacia());
+  // Métodos para manejar sílabas
+  agregarSilaba(palabraIndex: number): void {
+    this.palabrasCompletas[palabraIndex].silabas.push(
+      this.actividadFormService.crearPalabraVacia()
+    );
   }
 
-  eliminarPalabra(id: number): void {
-    if (!this.actividadFormService.puedeEliminarItem(this.palabras.length)) {
+  eliminarSilaba(palabraIndex: number, silabaId: number): void {
+    const silabas = this.palabrasCompletas[palabraIndex].silabas;
+    if (!this.actividadFormService.puedeEliminarItem(silabas.length)) {
       alert('Debe haber al menos una sílaba.');
       return;
     }
-    this.palabras = this.palabras.filter(p => p.id !== id);
+    this.palabrasCompletas[palabraIndex].silabas = silabas.filter(s => s.id !== silabaId);
   }
 
-  agregarFonema(): void {
-    this.fonemas.push(this.actividadFormService.crearFonemaVacio());
+  // Métodos para manejar fonemas
+  agregarFonema(palabraIndex: number): void {
+    this.palabrasCompletas[palabraIndex].fonemas.push(
+      this.actividadFormService.crearFonemaVacio()
+    );
   }
 
-  eliminarFonema(id: number): void {
-    if (!this.actividadFormService.puedeEliminarItem(this.fonemas.length)) {
+  eliminarFonema(palabraIndex: number, fonemaId: number): void {
+    const fonemas = this.palabrasCompletas[palabraIndex].fonemas;
+    if (!this.actividadFormService.puedeEliminarItem(fonemas.length)) {
       alert('Debe haber al menos un fonema.');
       return;
     }
-    this.fonemas = this.fonemas.filter(f => f.id !== id);
+    this.palabrasCompletas[palabraIndex].fonemas = fonemas.filter(f => f.id !== fonemaId);
   }
 
+  // Agregar nueva palabra completa
   agregarNuevaPalabra(): void {
-    if (confirm('¿Deseas agregar una nueva palabra? Esto creará nuevos campos vacíos.')) {
-      this.agregarPalabra();
-      this.agregarFonema();
+    this.palabrasCompletas.push(this.actividadFormService.crearPalabraCompleta());
+    
+    // Scroll al final después de un breve delay para que el DOM se actualice
+    setTimeout(() => {
+      const container = document.querySelector('.main-container');
+      if (container) {
+        container.scrollTo({
+          top: container.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
+  }
+
+  // Eliminar una palabra completa
+  eliminarPalabraCompleta(index: number): void {
+    if (this.palabrasCompletas.length === 1) {
+      alert('Debe haber al menos una palabra en la actividad.');
+      return;
+    }
+
+    const confirmacion = confirm('¿Estás seguro de que deseas eliminar esta palabra?');
+    if (confirmacion) {
+      this.palabrasCompletas.splice(index, 1);
     }
   }
 
   async guardarActividad(): Promise<void> {
     const resultado = await this.actividadFormService.guardarActividadCompleta(
       this.titulo,
-      this.palabras,
-      this.fonemas,
-      this.imagenPrincipalUrl
+      this.palabrasCompletas
     );
 
     alert(resultado.mensaje);
@@ -104,9 +129,7 @@ export class CrearActividadComponent implements OnInit {
   regresar(): void {
     if (this.actividadFormService.hayaCambiosSinGuardar(
       this.titulo,
-      this.palabras,
-      this.fonemas,
-      this.imagenPrincipalUrl
+      this.palabrasCompletas
     )) {
       if (confirm('¿Estás seguro de que deseas salir? Los cambios no guardados se perderán.')) {
         this.location.back();
