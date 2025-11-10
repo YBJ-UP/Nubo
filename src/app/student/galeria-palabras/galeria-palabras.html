@@ -8,18 +8,43 @@
                 <i class="fa-solid fa-circle-plus"></i>
                 Crear
             </button>
-            <button class="btn-eliminar" [class.active]="modoEliminar" (click)="toggleModoEliminar()">
+            <button 
+                class="btn-eliminar" 
+                [class.active]="modoEliminar" 
+                (click)="toggleModoEliminar()"
+            >
                 <i class="fa-solid fa-trash"></i>
-                Eliminar
+                {{ modoEliminar ? 'Cancelar' : 'Eliminar' }}
+            </button>
+            <button 
+                *ngIf="modoEliminar && actividadesSeleccionadas.size > 0"
+                class="btn-confirmar-eliminar"
+                (click)="eliminarSeleccionadas()"
+            >
+                <i class="fa-solid fa-check"></i>
+                Eliminar ({{ actividadesSeleccionadas.size }})
             </button>
         </div>
     </div>
 
     <div class="grid-cards">
-        <app-cards-palabras 
+        <div 
             *ngFor="let palabra of palabras"
-            [palabraData]="palabra"
+            class="card-wrapper"
+            [class.selectable]="modoEliminar"
+            [class.selected]="isSeleccionada(palabra.id)"
+            (click)="modoEliminar ? toggleSeleccion(palabra.id) : null"
         >
-        </app-cards-palabras>
+            <div class="selection-overlay" *ngIf="modoEliminar">
+                <div class="checkbox-container">
+                    <i class="fa-solid" [ngClass]="isSeleccionada(palabra.id) ? 'fa-check-circle' : 'fa-circle'"></i>
+                </div>
+            </div>
+            <app-cards-palabras 
+                [palabraData]="palabra"
+                [class.disabled]="modoEliminar"
+            >
+            </app-cards-palabras>
+        </div>
     </div>
 </div>
