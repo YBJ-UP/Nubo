@@ -1,6 +1,6 @@
 .crear-actividad-wrapper {
   font-family: 'Fredoka', sans-serif;
-  background-color: #F0EDDF;
+  background-color: #FFF9F2;
   height: calc(100vh - 100px);
   width: 100%;
   position: relative;
@@ -121,6 +121,10 @@
   }
 }
 
+.instrucciones-content ol {
+  margin-left: 20px;
+}
+
 .instrucciones-content li {
   margin-bottom: 10px;
   font-size: 1rem;
@@ -164,6 +168,53 @@
   height: 3px;
   background: linear-gradient(to right, #8B5A3C, transparent);
   margin: 40px 0;
+}
+
+.palabra-completa-section {
+  margin-bottom: 20px;
+}
+
+.palabra-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding: 20px;
+  background-color: #F9F7F0;
+  border-radius: 15px;
+}
+
+.palabra-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-font);
+  margin: 0;
+}
+
+.btn-eliminar-palabra {
+  padding: 12px 25px;
+  background-color: #F28B8B;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  font-family: 'Fredoka', sans-serif;
+}
+
+.btn-eliminar-palabra:hover {
+  background-color: #E67373;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(242, 139, 139, 0.4);
+}
+
+.btn-eliminar-palabra i {
+  font-size: 1.1rem;
 }
 
 .palabras-section {
@@ -227,6 +278,37 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.palabra-principal-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-label-small {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-font);
+  margin-bottom: 8px;
+}
+
+.palabra-principal-input {
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 1.2rem;
+  font-family: 'Fredoka', sans-serif;
+  border: 2px solid #E5E5E5;
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  background-color: white;
+  font-weight: 600;
+}
+
+.palabra-principal-input:focus {
+  border-color: #C9C7E9;
 }
 
 .palabras-list {
@@ -484,6 +566,17 @@
   .btn-crear-actividad {
     padding: 16px 30px;
     font-size: 1.1rem;
+  }
+
+  .palabra-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .btn-eliminar-palabra {
+    width: 100%;
+    justify-content: center;
   }
 }
 
