@@ -15,43 +15,69 @@
             </div>
         </div>
 
-        <div class="modules-header">
-            <h4>Progreso de módulos</h4>
-        </div>
+        <div class="modules-section">
+            <div class="modules-header">
+                <h4>Progreso de módulos</h4>
+            </div>
 
-        <div class="module-progress">
-            <div class="module-label">Módulo 1: {{progresoModulo1}}%</div>
-            <div class="progress-bar-container">
-                <div 
-                    class="progress-bar-fill module-1" 
-                    [style.width.%]="progresoModulo1"
-                >
-                    <span *ngIf="progresoModulo1 > 10">{{progresoModulo1}}%</span>
+            <div class="module-progress">
+                <div class="module-label">
+                    <div class="module-info">
+                        <div class="module-icon module-1">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <span class="module-name">Módulo 1: Área Cognitiva</span>
+                    </div>
+                    <span class="module-percentage">{{progresoModulo1}}%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div 
+                        class="progress-bar-fill module-1" 
+                        [style.width.%]="progresoModulo1"
+                    >
+                        <span *ngIf="progresoModulo1 > 15">{{progresoModulo1}}%</span>
+                    </div>
+                </div>
+                <div class="progress-details">
+                    <span>{{calcularActividadesCompletadas(progresoModulo1)}} actividades completadas</span>
+                    <span>{{calcularActividadesFaltantes(progresoModulo1)}} por completar</span>
                 </div>
             </div>
-        </div>
 
-        <div class="module-progress">
-            <div class="module-label">Módulo 2: {{progresoModulo2}}%</div>
-            <div class="progress-bar-container">
-                <div 
-                    class="progress-bar-fill module-2" 
-                    [style.width.%]="progresoModulo2"
-                >
-                    <span *ngIf="progresoModulo2 > 10">{{progresoModulo2}}%</span>
+            <div class="module-progress">
+                <div class="module-label">
+                    <div class="module-info">
+                        <div class="module-icon module-2">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <span class="module-name">Módulo 2: Área Lúdica</span>
+                    </div>
+                    <span class="module-percentage">{{progresoModulo2}}%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div 
+                        class="progress-bar-fill module-2" 
+                        [style.width.%]="progresoModulo2"
+                    >
+                        <span *ngIf="progresoModulo2 > 15">{{progresoModulo2}}%</span>
+                    </div>
+                </div>
+                <div class="progress-details">
+                    <span>{{calcularActividadesCompletadas(progresoModulo2)}} actividades completadas</span>
+                    <span>{{calcularActividadesFaltantes(progresoModulo2)}} por completar</span>
                 </div>
             </div>
-        </div>
 
-        <div class="action-buttons">
-            <button class="btn-delete" (click)="eliminarAlumno()">
-                <i class="fa-solid fa-trash-can"></i>
-                Eliminar
-            </button>
-            <button class="btn-login" (click)="ingresarComoAlumno()">
-                <i class="fa-solid fa-right-to-bracket"></i>
-                Ingresar
-            </button>
+            <div class="action-buttons">
+                <button class="btn-delete" (click)="eliminarAlumno()">
+                    <i class="fa-solid fa-trash-can"></i>
+                    Eliminar alumno
+                </button>
+                <button class="btn-login" (click)="ingresarComoAlumno()">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    Ingresar como alumno
+                </button>
+            </div>
         </div>
     </div>
 </div>
