@@ -10,11 +10,23 @@
         <div class="img-container">
             <div class="avatar-wrapper">
                 <img [src]="imagenPreview" alt="Foto de perfil" class="pfp-preview">
-                <button type="button" class="change-photo-btn" (click)="cambiarImagen()">
-                    <i class="fa-solid fa-camera"></i>
+                <button 
+                    type="button" 
+                    class="change-photo-btn" 
+                    (click)="cambiarImagen()"
+                    [disabled]="isUploading"
+                >
+                    <i class="fa-solid" [ngClass]="isUploading ? 'fa-spinner fa-spin' : 'fa-camera'"></i>
                 </button>
+                <input 
+                    #fileInput
+                    type="file" 
+                    (change)="onFileSelected($event)"
+                    accept="image/jpeg,image/png,image/gif,image/webp"
+                    style="display: none;"
+                >
             </div>
-            <p class="student-name-preview">{{inputText}}</p>
+            <p class="student-name-preview">{{inputText || 'Nombre del alumno...'}}</p>
         </div>
 
         <form class="formulario" #f="ngForm" (ngSubmit)="submit(f)">
@@ -71,7 +83,7 @@
                     <i class="fa-solid fa-xmark"></i>
                     Cancelar
                 </button>
-                <button type="submit" class="btn-submit">
+                <button type="submit" class="btn-submit" [disabled]="isUploading">
                     <i class="fa-solid fa-check"></i>
                     Crear
                 </button>
