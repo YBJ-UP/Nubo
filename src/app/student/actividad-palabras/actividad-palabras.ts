@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
 @Component({
@@ -10,6 +10,7 @@ import { Location } from '@angular/common';
 })
 export class ActividadPalabras implements OnInit {
   actividadId: string | null = null;
+  
   constructor(
     private route: ActivatedRoute,
     private location: Location
@@ -19,8 +20,8 @@ export class ActividadPalabras implements OnInit {
     this.actividadId = this.route.snapshot.paramMap.get('id');
     console.log(`Cargando actividad con ID: ${this.actividadId}`);
   }
+  
   regresar(): void {
     this.location.back();
   }
-
 }

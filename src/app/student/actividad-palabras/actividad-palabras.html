@@ -1,13 +1,12 @@
-
 <div class="actividad-container">
-    <button (click)="regresar()" class="back-button">
-     <i class="fa-solid fa-arrow-left"></i>
-   </button>
     <header class="actividad-header">
+        <button (click)="regresar()" class="back-button">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
         <div class="progress-area">
-            <span class="progress-title">PROGRESO DE LA ACTIVIDAD</span>
+            <span class="progress-title">Progreso de la actividad</span>
             <div class="progress-bar-container">
-                <div class="progress-bar-fill"></div> 
+                <div class="progress-bar-fill" [style.width.%]="40"></div> 
             </div>
         </div>
     </header>
