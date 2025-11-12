@@ -12,13 +12,30 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    overflow-y: auto;
+}
+
+.cuerpo::-webkit-scrollbar {
+    width: 10px;
+}
+
+.cuerpo::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.cuerpo::-webkit-scrollbar-thumb {
+    background: #C9C7E9;
+    border-radius: 10px;
+}
+
+.cuerpo::-webkit-scrollbar-thumb:hover {
+    background: #B5B3D8;
 }
 
 section {
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
 }
