@@ -3,7 +3,7 @@
         <a routerLink="../" class="back-link">
             <i class="fa-solid fa-arrow-left"></i>
         </a>
-        <div class="action-buttons">
+        <div class="action-buttons" *ngIf="esProfesor">
             <button class="btn-crear" (click)="irACrearActividad()">
                 <i class="fa-solid fa-circle-plus"></i>
                 Crear
