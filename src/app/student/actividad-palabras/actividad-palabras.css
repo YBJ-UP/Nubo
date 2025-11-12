@@ -5,24 +5,20 @@
 }
 
 .actividad-container {
-    margin-top: 20px;
     width: 100%;
-    max-width: 900px;
+    max-width: 1000px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 0 40px;
-    overflow-y: auto;
-    height: calc(100vh - 120px);
-    margin-left: auto;
-    margin-right: auto;
+    gap: 25px;
+    margin: 0 auto;
+    padding-bottom: 40px;
 }
-
 
 .actividad-header {
     display: flex;
     align-items: center;
     gap: 20px;
+    margin-bottom: 10px;
 }
 
 .back-button {
