@@ -62,7 +62,7 @@ export const routes: Routes = [
     ]
    },
    {
-    path: 'student',
+       path: 'student',
     component: StudentHome,
     children: [
         { path: '', component: CardsHome },
