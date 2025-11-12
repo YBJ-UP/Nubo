@@ -16,6 +16,7 @@ export class GaleriaPalabras implements OnInit {
   palabras: PalabraData[] = [];
   modoEliminar: boolean = false;
   actividadesSeleccionadas: Set<number> = new Set();
+  esProfesor: boolean = false; 
 
   constructor(
     private router: Router,
@@ -23,7 +24,14 @@ export class GaleriaPalabras implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.detectarRol();
     this.cargarActividades();
+  }
+
+  detectarRol(): void {
+    const rutaActual = this.router.url;
+    this.esProfesor = rutaActual.includes('/teacher');
+    console.log('Es profesor:', this.esProfesor);
   }
 
   cargarActividades(): void {
@@ -47,16 +55,14 @@ export class GaleriaPalabras implements OnInit {
   }
 
   irACrearActividad(): void {
-    const rutaActual = this.router.url;
-    
-    if (rutaActual.includes('/teacher')) {
+    if (this.esProfesor) {
       this.router.navigate(['/teacher/crear-actividad']);
-    } else {
-      alert('Solo los profesores pueden crear actividades');
     }
   }
 
   toggleModoEliminar(): void {
+    if (!this.esProfesor) return;
+    
     this.modoEliminar = !this.modoEliminar;
     
     if (!this.modoEliminar) {
@@ -67,7 +73,7 @@ export class GaleriaPalabras implements OnInit {
   }
 
   toggleSeleccion(id: number): void {
-    if (!this.modoEliminar) return;
+    if (!this.modoEliminar || !this.esProfesor) return;
 
     if (this.actividadesSeleccionadas.has(id)) {
       this.actividadesSeleccionadas.delete(id);
@@ -81,8 +87,7 @@ export class GaleriaPalabras implements OnInit {
   }
 
   eliminarSeleccionadas(): void {
-    if (this.actividadesSeleccionadas.size === 0) {
-      alert('Por favor selecciona al menos una actividad para eliminar');
+    if (!this.esProfesor || this.actividadesSeleccionadas.size === 0) {
       return;
     }
 
