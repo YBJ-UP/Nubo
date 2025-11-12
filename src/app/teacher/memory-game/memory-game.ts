@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MemoryGameService } from '../../services/memory-game.service';
 import { Header } from '../../components/header/header';
+import { MemoryGameService } from '../../services/memory-game.service';
 
 interface Card {
   id: number;
@@ -13,6 +13,7 @@ interface Card {
 
 @Component({
   selector: 'app-memory-game',
+  standalone: true,
   imports: [CommonModule, Header],
   templateUrl: './memory-game.html',
   styleUrl: './memory-game.css'

@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Header } from '../../components/header/header';
 import { MemoryGameService, MemoryGame } from '../../services/memory-game.service';
 
 @Component({
   selector: 'app-menu-memory-game',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, Header],
   templateUrl: './menu-memory-game.html',
   styleUrl: './menu-memory-game.css'
 })
