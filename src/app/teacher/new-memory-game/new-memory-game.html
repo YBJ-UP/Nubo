@@ -1,11 +1,8 @@
 <div class="help-box">
-    <div class="help-title" (click)="toggleInstructions()">
+    <div class="help-title">
         <span>¿Cómo puedo crear una actividad?</span>
-        <button class="help-toggle" [class.collapsed]="!showInstructions">
-            {{ showInstructions ? '⌃' : '⌄' }}
-        </button>
     </div>
-    <ol class="help-list" [class.collapsed]="!showInstructions">
+    <ol class="help-list">
         <li>Escribe el titulo de la actividad en el espacio indicado</li>
         <li>Sube una imagen representativa al tema seleccionado previamente</li>
         <li>Carga la imagen de manera manual desde tu dispositivo</li>

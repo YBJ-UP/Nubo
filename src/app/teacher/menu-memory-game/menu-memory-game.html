@@ -2,7 +2,9 @@
 
 <div class="container">
     <div class="header">
-        <button class="btn-back" (click)="goBack()">←</button>
+        <button class="btn-back" (click)="goBack()" aria-label="Atrás">
+            <img src="/Icon.svg" alt="Atrás" class="btn-back-icon" width="36" height="36">
+        </button>
         <div class="action-buttons">
             <ng-container *ngIf="isTeacherView">
                 <button class="btn-create" (click)="createGame()" *ngIf="!isDeleting">

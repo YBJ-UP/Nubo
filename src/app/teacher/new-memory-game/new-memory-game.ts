@@ -22,7 +22,7 @@ export class NewMemoryGame {
   cards: MemoryCard[] = [];
   currentCardCount = 0;
   showMaxCardsModal = false;
-  showInstructions = true;
+  
 
   constructor(
     private router: Router,
@@ -39,10 +39,6 @@ export class NewMemoryGame {
 
   closeMaxCardsModal() {
     this.showMaxCardsModal = false;
-  }
-
-  toggleInstructions() {
-    this.showInstructions = !this.showInstructions;
   }
 
   saveMemoryGame() {

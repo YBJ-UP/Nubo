@@ -23,13 +23,6 @@
   margin-bottom: 8px;
   font-weight: 600;
 }
-.help-toggle {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  color: #666;
-}
 .help-list {
   margin: 0;
   padding-left: 24px;
@@ -181,7 +174,13 @@
   cursor: pointer;
 }
 .action-btn.delete {
-  color: #ff0400;
+  background: #ff4d4d; /* red background for delete */
+  color: white; /* white icon/text */
+  border: 1px solid rgba(255,255,255,0.8);
+}
+.action-btn.delete:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(255,77,77,0.18);
 }
 .add-icon {
   font-size: 2rem;

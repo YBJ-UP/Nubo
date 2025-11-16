@@ -2,7 +2,9 @@
 
 <div class="game-container">
     <div class="game-header-section">
-        <button class="btn-back" (click)="goBack()">←</button>
+        <button class="btn-back" (click)="goBack()" aria-label="Atrás">
+            <img src="/Icon.svg" alt="Atrás" class="btn-back-icon" width="36" height="36">
+        </button>
         <div class="game-title-box">
             <h2 class="game-title">{{ gameTitle }}</h2>
         </div>
