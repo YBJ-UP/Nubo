@@ -18,7 +18,7 @@ interface Card {
   templateUrl: './memory-game.html',
   styleUrl: './memory-game.css'
 })
-export class MemoryGame implements OnInit {
+export class MemoryGame implements OnInit, AfterViewInit {
   cards: Card[] = [];
   flippedCards: Card[] = [];
   moves: number = 0;
@@ -28,11 +28,8 @@ export class MemoryGame implements OnInit {
   isChecking: boolean = false;
   gameCompleted: boolean = false;
   totalPairs: number = 0;
-  // Progress percentage (0 - 100). Used by the vertical progress bar.
   progress: number = 0;
-  // Use the same palette as menu-memory-game so the progress bar shows those colors
   private readonly COLOR_PALETTE: string[] = ['#EBE3C0', '#A2D8F2', '#FFC364', '#D0CDEA', '#FFD0A7', '#D6DC82', '#D96073'];
-  // CSS gradient string built from the palette
   progressGradient: string = '';
   @ViewChild('boardWrap', { static: false }) boardWrap!: ElementRef<HTMLDivElement>;
   @ViewChild('progressWrap', { static: false }) progressWrap!: ElementRef<HTMLDivElement>;
@@ -72,24 +69,11 @@ export class MemoryGame implements OnInit {
         if (game) {
           this.gameTitle = game.title;
           this.gameColor = game.color;
-          // build a vertical gradient using the shared palette
           this.progressGradient = `linear-gradient(to top, ${this.COLOR_PALETTE.join(', ')})`;
           this.initializeGame(game.cards);
-          // wait a tick so DOM renders then position the progress bar
           setTimeout(() => this.adjustProgressPosition(), 50);
         }
       });
-    }
-
-    ngAfterViewInit() {
-      // adjust on first load
-      setTimeout(() => this.adjustProgressPosition(), 120);
-    }
-
-    @HostListener('window:resize')
-    onWindowResize() {
-      // recompute on resize
-      setTimeout(() => this.adjustProgressPosition(), 80);
     }
   }
 
@@ -108,6 +92,15 @@ export class MemoryGame implements OnInit {
     this.matches = 0;
     this.gameCompleted = false;
     this.progress = 0;
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => this.adjustProgressPosition(), 120);
+  }
+
+  @HostListener('window:resize')
+  onWindowResize() {
+    setTimeout(() => this.adjustProgressPosition(), 80);
   }
 
   shuffleArray(array: any[]): any[] {
@@ -188,9 +181,7 @@ export class MemoryGame implements OnInit {
       this.progress = 0;
       return;
     }
-    // matches / totalPairs gives 0..1, convert to percentage
     this.progress = Math.min(100, Math.round((this.matches / this.totalPairs) * 100));
-    // each time progress updates, adjust bar vertical center if needed
     setTimeout(() => this.adjustProgressPosition(), 40);
   }
 
@@ -200,7 +191,6 @@ export class MemoryGame implements OnInit {
       const boardEl = this.boardWrap?.nativeElement;
       if (!progEl || !boardEl) return;
 
-      // If the bar is hidden on small screens, do nothing
       const style = window.getComputedStyle(progEl);
       if (style.display === 'none') {
         progEl.style.top = '';
@@ -211,25 +201,20 @@ export class MemoryGame implements OnInit {
       const progRect = progEl.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
 
-      // space between bottom of the board and bottom of viewport
       const remaining = Math.max(0, viewportHeight - boardRect.bottom);
 
       let topPos: number;
       if (remaining < progRect.height) {
-        // not enough space: center the progress bar in viewport
         topPos = Math.max(16, (viewportHeight - progRect.height) / 2);
       } else {
-        // place the progress bar centered in the remaining space
         topPos = boardRect.bottom + (remaining / 2) - (progRect.height / 2);
       }
 
-      // convert to position relative to the .game-main container (offset parent)
       const container = progEl.offsetParent as HTMLElement || document.body;
       const containerRect = container.getBoundingClientRect();
       const relativeTop = Math.max(8, topPos - containerRect.top);
       progEl.style.top = `${Math.round(relativeTop)}px`;
     } catch (err) {
-      // silent fail
       console.warn('adjustProgressPosition error', err);
     }
   }

@@ -26,9 +26,8 @@ export class MenuMemoryGame implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.gameService.getGames().subscribe(games => {
+      this.gameService.getGames().subscribe(games => {
       console.log('Juegos actualizados:', games);
-      // Asignar colores de la paleta de forma rotativa si no vienen definidos
       this.games = games.map((g, idx) => ({
         ...g,
         color: g.color || this.COLOR_PALETTE[idx % this.COLOR_PALETTE.length]
@@ -90,7 +89,6 @@ export class MenuMemoryGame implements OnInit, OnDestroy {
   }
 
   onGameSaved(newGame: any) {
-    // Asignar color al juego nuevo (usar siguiente color en la paleta)
     const idx = this.games.length;
     newGame.color = newGame.color || this.COLOR_PALETTE[idx % this.COLOR_PALETTE.length];
     this.games.push(newGame);

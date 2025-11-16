@@ -110,11 +110,13 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     gap: 30px;
-    padding: 20px;
+    padding: 20px 20px 124px 20px; /* extra bottom padding so last row can fully appear (nudged +4px) */
     align-items: flex-start;
     overflow-y: auto;
     flex: 1;
     max-height: calc(100vh - 120px);
+    scroll-behavior: smooth;
+    scroll-padding-bottom: 84px; /* helpful when using programmatic scrollIntoView (nudged +4px) */
 }
 
 .game-card {
