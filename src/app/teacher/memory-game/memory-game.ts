@@ -28,6 +28,7 @@ export class MemoryGame implements OnInit, AfterViewInit {
   isChecking: boolean = false;
   gameCompleted: boolean = false;
   totalPairs: number = 0;
+  isTeacherView: boolean = false;
   progress: number = 0;
   private readonly COLOR_PALETTE: string[] = ['#EBE3C0', '#A2D8F2', '#FFC364', '#D0CDEA', '#FFD0A7', '#D6DC82', '#D96073'];
   progressGradient: string = '';
@@ -58,7 +59,15 @@ export class MemoryGame implements OnInit, AfterViewInit {
     private router: Router,
     private route: ActivatedRoute,
     private gameService: MemoryGameService
-  ) {}
+  ) {
+    this.isTeacherView = this.router.url.startsWith('/teacher');
+  }
+
+
+  ngOnChanges() {
+    // keep teacher/student view in sync if route changes (best-effort)
+    this.isTeacherView = this.router.url.startsWith('/teacher');
+  }
 
   ngOnInit() {
     const gameIndex = this.route.snapshot.queryParams['index'];
