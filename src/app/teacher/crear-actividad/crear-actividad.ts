@@ -17,6 +17,7 @@ import {
 })
 export class CrearActividadComponent implements OnInit {
   titulo = '';
+  imagenPortada = 'perfil.jpg'; 
   palabrasCompletas: PalabraCompleta[] = [];
   mostrarInstrucciones = false;
   
@@ -30,7 +31,6 @@ export class CrearActividadComponent implements OnInit {
   }
 
   inicializarFormulario(): void {
-    // Crear la primera palabra completa
     this.palabrasCompletas.push(this.actividadFormService.crearPalabraCompleta());
   }
 
@@ -38,7 +38,20 @@ export class CrearActividadComponent implements OnInit {
     this.mostrarInstrucciones = !this.mostrarInstrucciones;
   }
 
-  // Métodos para manejar la imagen de cada palabra
+  triggerPortadaInput(): void {
+    const input = document.getElementById('portadaInput') as HTMLInputElement;
+    input?.click();
+  }
+
+  async onPortadaSeleccionada(event: Event): Promise<void> {
+    const resultado = await this.actividadFormService.procesarImagenSeleccionada(event);
+    if (resultado.exito && resultado.url) {
+      this.imagenPortada = resultado.url;
+    } else {
+      alert(resultado.mensaje);
+    }
+  }
+
   triggerImagenInput(index: number): void {
     const input = document.getElementById(`imagenInput-${index}`) as HTMLInputElement;
     input?.click();
@@ -53,7 +66,6 @@ export class CrearActividadComponent implements OnInit {
     }
   }
 
-  // Métodos para manejar sílabas
   agregarSilaba(palabraIndex: number): void {
     this.palabrasCompletas[palabraIndex].silabas.push(
       this.actividadFormService.crearPalabraVacia()
@@ -69,7 +81,6 @@ export class CrearActividadComponent implements OnInit {
     this.palabrasCompletas[palabraIndex].silabas = silabas.filter(s => s.id !== silabaId);
   }
 
-  // Métodos para manejar fonemas
   agregarFonema(palabraIndex: number): void {
     this.palabrasCompletas[palabraIndex].fonemas.push(
       this.actividadFormService.crearFonemaVacio()
@@ -85,11 +96,9 @@ export class CrearActividadComponent implements OnInit {
     this.palabrasCompletas[palabraIndex].fonemas = fonemas.filter(f => f.id !== fonemaId);
   }
 
-  // Agregar nueva palabra completa
   agregarNuevaPalabra(): void {
     this.palabrasCompletas.push(this.actividadFormService.crearPalabraCompleta());
     
-    // Scroll al final después de un breve delay para que el DOM se actualice
     setTimeout(() => {
       const container = document.querySelector('.main-container');
       if (container) {
@@ -101,7 +110,6 @@ export class CrearActividadComponent implements OnInit {
     }, 100);
   }
 
-  // Eliminar una palabra completa
   eliminarPalabraCompleta(index: number): void {
     if (this.palabrasCompletas.length === 1) {
       alert('Debe haber al menos una palabra en la actividad.');
@@ -117,6 +125,7 @@ export class CrearActividadComponent implements OnInit {
   async guardarActividad(): Promise<void> {
     const resultado = await this.actividadFormService.guardarActividadCompleta(
       this.titulo,
+      this.imagenPortada, 
       this.palabrasCompletas
     );
 
@@ -129,6 +138,7 @@ export class CrearActividadComponent implements OnInit {
   regresar(): void {
     if (this.actividadFormService.hayaCambiosSinGuardar(
       this.titulo,
+      this.imagenPortada, 
       this.palabrasCompletas
     )) {
       if (confirm('¿Estás seguro de que deseas salir? Los cambios no guardados se perderán.')) {
