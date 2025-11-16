@@ -8,8 +8,8 @@
         </div>
     </div>
 
-    <div class="game-main">
-        <div class="board-wrap">
+    <div class="game-main" id="gameMain">
+        <div class="board-wrap" #boardWrap>
             <div class="game-board">
                 <div class="card-container" *ngFor="let card of cards" (click)="flipCard(card)">
                     <div class="card" 
@@ -24,7 +24,7 @@
             </div>
         </div>
 
-        <div class="progress-wrap" aria-hidden="false">
+        <div class="progress-wrap" #progressWrap aria-hidden="false">
             <div class="progress-track">
                 <div class="progress-fill" [style.height]="progress + '%'" [style.background]="progressGradient" [title]="progress + '%'">
                 </div>

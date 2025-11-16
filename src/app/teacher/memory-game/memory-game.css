@@ -83,6 +83,7 @@
     gap: 18px;
     align-items: stretch;
     width: 100%;
+    position: relative; /* make containing block for absolute progress bar */
 }
 .board-wrap {
     flex: 1 1 auto;
@@ -101,12 +102,13 @@
     padding: 6px 6px;
     box-sizing: border-box;
     gap: 6px;
-    /* limit vertical footprint so it no longer spans the whole screen */
-    justify-content: center;
+    /* will be positioned absolutely so it doesn't affect layout */
+    position: absolute;
+    right: 24px; /* distance from right edge of the game-main container */
+    /* the vertical `top` will be set dynamically by TS to center in remaining space */
+    transform: translateY(0);
     height: auto;
     max-height: 420px;
-    /* move the bar slightly to the right (create space from the board) without shifting the board */
-    margin-left: 50px; /* approx. 50px as requested */
 }
 .progress-track {
     /* compact, kid-friendly track */

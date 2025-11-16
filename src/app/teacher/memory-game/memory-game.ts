@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Header } from '../../components/header/header';
@@ -34,6 +34,8 @@ export class MemoryGame implements OnInit {
   private readonly COLOR_PALETTE: string[] = ['#EBE3C0', '#A2D8F2', '#FFC364', '#D0CDEA', '#FFD0A7', '#D6DC82', '#D96073'];
   // CSS gradient string built from the palette
   progressGradient: string = '';
+  @ViewChild('boardWrap', { static: false }) boardWrap!: ElementRef<HTMLDivElement>;
+  @ViewChild('progressWrap', { static: false }) progressWrap!: ElementRef<HTMLDivElement>;
   selectedVictoryMessage: string = '';
   selectedMotivationMessage: string = '';
   private victoryMessages: string[] = [
@@ -73,8 +75,21 @@ export class MemoryGame implements OnInit {
           // build a vertical gradient using the shared palette
           this.progressGradient = `linear-gradient(to top, ${this.COLOR_PALETTE.join(', ')})`;
           this.initializeGame(game.cards);
+          // wait a tick so DOM renders then position the progress bar
+          setTimeout(() => this.adjustProgressPosition(), 50);
         }
       });
+    }
+
+    ngAfterViewInit() {
+      // adjust on first load
+      setTimeout(() => this.adjustProgressPosition(), 120);
+    }
+
+    @HostListener('window:resize')
+    onWindowResize() {
+      // recompute on resize
+      setTimeout(() => this.adjustProgressPosition(), 80);
     }
   }
 
@@ -165,6 +180,7 @@ export class MemoryGame implements OnInit {
     this.matches = 0;
     this.gameCompleted = false;
     this.progress = 0;
+    setTimeout(() => this.adjustProgressPosition(), 60);
   }
 
   private updateProgress() {
@@ -174,6 +190,48 @@ export class MemoryGame implements OnInit {
     }
     // matches / totalPairs gives 0..1, convert to percentage
     this.progress = Math.min(100, Math.round((this.matches / this.totalPairs) * 100));
+    // each time progress updates, adjust bar vertical center if needed
+    setTimeout(() => this.adjustProgressPosition(), 40);
+  }
+
+  private adjustProgressPosition() {
+    try {
+      const progEl = this.progressWrap?.nativeElement;
+      const boardEl = this.boardWrap?.nativeElement;
+      if (!progEl || !boardEl) return;
+
+      // If the bar is hidden on small screens, do nothing
+      const style = window.getComputedStyle(progEl);
+      if (style.display === 'none') {
+        progEl.style.top = '';
+        return;
+      }
+
+      const boardRect = boardEl.getBoundingClientRect();
+      const progRect = progEl.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+
+      // space between bottom of the board and bottom of viewport
+      const remaining = Math.max(0, viewportHeight - boardRect.bottom);
+
+      let topPos: number;
+      if (remaining < progRect.height) {
+        // not enough space: center the progress bar in viewport
+        topPos = Math.max(16, (viewportHeight - progRect.height) / 2);
+      } else {
+        // place the progress bar centered in the remaining space
+        topPos = boardRect.bottom + (remaining / 2) - (progRect.height / 2);
+      }
+
+      // convert to position relative to the .game-main container (offset parent)
+      const container = progEl.offsetParent as HTMLElement || document.body;
+      const containerRect = container.getBoundingClientRect();
+      const relativeTop = Math.max(8, topPos - containerRect.top);
+      progEl.style.top = `${Math.round(relativeTop)}px`;
+    } catch (err) {
+      // silent fail
+      console.warn('adjustProgressPosition error', err);
+    }
   }
 
   previousGame() {
