@@ -171,4 +171,35 @@
       Crear actividad
     </button>
   </div>
+  <div class="content-card">
+      <div class="card-header">
+        <h2>Actividad Cognitiva</h2>
+      </div>
+
+      <div class="portada-section">
+        <label class="form-label">Imagen de portada de la actividad</label>
+        <div class="portada-upload-container">
+          <button 
+            class="portada-upload-button"
+            (click)="triggerPortadaInput()"
+            type="button"
+          >
+            <i class="fa-solid fa-image"></i>
+          </button>
+          <input 
+            type="file" 
+            id="portadaInput"
+            (change)="onPortadaSeleccionada($event)"
+            accept="image/*"
+            style="display: none;"
+          />
+          <span class="upload-label-portada">Subir imagen de portada</span>
+          
+          <div class="portada-preview" *ngIf="imagenPortada && imagenPortada !== 'perfil.jpg'">
+            <img [src]="imagenPortada" alt="Vista previa portada">
+          </div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="instrucciones-section">
 </div>
