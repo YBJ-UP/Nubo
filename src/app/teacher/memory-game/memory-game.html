@@ -8,16 +8,28 @@
         </div>
     </div>
 
-    <div class="game-board">
-        <div class="card-container" *ngFor="let card of cards" (click)="flipCard(card)">
-            <div class="card" 
-                 [class.flipped]="card.isFlipped || card.isMatched"
-                 [class.matched]="card.isMatched">
-                <div class="card-face card-front"></div>
-                <div class="card-face card-back" [class.highlighted]="card.isFlipped && !card.isMatched">
-                    <img [src]="card.imageUrl" [alt]="'Carta ' + card.id">
+    <div class="game-main">
+        <div class="board-wrap">
+            <div class="game-board">
+                <div class="card-container" *ngFor="let card of cards" (click)="flipCard(card)">
+                    <div class="card" 
+                         [class.flipped]="card.isFlipped || card.isMatched"
+                         [class.matched]="card.isMatched">
+                        <div class="card-face card-front"></div>
+                        <div class="card-face card-back" [class.highlighted]="card.isFlipped && !card.isMatched">
+                            <img [src]="card.imageUrl" [alt]="'Carta ' + card.id">
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <div class="progress-wrap" aria-hidden="false">
+            <div class="progress-track">
+                <div class="progress-fill" [style.height]="progress + '%'" [style.background]="progressGradient" [title]="progress + '%'">
+                </div>
+            </div>
+            <div class="progress-label">{{ progress }}%</div>
         </div>
     </div>
 

@@ -6,7 +6,7 @@
         <div class="action-buttons">
             <ng-container *ngIf="isTeacherView">
                 <button class="btn-create" (click)="createGame()" *ngIf="!isDeleting">
-                    <span class="icon">⊕</span> Crear
+                    <span class="icon">+</span> Crear
                 </button>
                 <button class="btn-delete" (click)="deleteGame()" [disabled]="isDeleting && selectedGameIndex === -1">
                     <span class="icon">🗑</span> {{ isDeleting ? 'Confirmar' : 'Eliminar' }}

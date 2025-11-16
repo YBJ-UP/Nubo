@@ -28,6 +28,12 @@ export class MemoryGame implements OnInit {
   isChecking: boolean = false;
   gameCompleted: boolean = false;
   totalPairs: number = 0;
+  // Progress percentage (0 - 100). Used by the vertical progress bar.
+  progress: number = 0;
+  // Use the same palette as menu-memory-game so the progress bar shows those colors
+  private readonly COLOR_PALETTE: string[] = ['#EBE3C0', '#A2D8F2', '#FFC364', '#D0CDEA', '#FFD0A7', '#D6DC82', '#D96073'];
+  // CSS gradient string built from the palette
+  progressGradient: string = '';
   selectedVictoryMessage: string = '';
   selectedMotivationMessage: string = '';
   private victoryMessages: string[] = [
@@ -64,6 +70,8 @@ export class MemoryGame implements OnInit {
         if (game) {
           this.gameTitle = game.title;
           this.gameColor = game.color;
+          // build a vertical gradient using the shared palette
+          this.progressGradient = `linear-gradient(to top, ${this.COLOR_PALETTE.join(', ')})`;
           this.initializeGame(game.cards);
         }
       });
@@ -84,6 +92,7 @@ export class MemoryGame implements OnInit {
     this.moves = 0;
     this.matches = 0;
     this.gameCompleted = false;
+    this.progress = 0;
   }
 
   shuffleArray(array: any[]): any[] {
@@ -117,6 +126,7 @@ export class MemoryGame implements OnInit {
       card1.isMatched = true;
       card2.isMatched = true;
       this.matches++;
+      this.updateProgress();
       this.flippedCards = [];
       this.isChecking = false;
 
@@ -125,6 +135,7 @@ export class MemoryGame implements OnInit {
         this.selectedMotivationMessage = this.getRandomItem(this.motivationMessages);
         this.accentColor = this.getRandomItem(this.accentColors);
         this.gameCompleted = true;
+        this.progress = 100;
       }
     } else {
       setTimeout(() => {
@@ -153,6 +164,16 @@ export class MemoryGame implements OnInit {
     this.moves = 0;
     this.matches = 0;
     this.gameCompleted = false;
+    this.progress = 0;
+  }
+
+  private updateProgress() {
+    if (!this.totalPairs || this.totalPairs === 0) {
+      this.progress = 0;
+      return;
+    }
+    // matches / totalPairs gives 0..1, convert to percentage
+    this.progress = Math.min(100, Math.round((this.matches / this.totalPairs) * 100));
   }
 
   previousGame() {
