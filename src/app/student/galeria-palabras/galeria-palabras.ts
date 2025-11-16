@@ -34,26 +34,26 @@ export class GaleriaPalabras implements OnInit {
     console.log('Es profesor:', this.esProfesor);
   }
 
-  cargarActividades(): void {
-    const actividadesGuardadas = this.actividadService.getAllActividades();
-    
-    if (actividadesGuardadas.length > 0) {
-      const actividadesConvertidas: PalabraData[] = actividadesGuardadas.map((act: any) => ({
-        id: act.id,
-        titulo: act.titulo,
-        colorFondo: this.obtenerColorAleatorio(),
-        imagenUrl: act.palabrasCompletas?.[0]?.imagenUrl || '/crds.webp',
-        enlace: `/student/cognitive-abilities/actividad/${act.id}`
-      }));
+cargarActividades(): void {
+  const actividadesGuardadas = this.actividadService.getAllActividades();
+  
+  if (actividadesGuardadas.length > 0) {
+    const actividadesConvertidas: PalabraData[] = actividadesGuardadas.map((act: any) => ({
+      id: act.id,
+      titulo: act.titulo,
+      colorFondo: this.obtenerColorAleatorio(),
+      // AHORA USA LA IMAGEN DE PORTADA PRIMERO
+      imagenUrl: act.imagenPortada || act.palabrasCompletas?.[0]?.imagenUrl || '/crds.webp',
+      enlace: `/student/cognitive-abilities/actividad/${act.id}`
+    }));
 
-      this.palabras = [...actividadesConvertidas, ...PALABRAS_DATA_MOCK];
-    } else {
-      this.palabras = PALABRAS_DATA_MOCK;
-    }
-    
-    console.log("Actividades cargadas:", this.palabras.length);
+    this.palabras = [...actividadesConvertidas, ...PALABRAS_DATA_MOCK];
+  } else {
+    this.palabras = PALABRAS_DATA_MOCK;
   }
-
+  
+  console.log("Actividades cargadas:", this.palabras.length);
+}
   irACrearActividad(): void {
     if (this.esProfesor) {
       this.router.navigate(['/teacher/crear-actividad']);
