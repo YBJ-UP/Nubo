@@ -8,6 +8,33 @@
       <div class="card-header">
         <h2>Actividad Cognitiva</h2>
       </div>
+      
+      <div class="portada-section">
+        <label class="form-label">Imagen de portada de la actividad</label>
+        <div class="portada-upload-container">
+          <button 
+            class="portada-upload-button"
+            (click)="triggerPortadaInput()"
+            type="button"
+          >
+            <i class="fa-solid fa-image"></i>
+          </button>
+          <input 
+            type="file" 
+            id="portadaInput"
+            (change)="onPortadaSeleccionada($event)"
+            accept="image/*"
+            style="display: none;"
+          />
+          <span class="upload-label-portada">Subir imagen de portada</span>
+          
+          <div class="portada-preview" *ngIf="imagenPortada && imagenPortada !== 'perfil.jpg'">
+            <img [src]="imagenPortada" alt="Vista previa portada">
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
 
       <div class="instrucciones-section">
         <button class="instrucciones-toggle" (click)="toggleInstrucciones()">
@@ -18,6 +45,7 @@
         
         <div class="instrucciones-content" *ngIf="mostrarInstrucciones">
           <ol>
+            <li>Sube una imagen de portada para tu actividad</li>
             <li>Escribe el título de tu actividad</li>
             <li>Para cada palabra: sube una imagen representativa</li>
             <li>Escribe la palabra principal</li>
@@ -40,7 +68,6 @@
 
       <hr class="divider">
 
-      <!-- Repetir para cada palabra completa -->
       <div *ngFor="let palabraCompleta of palabrasCompletas; let palabraIndex = index" class="palabra-completa-section">
         
         <div class="palabra-header" *ngIf="palabraIndex > 0">
@@ -171,35 +198,4 @@
       Crear actividad
     </button>
   </div>
-  <div class="content-card">
-      <div class="card-header">
-        <h2>Actividad Cognitiva</h2>
-      </div>
-
-      <div class="portada-section">
-        <label class="form-label">Imagen de portada de la actividad</label>
-        <div class="portada-upload-container">
-          <button 
-            class="portada-upload-button"
-            (click)="triggerPortadaInput()"
-            type="button"
-          >
-            <i class="fa-solid fa-image"></i>
-          </button>
-          <input 
-            type="file" 
-            id="portadaInput"
-            (change)="onPortadaSeleccionada($event)"
-            accept="image/*"
-            style="display: none;"
-          />
-          <span class="upload-label-portada">Subir imagen de portada</span>
-          
-          <div class="portada-preview" *ngIf="imagenPortada && imagenPortada !== 'perfil.jpg'">
-            <img [src]="imagenPortada" alt="Vista previa portada">
-          </div>
-        </div>
-      </div>
-      <hr class="divider">
-      <div class="instrucciones-section">
 </div>
