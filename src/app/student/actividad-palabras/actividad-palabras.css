@@ -29,6 +29,11 @@
     display: block;
     align-self: flex-start; 
     margin-left: 0;
+    transition: transform 0.2s ease;
+}
+
+.back-button:hover {
+    transform: translateX(-5px);
 }
 
 .progress-area {
@@ -83,6 +88,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
 .main-image {
@@ -101,9 +108,26 @@
     color: #4A90E2;
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
-.nav-arrow i{
- font-size: 2.2rem;
+
+.nav-arrow:hover:not(:disabled) {
+    background-color: #A2D8F2;
+    transform: scale(1.05);
+}
+
+.nav-arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.nav-arrow.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.nav-arrow i {
+    font-size: 2.2rem;
 }
 
 .syllable-buttons,
@@ -123,12 +147,24 @@
     cursor: pointer;
     color: #333;
     box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+}
+
+.syllable-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.15);
 }
 
 .audio-button {
     padding: 10px 15px;
     background-color: var(--color-model); 
     font-size: 1.8rem;
+}
+
+.audio-button:hover {
+    background-color: #FFC08A;
+    transform: scale(1.05);
 }
 
 .phoneme-button {
@@ -140,9 +176,112 @@
     cursor: pointer;
     color: #333;
     box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.phoneme-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.15);
 }
 
 .color-green { background-color: #E6F097; }
 .color-yellow { background-color: #FEF9C3; }
 .color-blue { background-color: #BDE0FE; }
 .color-purple { background-color: #D4BFFF; }
+
+.palabra-info {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.palabra-completa {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-font);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.palabra-contador {
+    font-size: 1rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+    gap: 20px;
+}
+
+.no-data i {
+    font-size: 5rem;
+    color: #F28B8B;
+}
+
+.no-data h3 {
+    font-size: 2rem;
+    color: var(--color-font);
+}
+
+.no-data p {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.btn-regresar {
+    padding: 15px 40px;
+    background-color: #A2D8F2;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Fredoka', sans-serif;
+}
+
+.btn-regresar:hover {
+    background-color: #8BC9E8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(162, 216, 242, 0.4);
+}
+
+@media (max-width: 768px) {
+    .image-navigation {
+        gap: 40px;
+    }
+
+    .main-image-card {
+        width: 250px;
+        height: 250px;
+    }
+
+    .nav-arrow {
+        width: 70px;
+        height: 70px;
+    }
+
+    .nav-arrow i {
+        font-size: 1.8rem;
+    }
+
+    .syllable-button {
+        padding: 20px 40px;
+        font-size: 1.5rem;
+    }
+
+    .phoneme-button {
+        padding: 20px 28px;
+        font-size: 1.5rem;
+    }
+
+    .palabra-completa {
+        font-size: 2rem;
+    }
+}
