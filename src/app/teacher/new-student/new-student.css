@@ -131,7 +131,7 @@
 
 .form-group input {
     width: 100%;
-    padding: 15px 20px;
+    padding: 15px;
     font-size: 1rem;
     font-family: 'Fredoka', sans-serif;
     border: 2px solid #E5E5E5;
@@ -139,6 +139,7 @@
     outline: none;
     transition: border-color 0.3s ease;
     background-color: #FAFAFA;
+    box-sizing: border-box;
 }
 
 .form-group input:focus {
