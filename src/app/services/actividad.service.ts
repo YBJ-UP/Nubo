@@ -217,9 +217,7 @@ export class ActividadFormService {
   }
 
   async guardarActividadCompleta(
-    titulo: string,
-    palabrasCompletas: PalabraCompleta[]
-  ): Promise<ResultadoOperacion> {
+titulo: string, imagenPortada: string, palabrasCompletas: PalabraCompleta[]  ): Promise<ResultadoOperacion> {
     const validacion = this.validarFormulario(titulo, palabrasCompletas);
     if (!validacion.exito) {
       return validacion;
@@ -270,9 +268,7 @@ export class ActividadFormService {
   }
 
   hayaCambiosSinGuardar(
-    titulo: string,
-    palabrasCompletas: PalabraCompleta[]
-  ): boolean {
+titulo: string, imagenPortada: string, palabrasCompletas: PalabraCompleta[]  ): boolean {
     if (titulo.trim() !== '') return true;
     
     return palabrasCompletas.some(p => 
