@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
-import { PalabraCompleta } from './actividad.service';
+import { ProgressService } from './progress.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActividadNavigationService {
   
+  constructor(private progressService: ProgressService) {}
   calcularProgreso(palabraActualIndex: number, totalPalabras: number): number {
-    if (totalPalabras === 0) return 0;
-    return Math.round(((palabraActualIndex + 1) / totalPalabras) * 100);
+    if (!this.progressService.validarIndices(palabraActualIndex, totalPalabras)) {
+      return 0;
+    }
+    return this.progressService.calcularPorcentaje(palabraActualIndex, totalPalabras);
   }
 
   puedeIrAnterior(palabraActualIndex: number): boolean {
@@ -17,6 +20,14 @@ export class ActividadNavigationService {
 
   puedeirSiguiente(palabraActualIndex: number, totalPalabras: number): boolean {
     return palabraActualIndex < totalPalabras - 1;
+  }
+
+  esUltimaPalabra(palabraActualIndex: number, totalPalabras: number): boolean {
+    return palabraActualIndex === totalPalabras - 1;
+  }
+
+  esPrimeraPalabra(palabraActualIndex: number): boolean {
+    return palabraActualIndex === 0;
   }
 
   obtenerColorSilaba(index: number): string {
@@ -36,5 +47,32 @@ export class ActividadNavigationService {
       '#FEF9C3', '#D9F7C4', '#C3D4FE'
     ];
     return colores[Math.floor(Math.random() * colores.length)];
+  }
+
+  obtenerTextoProgreso(palabraActualIndex: number, totalPalabras: number): string {
+    return this.progressService.formatearTextoProgreso(palabraActualIndex, totalPalabras);
+  }
+
+  obtenerColorBarraProgreso(palabraActualIndex: number, totalPalabras: number): string {
+    const porcentaje = this.calcularProgreso(palabraActualIndex, totalPalabras);
+    return this.progressService.obtenerColorProgreso(porcentaje);
+  }
+
+  actividadCompletada(palabraActualIndex: number, totalPalabras: number): boolean {
+    return this.progressService.estaCompleto(palabraActualIndex, totalPalabras);
+  }
+
+  obtenerSiguienteIndice(palabraActualIndex: number, totalPalabras: number): number {
+    if (this.puedeirSiguiente(palabraActualIndex, totalPalabras)) {
+      return palabraActualIndex + 1;
+    }
+    return palabraActualIndex;
+  }
+
+  obtenerAnteriorIndice(palabraActualIndex: number): number {
+    if (this.puedeIrAnterior(palabraActualIndex)) {
+      return palabraActualIndex - 1;
+    }
+    return palabraActualIndex;
   }
 }
