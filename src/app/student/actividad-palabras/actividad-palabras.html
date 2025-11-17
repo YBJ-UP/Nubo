@@ -4,10 +4,22 @@
             <i class="fa-solid fa-arrow-left"></i>
         </button>
         <div class="progress-area">
-            <span class="progress-title">Progreso de la actividad</span>
+            <span class="progress-title">
+                Progreso: {{progressData?.palabraActual || 0}} de {{progressData?.totalPalabras || 0}} palabras 
+                ({{progreso.toFixed(0)}}%)
+            </span>
             <div class="progress-bar-container">
-                <div class="progress-bar-fill" [style.width.%]="progreso"></div> 
+                <div 
+                    class="progress-bar-fill" 
+                    [style.width.%]="progreso"
+                    [style.background-color]="obtenerColorBarra()"
+                >
+                </div> 
             </div>
+            <span class="progress-subtitle" *ngIf="progressData">
+                Completadas: {{progressData.palabrasCompletadas}} | 
+                Faltantes: {{progressData.palabrasFaltantes}}
+            </span>
         </div>
     </header>
 
@@ -18,17 +30,21 @@
                 (click)="anteriorPalabra()"
                 [disabled]="!puedeIrAnterior()"
                 [class.disabled]="!puedeIrAnterior()"
+                [title]="puedeIrAnterior() ? 'Palabra anterior' : 'Esta es la primera palabra'"
             >
                 <i class="fa-solid fa-arrow-left"></i>
             </button>
+            
             <div class="main-image-card" [style.background-color]="navigationService.obtenerColorAleatorio()">
                 <img [src]="palabraActual.imagenUrl" [alt]="palabraActual.palabra" class="main-image">
             </div>
+            
             <button 
                 class="nav-arrow right-arrow"
                 (click)="siguientePalabra()"
                 [disabled]="!puedeirSiguiente()"
                 [class.disabled]="!puedeirSiguiente()"
+                [title]="puedeirSiguiente() ? 'Siguiente palabra' : 'Esta es la última palabra'"
             >
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
@@ -59,7 +75,12 @@
 
         <div class="palabra-info">
             <p class="palabra-completa">{{palabraActual.palabra}}</p>
-            <p class="palabra-contador">Palabra {{palabraActualIndex + 1}} de {{palabras.length}}</p>
+            <p class="palabra-contador">
+                {{obtenerTextoProgreso()}}
+                <span *ngIf="actividadCompletada()" class="completado-badge">
+                    <i class="fa-solid fa-check-circle"></i> ¡Completado!
+                </span>
+            </p>
         </div>
     </div>
 </div>
