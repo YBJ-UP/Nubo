@@ -21,10 +21,13 @@ export class ProgressService {
   }
 
   obtenerDatosProgreso(palabraActualIndex: number, totalPalabras: number): ProgressData {
+    const palabrasCompletadas = palabraActualIndex + 1;
     return {
-      palabraActual: palabraActualIndex + 1,
+      palabraActual: palabrasCompletadas,
       totalPalabras: totalPalabras,
-      porcentaje: this.calcularPorcentaje(palabraActualIndex, totalPalabras)
+      porcentaje: this.calcularPorcentaje(palabraActualIndex, totalPalabras),
+      palabrasCompletadas: palabrasCompletadas,
+      palabrasFaltantes: this.palabrasFaltantes(palabraActualIndex, totalPalabras)
     };
   }
 
