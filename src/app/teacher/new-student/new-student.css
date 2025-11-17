@@ -5,26 +5,6 @@
     justify-content: center;
     align-items: flex-start;
     padding: 20px;
-    overflow-y: scroll;
-}
-
-:host::-webkit-scrollbar {
-    width: 10px;
-}
-
-:host::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-:host::-webkit-scrollbar-thumb {
-    background: #C9C7E9;
-    border-radius: 10px;
-    transition: background 0.3s ease;
-}
-
-:host::-webkit-scrollbar-thumb:hover {
-    background: #A09FD8;
 }
 
 .new-student-container {
