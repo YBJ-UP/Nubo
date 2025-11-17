@@ -42,7 +42,7 @@ export class ActividadFormService {
   private readonly MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
   generarId(): number {
-    return Date.now() + Math.random();
+    return Date.now();
   }
 
   crearPalabraVacia(): Palabra {
@@ -211,7 +211,11 @@ export class ActividadFormService {
       actividades.push(actividad);
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(actividades));
       
-      console.log('Actividad guardada exitosamente:', actividad);
+      console.log('Actividad guardada exitosamente:', {
+        id: actividad.id,
+        titulo: actividad.titulo,
+        palabras: actividad.palabrasCompletas.length
+      });
       return true;
     } catch (error) {
       console.error('Error al guardar la actividad:', error);
@@ -260,7 +264,18 @@ export class ActividadFormService {
 
   getActividadById(id: number): ActividadCompleta | undefined {
     const actividades = this.getAllActividades();
-    return actividades.find(a => a.id === id);
+   
+    let actividad = actividades.find(a => a.id === id);
+    
+    if (!actividad) {
+      actividad = actividades.find(a => String(a.id) === String(id));
+    }
+    
+    if (!actividad) {
+      actividad = actividades.find(a => Math.floor(a.id) === Math.floor(id));
+    }
+    
+    return actividad;
   }
 
   deleteActividad(id: number): boolean {
@@ -273,6 +288,7 @@ export class ActividadFormService {
       }
       
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(filtered));
+      console.log('Actividad eliminada:', id);
       return true;
     } catch (error) {
       console.error('Error al eliminar actividad:', error);
