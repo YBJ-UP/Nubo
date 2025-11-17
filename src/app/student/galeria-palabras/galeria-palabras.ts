@@ -42,7 +42,6 @@ cargarActividades(): void {
       id: act.id,
       titulo: act.titulo,
       colorFondo: this.obtenerColorAleatorio(),
-      // AHORA USA LA IMAGEN DE PORTADA PRIMERO
       imagenUrl: act.imagenPortada || act.palabrasCompletas?.[0]?.imagenUrl || '/crds.webp',
       enlace: `/student/cognitive-abilities/actividad/${act.id}`
     }));
