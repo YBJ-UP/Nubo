@@ -23,7 +23,7 @@ export class ActividadPalabras implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
     private actividadService: ActividadFormService,
-    private navigationService: ActividadNavigationService
+    public navigationService: ActividadNavigationService
   ) {}
 
   ngOnInit(): void {
