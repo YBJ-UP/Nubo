@@ -21,6 +21,7 @@ export interface PalabraCompleta {
 export interface ActividadCompleta {
   id: number;
   titulo: string;
+  imagenPortada: string;
   palabrasCompletas: PalabraCompleta[];
   fechaCreacion: Date;
 }
@@ -190,11 +191,13 @@ export class ActividadFormService {
 
   private crearObjetoActividad(
     titulo: string,
+    imagenPortada: string,
     palabrasCompletas: PalabraCompleta[]
   ): ActividadCompleta {
     return {
       id: this.generarId(),
       titulo: titulo.trim(),
+      imagenPortada: imagenPortada, 
       palabrasCompletas: palabrasCompletas.map(p => this.limpiarPalabraCompleta(p)),
       fechaCreacion: new Date()
     };
@@ -217,13 +220,23 @@ export class ActividadFormService {
   }
 
   async guardarActividadCompleta(
-titulo: string, imagenPortada: string, palabrasCompletas: PalabraCompleta[]  ): Promise<ResultadoOperacion> {
+    titulo: string,
+    imagenPortada: string,
+    palabrasCompletas: PalabraCompleta[]
+  ): Promise<ResultadoOperacion> {
     const validacion = this.validarFormulario(titulo, palabrasCompletas);
     if (!validacion.exito) {
       return validacion;
     }
 
-    const actividad = this.crearObjetoActividad(titulo, palabrasCompletas);
+    if (!imagenPortada || imagenPortada === this.IMAGEN_DEFAULT) {
+      return {
+        exito: false,
+        mensaje: 'Por favor, sube una imagen de portada para la actividad'
+      };
+    }
+
+    const actividad = this.crearObjetoActividad(titulo, imagenPortada, palabrasCompletas);
     const guardado = this.guardarEnStorage(actividad);
 
     if (guardado) {
@@ -268,8 +281,12 @@ titulo: string, imagenPortada: string, palabrasCompletas: PalabraCompleta[]  ): 
   }
 
   hayaCambiosSinGuardar(
-titulo: string, imagenPortada: string, palabrasCompletas: PalabraCompleta[]  ): boolean {
+    titulo: string,
+    imagenPortada: string,
+    palabrasCompletas: PalabraCompleta[]
+  ): boolean {
     if (titulo.trim() !== '') return true;
+    if (imagenPortada !== this.IMAGEN_DEFAULT) return true;
     
     return palabrasCompletas.some(p => 
       p.palabra.trim() !== '' ||
