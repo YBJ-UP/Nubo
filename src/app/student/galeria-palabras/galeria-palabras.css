@@ -1,18 +1,25 @@
-
 :host {
-    display: flex;
-    flex-direction: column; 
+    display: block;
     width: 100%;
-    min-height: 90vh; 
 }
 
-.back-link-container {
-    width: 90%; 
+.galeria-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 5%;
+}
+
+.header-container {
+    width: 100%;
     max-width: 1200px;
-    padding: 0 5%;
+    margin: 0 auto 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.back-link-container a {
+.back-link {
     text-decoration: none;
     color: var(--color-font); 
     font-size: 1.9rem;
@@ -20,14 +27,184 @@
     display: inline-flex; 
     align-items: center;
     cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.back-link:hover {
+    transform: translateX(-5px);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+
+.btn-crear,
+.btn-eliminar,
+.btn-confirmar-eliminar {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-crear {
+    background-color: #A2D8F2;
+    color: #2E5299;
+}
+
+.btn-crear:hover {
+    background-color: #8BC9E8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(162, 216, 242, 0.4);
+}
+
+.btn-eliminar {
+    background-color: #F28B8B;
+    color: #8B2E2E;
+}
+
+.btn-eliminar:hover {
+    background-color: #E67373;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(242, 139, 139, 0.4);
+}
+
+.btn-eliminar.active {
+    background-color: #D64545;
+    color: white;
+}
+
+.btn-confirmar-eliminar {
+    background-color: #4CAF50;
+    color: white;
+    animation: pulse 1.5s infinite;
+}
+
+.btn-confirmar-eliminar:hover {
+    background-color: #45A049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.btn-crear i,
+.btn-eliminar i,
+.btn-confirmar-eliminar i {
+    font-size: 1.1rem;
 }
 
 .grid-cards { 
     display: grid;
     grid-template-columns: repeat(3, 1fr); 
     gap: 100px;
-    padding: 30px 5%; 
     max-width: 1200px;
-    margin: 0 auto; 
-    flex-grow: 1; 
+    margin: 0 auto;
+    width: 100%;
+    padding-bottom: 40px;
+}
+
+.card-wrapper {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.card-wrapper.selectable {
+    cursor: pointer;
+}
+
+.card-wrapper.selectable:hover {
+    transform: translateY(-5px);
+}
+
+.card-wrapper.selected {
+    transform: scale(0.95);
+}
+
+.selection-overlay {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.checkbox-container {
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.checkbox-container i {
+    font-size: 2rem;
+    color: #F28B8B;
+    transition: all 0.3s ease;
+}
+
+.card-wrapper.selected .checkbox-container i {
+    color: #4CAF50;
+}
+
+.card-wrapper app-cards-palabras {
+    pointer-events: none;
+}
+
+.card-wrapper:not(.selectable) app-cards-palabras {
+    pointer-events: auto;
+}
+
+@media (max-width: 1200px) {
+    .grid-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 60px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .action-buttons {
+        width: 100%;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+
+    .grid-cards {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .btn-crear,
+    .btn-eliminar,
+    .btn-confirmar-eliminar {
+        padding: 10px 18px;
+        font-size: 0.9rem;
+    }
 }

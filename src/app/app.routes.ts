@@ -7,8 +7,9 @@ import { Register } from './auth/register/register';
 //MAESTRO
 import { Home } from './teacher/home/home';
 import { CreateStudent } from './teacher/create-student/create-student';
-import { ViewStudent } from './teacher/view-student/view-student';
 import { NewStudent } from './teacher/new-student/new-student';
+import { ViewStudent } from './teacher/view-student/view-student';
+import { CrearActividadComponent } from './teacher/crear-actividad/crear-actividad';
 
 //ESTUDIANTE
 import { StudentHome } from './student/home/student-home';
@@ -41,12 +42,27 @@ export const routes: Routes = [
     component: Home,
     children: [
         { path: '', component: CardsHome },
-        { path: 'students', component: CreateStudent, children: [ { path: '', component: ViewStudent }, { path: 'new', component: NewStudent } ] },
-        { path: 'cognitive-abilities', component: GaleriaPalabras }
+        { 
+            path: 'students', 
+            component: CreateStudent,
+            children: [
+                { path: 'new', component: NewStudent },
+                { path: 'view/:id', component: ViewStudent }
+            ]
+        },
+        { 
+            path: 'cognitive-abilities', 
+            component: Shell,
+            children: [
+                { path: '', component: GaleriaPalabras },
+                { path: 'actividad/:id', component: ActividadPalabras }
+            ]
+        },
+        { path: 'crear-actividad', component: CrearActividadComponent }
     ]
    },
    {
-    path: 'student',
+       path: 'student',
     component: StudentHome,
     children: [
         { path: '', component: CardsHome },
@@ -58,13 +74,14 @@ export const routes: Routes = [
                 { path: 'actividad/:id', component: ActividadPalabras}
             ]
         },
-        {path:'juego-ludico', component: ludicshell,
+        {
+            path:'juego-ludico', 
+            component: ludicshell,
             children:[
               {path: '', component: GaleriaJuegos},
               {path: 'memorama/:id', component: Memorama}
             ]
         }
-        
     ]
    }
 ];

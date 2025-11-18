@@ -1,0 +1,668 @@
+.crear-actividad-wrapper {
+  font-family: 'Fredoka', sans-serif;
+  background-color: #FFF9F2;
+  height: calc(100vh - 100px);
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.portada-section {
+  margin-bottom: 30px;
+}
+
+.portada-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.portada-upload-button {
+  width: 180px;
+  height: 180px;
+  background-color: #FFD0A7;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #8B5A3C;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.portada-upload-button:hover {
+  background-color: #FFC08A;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.upload-label-portada {
+  font-size: 1rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.portada-preview {
+  width: 250px;
+  height: 180px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 3px solid #FFD0A7;
+}
+
+.portada-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.main-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 30px 20px 120px;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.main-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+.main-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.main-container::-webkit-scrollbar-thumb {
+  background: #C9C7E9;
+  border-radius: 10px;
+}
+
+.main-container::-webkit-scrollbar-thumb:hover {
+  background: #B5B3D8;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--color-font);
+  padding: 10px;
+  margin-bottom: 20px;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+.back-button:hover {
+  transform: translateX(-5px);
+}
+
+.content-card {
+  background: white;
+  border-radius: 25px;
+  padding: 50px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-font);
+  margin-bottom: 25px;
+}
+
+.instrucciones-section {
+  margin-bottom: 30px;
+}
+
+.instrucciones-toggle {
+  width: 100%;
+  background-color: #FFD0A7;
+  border: none;
+  border-radius: 15px;
+  padding: 18px 25px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #8B5A3C;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.instrucciones-toggle:hover {
+  background-color: #FFC08A;
+  transform: translateY(-2px);
+}
+
+.instrucciones-toggle i:first-child {
+  font-size: 1.3rem;
+}
+
+.instrucciones-toggle i:last-child {
+  margin-left: auto;
+}
+
+.instrucciones-content {
+  background-color: #FFF9F2;
+  border-radius: 15px;
+  padding: 25px 30px;
+  margin-top: 15px;
+  animation: slideDown 0.3s ease;
+  line-height: 1.8;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.instrucciones-content ol {
+  margin-left: 20px;
+}
+
+.instrucciones-content li {
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.form-group {
+  margin-bottom: 30px;
+}
+
+.form-label {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-font);
+  margin-bottom: 15px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 18px 25px;
+  font-size: 1.1rem;
+  font-family: 'Fredoka', sans-serif;
+  border: 2px solid #E5E5E5;
+  border-radius: 15px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  background-color: #FAFAFA;
+}
+
+.form-input:focus {
+  border-color: #C9C7E9;
+  background-color: white;
+}
+
+.form-input::placeholder {
+  color: #BDBDBD;
+}
+
+.divider {
+  border: none;
+  height: 3px;
+  background: linear-gradient(to right, #8B5A3C, transparent);
+  margin: 40px 0;
+}
+
+.palabra-completa-section {
+  margin-bottom: 20px;
+}
+
+.palabra-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding: 20px;
+  background-color: #F9F7F0;
+  border-radius: 15px;
+}
+
+.palabra-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-font);
+  margin: 0;
+}
+
+.btn-eliminar-palabra {
+  padding: 12px 25px;
+  background-color: #F28B8B;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  font-family: 'Fredoka', sans-serif;
+}
+
+.btn-eliminar-palabra:hover {
+  background-color: #E67373;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(242, 139, 139, 0.4);
+}
+
+.btn-eliminar-palabra i {
+  font-size: 1.1rem;
+}
+
+.palabras-section {
+  margin-top: 35px;
+}
+
+.palabras-container {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 35px;
+  align-items: flex-start;
+}
+
+.imagen-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+.imagen-upload-button {
+  width: 120px;
+  height: 120px;
+  background-color: #FFD0A7;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: #8B5A3C;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.imagen-upload-button:hover {
+  background-color: #FFC08A;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.upload-label {
+  font-size: 0.95rem;
+  color: #666;
+  text-align: center;
+  font-weight: 500;
+}
+
+.imagen-preview {
+  width: 120px;
+  height: 120px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.imagen-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.palabra-principal-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-label-small {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-font);
+  margin-bottom: 8px;
+}
+
+.palabra-principal-input {
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 1.2rem;
+  font-family: 'Fredoka', sans-serif;
+  border: 2px solid #E5E5E5;
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  background-color: white;
+  font-weight: 600;
+}
+
+.palabra-principal-input:focus {
+  border-color: #C9C7E9;
+}
+
+.palabras-list {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-content: flex-start;
+}
+
+.palabra-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.palabra-input {
+  width: 100px;
+  padding: 15px 18px;
+  font-size: 1.3rem;
+  font-family: 'Fredoka', sans-serif;
+  border: 2px solid #E5E5E5;
+  border-radius: 12px;
+  outline: none;
+  text-align: center;
+  transition: border-color 0.3s ease;
+  background-color: white;
+  font-weight: 600;
+}
+
+.palabra-input:focus {
+  border-color: #C9C7E9;
+}
+
+.btn-add-circle,
+.btn-delete-circle {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  transition: all 0.2s ease;
+}
+
+.btn-add-circle {
+  background-color: transparent;
+  color: #4CAF50;
+}
+
+.btn-add-circle:hover {
+  background-color: #E8F5E9;
+  transform: scale(1.15);
+}
+
+.btn-delete-circle {
+  background-color: transparent;
+  color: #F44336;
+}
+
+.btn-delete-circle:hover:not(:disabled) {
+  background-color: #FFEBEE;
+  transform: scale(1.15);
+}
+
+.btn-delete-circle:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.fonemas-section {
+  margin-top: 35px;
+  margin-bottom: 30px;
+}
+
+.fonemas-title {
+  margin-bottom: 20px;
+}
+
+.fonemas-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+}
+
+.fonema-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.fonema-circle {
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  background-color: #E8E8E8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.fonema-input {
+  width: 60px;
+  height: 60px;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-size: 1.4rem;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  color: #333;
+  outline: none;
+}
+
+.fonema-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-add-fonema,
+.btn-delete-fonema {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+}
+
+.btn-add-fonema {
+  background-color: transparent;
+  color: #4CAF50;
+}
+
+.btn-add-fonema:hover {
+  background-color: #E8F5E9;
+  transform: scale(1.15);
+}
+
+.btn-delete-fonema {
+  background-color: transparent;
+  color: #F44336;
+}
+
+.btn-delete-fonema:hover:not(:disabled) {
+  background-color: #FFEBEE;
+  transform: scale(1.15);
+}
+
+.btn-delete-fonema:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btn-agregar-palabra {
+  width: 100%;
+  padding: 18px;
+  background-color: #D6DC82;
+  border: none;
+  border-radius: 15px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #3E3300;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  font-family: 'Fredoka', sans-serif;
+  margin-top: 25px;
+}
+
+.btn-agregar-palabra:hover {
+  background-color: #C8D26D;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-agregar-palabra i {
+  font-size: 1.4rem;
+}
+
+.floating-button-container {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  z-index: 1000;
+}
+
+.btn-crear-actividad {
+  padding: 20px 40px;
+  background: linear-gradient(135deg, #A2D8F2 0%, #7FC4E8 100%);
+  border: none;
+  border-radius: 50px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2E5299;
+  cursor: pointer;
+  font-family: 'Fredoka', sans-serif;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(162, 216, 242, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-crear-actividad:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(162, 216, 242, 0.7);
+  background: linear-gradient(135deg, #7FC4E8 0%, #A2D8F2 100%);
+}
+
+.btn-crear-actividad:active {
+  transform: translateY(-1px);
+}
+
+.btn-crear-actividad i {
+  font-size: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .content-card {
+    padding: 30px 25px;
+  }
+
+  .palabras-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .palabras-list {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .fonemas-container {
+    justify-content: center;
+  }
+
+  .floating-button-container {
+    bottom: 25px;
+    right: 25px;
+  }
+
+  .btn-crear-actividad {
+    padding: 16px 30px;
+    font-size: 1.1rem;
+  }
+
+  .palabra-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .btn-eliminar-palabra {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-header h2 {
+    font-size: 1.6rem;
+  }
+
+  .form-label {
+    font-size: 1.1rem;
+  }
+
+  .imagen-upload-button {
+    width: 100px;
+    height: 100px;
+    font-size: 2rem;
+  }
+
+  .palabra-input {
+    width: 85px;
+    padding: 12px 15px;
+    font-size: 1.1rem;
+  }
+
+  .fonema-circle {
+    width: 70px;
+    height: 70px;
+  }
+
+  .fonema-input {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+}

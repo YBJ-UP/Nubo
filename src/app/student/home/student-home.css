@@ -1,27 +1,45 @@
 :host {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    width: 100vw; height: 100vh;
+    width: 100vw;
+    height: 100vh;
     background-color: #FFF9F2;
-    overflow: auto;
-    overflow-y: hidden;
+    overflow: hidden;
 }
+
 .cuerpo {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 0 20px;
 }
-.anuncio {
-    width: 90%;
-    margin-top: 1rem;
-    justify-content: center;
-    align-items: center;
+
+.cuerpo::-webkit-scrollbar {
+    width: 10px;
 }
+
+.cuerpo::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.cuerpo::-webkit-scrollbar-thumb {
+    background: #C9C7E9;
+    border-radius: 10px;
+}
+
+.cuerpo::-webkit-scrollbar-thumb:hover {
+    background: #B5B3D8;
+}
+
 section {
-    width: 90%;
-    margin-top: 2rem;
+    width: 100%;
+    max-width: 1600px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    padding: 20px 0;
 }
