@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ActividadFormService, PalabraCompleta } from '../../services/actividad.service';
 import { ActividadNavigationService } from '../../services/actividad.navegation.service';
 import { ProgressService, ProgressData } from '../../services/progress.service';
+import { SpeechService } from '../../services/speech.service';
 
 @Component({
   selector: 'app-actividad-palabras',
@@ -13,20 +14,25 @@ import { ProgressService, ProgressData } from '../../services/progress.service';
   templateUrl: './actividad-palabras.html',
   styleUrl: './actividad-palabras.css'
 })
-export class ActividadPalabras implements OnInit {
+export class ActividadPalabras implements OnInit, OnDestroy {
   palabras: PalabraCompleta[] = [];
   palabraActualIndex: number = 0;
   progreso: number = 0;
   actividadId: number | null = null;
   tituloActividad: string = '';
   progressData: ProgressData | null = null;
+  
+  // Estados de audio
+  isPlayingAudio: boolean = false;
+  audioError: string | null = null;
 
   constructor(
     private location: Location,
     private route: ActivatedRoute,
     private actividadService: ActividadFormService,
     public navigationService: ActividadNavigationService,
-    private progressService: ProgressService
+    private progressService: ProgressService,
+    private speechService: SpeechService
   ) {}
 
   ngOnInit(): void {
@@ -35,6 +41,17 @@ export class ActividadPalabras implements OnInit {
       this.actividadId = parseInt(id);
       this.cargarActividad(this.actividadId);
     }
+
+    // Verificar soporte de Web Speech API
+    if (!this.speechService.isSupported()) {
+      console.warn('Web Speech API no está soportada en este navegador');
+      this.audioError = 'Audio no disponible en este navegador';
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Detener cualquier reproducción al salir del componente
+    this.speechService.stop();
   }
 
   cargarActividad(id: number): void {
@@ -62,6 +79,7 @@ export class ActividadPalabras implements OnInit {
 
   anteriorPalabra(): void {
     if (this.navigationService.puedeIrAnterior(this.palabraActualIndex)) {
+      this.speechService.stop();
       this.palabraActualIndex = this.navigationService.obtenerAnteriorIndice(this.palabraActualIndex);
       this.actualizarProgreso();
       console.log('Navegando a palabra anterior:', this.palabraActualIndex + 1);
@@ -70,6 +88,7 @@ export class ActividadPalabras implements OnInit {
 
   siguientePalabra(): void {
     if (this.navigationService.puedeirSiguiente(this.palabraActualIndex, this.palabras.length)) {
+      this.speechService.stop();
       this.palabraActualIndex = this.navigationService.obtenerSiguienteIndice(
         this.palabraActualIndex, 
         this.palabras.length
@@ -85,7 +104,6 @@ export class ActividadPalabras implements OnInit {
     }
   }
 
-
   private actualizarProgreso(): void {
     this.progreso = this.navigationService.calcularProgreso(
       this.palabraActualIndex, 
@@ -96,16 +114,113 @@ export class ActividadPalabras implements OnInit {
       this.palabraActualIndex,
       this.palabras.length
     );
-    
-    console.log('Progreso actualizado:', {
-      porcentaje: this.progreso,
-      palabraActual: this.progressData.palabraActual,
-      totalPalabras: this.progressData.totalPalabras,
-      completadas: this.progressData.palabrasCompletadas,
-      faltantes: this.progressData.palabrasFaltantes
-    });
   }
 
+  // Métodos de reproducción de audio
+  async reproducirPalabraCompleta(): Promise<void> {
+    if (!this.palabraActual || this.isPlayingAudio) return;
+
+    try {
+      this.isPlayingAudio = true;
+      this.audioError = null;
+      await this.speechService.speakWord(this.palabraActual.palabra);
+    } catch (error) {
+      console.error('Error al reproducir palabra:', error);
+      this.audioError = 'Error al reproducir audio';
+    } finally {
+      this.isPlayingAudio = false;
+    }
+  }
+
+  async reproducirSilaba(silaba: string): Promise<void> {
+    if (!silaba || this.isPlayingAudio) return;
+
+    try {
+      this.isPlayingAudio = true;
+      this.audioError = null;
+      await this.speechService.speakSyllable(silaba);
+    } catch (error) {
+      console.error('Error al reproducir sílaba:', error);
+      this.audioError = 'Error al reproducir audio';
+    } finally {
+      this.isPlayingAudio = false;
+    }
+  }
+
+  async reproducirFonema(fonema: string): Promise<void> {
+    if (!fonema || this.isPlayingAudio) return;
+
+    try {
+      this.isPlayingAudio = true;
+      this.audioError = null;
+      await this.speechService.speakPhoneme(fonema);
+    } catch (error) {
+      console.error('Error al reproducir fonema:', error);
+      this.audioError = 'Error al reproducir audio';
+    } finally {
+      this.isPlayingAudio = false;
+    }
+  }
+
+  async reproducirSecuenciaSilabas(): Promise<void> {
+    if (!this.palabraActual || this.isPlayingAudio) return;
+
+    try {
+      this.isPlayingAudio = true;
+      this.audioError = null;
+
+      for (const silaba of this.palabraActual.silabas) {
+        if (silaba.texto.trim()) {
+          await this.speechService.speakSyllable(silaba.texto);
+          // Pequeña pausa entre sílabas
+          await this.delay(300);
+        }
+      }
+
+      // Reproducir palabra completa al final
+      await this.delay(500);
+      await this.speechService.speakWord(this.palabraActual.palabra);
+
+    } catch (error) {
+      console.error('Error al reproducir secuencia:', error);
+      this.audioError = 'Error al reproducir audio';
+    } finally {
+      this.isPlayingAudio = false;
+    }
+  }
+
+  async reproducirSecuenciaFonemas(): Promise<void> {
+    if (!this.palabraActual || this.isPlayingAudio) return;
+
+    try {
+      this.isPlayingAudio = true;
+      this.audioError = null;
+
+      for (const fonema of this.palabraActual.fonemas) {
+        if (fonema.texto.trim()) {
+          await this.speechService.speakPhoneme(fonema.texto);
+          await this.delay(250);
+        }
+      }
+
+    } catch (error) {
+      console.error('Error al reproducir secuencia de fonemas:', error);
+      this.audioError = 'Error al reproducir audio';
+    } finally {
+      this.isPlayingAudio = false;
+    }
+  }
+
+  detenerAudio(): void {
+    this.speechService.stop();
+    this.isPlayingAudio = false;
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  // Métodos existentes
   obtenerColorSilaba(index: number): string {
     return this.navigationService.obtenerColorSilaba(index);
   }
@@ -144,6 +259,8 @@ export class ActividadPalabras implements OnInit {
   }
 
   regresar(): void {
+    this.speechService.stop();
+    
     if (this.actividadCompletada()) {
       const mensaje = '¡Has completado esta actividad!\n\n' +
                      `Palabras vistas: ${this.progressData?.palabrasCompletadas || 0}\n` +
