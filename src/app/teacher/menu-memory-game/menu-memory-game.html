@@ -27,12 +27,12 @@
             <div class="selection-indicator" *ngIf="isDeleting">
                 <input type="radio" [checked]="selectedGameIndex === i" (click)="$event.stopPropagation(); selectGame(i)">
             </div>
-            <h3 class="game-title">{{ game.title }}</h3>
             <div class="card-stack">
                 <div class="card front" [style.background-color]="game.color">
+                    <div class="card-title">{{ game.title }}</div>
                     <img *ngIf="game.cards[0]?.imageUrl" [src]="game.cards[0].imageUrl" 
                          class="card-preview" alt="Primera tarjeta">
-                    <button class="btn-start" *ngIf="!isDeleting" (click)="playGame(i); $event.stopPropagation()">start</button>
+                    <button class="btn-start" *ngIf="!isDeleting" (click)="playGame(i); $event.stopPropagation()">Comenzar</button>
                 </div>
                 <div class="card middle" [style.background-color]="game.color"></div>
                 <div class="card back" [style.background-color]="game.color"></div>

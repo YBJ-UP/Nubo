@@ -162,6 +162,20 @@
     justify-content: center;
 }
 
+.card-title {
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    background: rgba(255,255,255,0.7);
+    padding: 6px 8px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    margin-bottom: 6px;
+    z-index: 4;
+}
+
 .modal-overlay {
     position: fixed;
     top: 0;
