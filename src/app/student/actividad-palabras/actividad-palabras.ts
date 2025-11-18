@@ -1,179 +1,258 @@
-import { Injectable } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 
-export interface SpeechConfig {
-  lang?: string;
-  rate?: number;
-  pitch?: number;
-  volume?: number;
-}
+// Services
+import { ActividadFormService, PalabraCompleta } from '../../services/actividad.service';
+import { ActividadNavigationService } from '../../services/actividad.navegation.service';
+import { ProgressService, ProgressData } from '../../services/progress.service';
+import { AudioPlaybackService } from '../../services/audio-playback.service';
+import { ActividadStateService } from '../../services/actividad-state.service';
 
-export interface VoiceOption {
-  name: string;
-  lang: string;
-  localService: boolean;
-  default: boolean;
-}
-
-export interface SpeechError {
-  message: string;
-  code: string;
-}
-
-@Injectable({
-  providedIn: 'root'
+@Component({
+  selector: 'app-actividad-palabras',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './actividad-palabras.html',
+  styleUrl: './actividad-palabras.css'
 })
-export class SpeechService {
-  private synthesis: SpeechSynthesis;
-  private defaultConfig: SpeechConfig = {
-    lang: 'es-MX',
-    rate: 0.9,
-    pitch: 1.0,
-    volume: 1.0
-  };
-  private currentUtterance: SpeechSynthesisUtterance | null = null;
+export class ActividadPalabras implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
 
-  constructor() {
-    this.synthesis = window.speechSynthesis;
-    this.initializeVoices();
+  // Getters para el template
+  get palabraActual(): PalabraCompleta | null {
+    return this.stateService.getPalabraActual();
   }
 
-  private initializeVoices(): void {
-    if (this.synthesis.getVoices().length === 0) {
-      this.synthesis.addEventListener('voiceschanged', () => {
-        console.log('Voces cargadas:', this.synthesis.getVoices().length);
-      });
+  get progreso(): number {
+    return this.stateService.getProgreso();
+  }
+
+  get progressData(): ProgressData | null {
+    return this.stateService.getProgressData();
+  }
+
+  get isPlayingAudio(): boolean {
+    return this.audioService.isPlaying();
+  }
+
+  get audioError(): string | null {
+    return this.audioService.getError();
+  }
+
+  constructor(
+    private location: Location,
+    private route: ActivatedRoute,
+    private actividadService: ActividadFormService,
+    public navigationService: ActividadNavigationService,
+    private progressService: ProgressService,
+    private audioService: AudioPlaybackService,
+    private stateService: ActividadStateService
+  ) {}
+
+  ngOnInit(): void {
+    this.inicializarActividad();
+    this.verificarSoporteAudio();
+  }
+
+  ngOnDestroy(): void {
+    this.audioService.limpiarEstado();
+    this.stateService.resetState();
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private inicializarActividad(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      const actividadId = parseInt(id);
+      this.stateService.setActividadId(actividadId);
+      this.cargarActividad(actividadId);
     }
   }
 
-  isSupported(): boolean {
-    return 'speechSynthesis' in window;
-  }
-
-  getAvailableVoices(): Promise<VoiceOption[]> {
-    return new Promise((resolve) => {
-      let voices = this.synthesis.getVoices();
-      
-      if (voices.length > 0) {
-        resolve(this.mapVoices(voices));
-        return;
-      }
-
-      this.synthesis.onvoiceschanged = () => {
-        voices = this.synthesis.getVoices();
-        resolve(this.mapVoices(voices));
-      };
-    });
-  }
-
-  private mapVoices(voices: SpeechSynthesisVoice[]): VoiceOption[] {
-    return voices.map(voice => ({
-      name: voice.name,
-      lang: voice.lang,
-      localService: voice.localService,
-      default: voice.default
-    }));
-  }
-
-  async speak(text: string, config?: SpeechConfig): Promise<void> {
-    if (!this.isSupported()) {
-      console.error('Web Speech API no está soportada en este navegador');
-      throw new Error('Speech synthesis no disponible');
+  private verificarSoporteAudio(): void {
+    if (!this.audioService.isSpeechSupported()) {
+      console.warn('Web Speech API no está soportada en este navegador');
     }
+  }
 
-    if (!text || text.trim() === '') {
-      console.warn('No hay texto para reproducir');
-      return;
-    }
-
-    this.stop();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    const finalConfig = { ...this.defaultConfig, ...config };
-
-    utterance.lang = finalConfig.lang!;
-    utterance.rate = finalConfig.rate!;
-    utterance.pitch = finalConfig.pitch!;
-    utterance.volume = finalConfig.volume!;
-
-    const voices = await this.getAvailableVoices();
-    const spanishVoice = voices.find(v => v.lang.startsWith('es'));
+  private cargarActividad(id: number): void {
+    const actividad = this.actividadService.getActividadById(id);
     
-    if (spanishVoice) {
-      const voiceList = this.synthesis.getVoices();
-      utterance.voice = voiceList.find(v => v.name === spanishVoice.name) || null;
-    }
-
-    return new Promise((resolve, reject) => {
-      utterance.onend = () => {
-        console.log('Reproducción completada');
-        resolve();
-      };
-
-      utterance.onerror = (event) => {
-        console.error('Error en speech synthesis:', event);
-        reject(event.error);
-      };
-
-      this.synthesis.speak(utterance);
-    });
-  }
-
-  speakWord(word: string): Promise<void> {
-    return this.speak(word, {
-      rate: 0.8,
-      pitch: 1.0
-    });
-  }
-
-  speakSyllable(syllable: string): Promise<void> {
-    return this.speak(syllable, {
-      rate: 0.7,
-      pitch: 1.1
-    });
-  }
-
-  speakPhoneme(phoneme: string): Promise<void> {
-    return this.speak(phoneme, {
-      rate: 0.6,
-      pitch: 1.2
-    });
-  }
-
-  stop(): void {
-    if (this.synthesis.speaking || this.synthesis.pending) {
-      this.synthesis.cancel();
+    if (actividad && actividad.palabrasCompletas) {
+      this.stateService.setPalabras(actividad.palabrasCompletas);
+      this.stateService.setTituloActividad(actividad.titulo);
+      this.actualizarProgreso();
+      
+      console.log('Actividad cargada:', {
+        titulo: actividad.titulo,
+        totalPalabras: actividad.palabrasCompletas.length,
+        id: actividad.id
+      });
+    } else {
+      console.error('Actividad no encontrada o sin palabras');
+      alert('No se pudo cargar la actividad');
+      this.regresar();
     }
   }
 
-  pause(): void {
-    if (this.synthesis.speaking) {
-      this.synthesis.pause();
+  anteriorPalabra(): void {
+    const currentIndex = this.stateService.getPalabraActualIndex();
+    
+    if (this.navigationService.puedeIrAnterior(currentIndex)) {
+      this.audioService.detenerAudio();
+      const nuevoIndex = this.navigationService.obtenerAnteriorIndice(currentIndex);
+      this.stateService.setPalabraActualIndex(nuevoIndex);
+      this.actualizarProgreso();
+      console.log('Navegando a palabra anterior:', nuevoIndex + 1);
     }
   }
 
-  resume(): void {
-    if (this.synthesis.paused) {
-      this.synthesis.resume();
+  siguientePalabra(): void {
+    const currentIndex = this.stateService.getPalabraActualIndex();
+    const totalPalabras = this.stateService.getTotalPalabras();
+    
+    if (this.navigationService.puedeirSiguiente(currentIndex, totalPalabras)) {
+      this.audioService.detenerAudio();
+      const nuevoIndex = this.navigationService.obtenerSiguienteIndice(currentIndex, totalPalabras);
+      this.stateService.setPalabraActualIndex(nuevoIndex);
+      this.actualizarProgreso();
+      console.log('Navegando a siguiente palabra:', nuevoIndex + 1);
+
+      if (this.navigationService.actividadCompletada(nuevoIndex, totalPalabras)) {
+        setTimeout(() => {
+          alert('¡Felicidades! Has completado la actividad.');
+        }, 500);
+      }
     }
   }
 
-  isSpeaking(): boolean {
-    return this.synthesis.speaking;
+  private actualizarProgreso(): void {
+    const currentIndex = this.stateService.getPalabraActualIndex();
+    const totalPalabras = this.stateService.getTotalPalabras();
+    
+    const progreso = this.navigationService.calcularProgreso(currentIndex, totalPalabras);
+    const progressData = this.progressService.obtenerDatosProgreso(currentIndex, totalPalabras);
+    
+    this.stateService.setProgreso(progreso);
+    this.stateService.setProgressData(progressData);
   }
 
-  isPaused(): boolean {
-    return this.synthesis.paused;
+
+  async reproducirPalabraCompleta(): Promise<void> {
+    if (!this.palabraActual) return;
+    
+    try {
+      await this.audioService.reproducirPalabra(this.palabraActual.palabra);
+    } catch (error) {
+      console.error('Error al reproducir palabra completa:', error);
+    }
   }
 
-  setDefaultConfig(config: Partial<SpeechConfig>): void {
-    this.defaultConfig = { ...this.defaultConfig, ...config };
+  async reproducirSilaba(silaba: string): Promise<void> {
+    try {
+      await this.audioService.reproducirSilaba(silaba);
+    } catch (error) {
+      console.error('Error al reproducir sílaba:', error);
+    }
   }
 
-  getDefaultConfig(): SpeechConfig {
-    return { ...this.defaultConfig };
+  async reproducirFonema(fonema: string): Promise<void> {
+    try {
+      await this.audioService.reproducirFonema(fonema);
+    } catch (error) {
+      console.error('Error al reproducir fonema:', error);
+    }
   }
 
-  async testVoice(): Promise<void> {
-    await this.speak('Hola, soy el asistente de voz de Nubo. ¿Puedes escucharme correctamente?');
+  async reproducirSecuenciaSilabas(): Promise<void> {
+    if (!this.palabraActual) return;
+    
+    try {
+      await this.audioService.reproducirSecuenciaSilabas(this.palabraActual);
+    } catch (error) {
+      console.error('Error al reproducir secuencia de sílabas:', error);
+    }
+  }
+
+  async reproducirSecuenciaFonemas(): Promise<void> {
+    if (!this.palabraActual) return;
+    
+    try {
+      await this.audioService.reproducirSecuenciaFonemas(this.palabraActual);
+    } catch (error) {
+      console.error('Error al reproducir secuencia de fonemas:', error);
+    }
+  }
+
+  detenerAudio(): void {
+    this.audioService.detenerAudio();
+  }
+
+  // Métodos de utilidad para el template
+  obtenerColorSilaba(index: number): string {
+    return this.navigationService.obtenerColorSilaba(index);
+  }
+
+  obtenerColorFonema(index: number): string {
+    return this.navigationService.obtenerColorFonema(index);
+  }
+
+  puedeIrAnterior(): boolean {
+    return this.navigationService.puedeIrAnterior(this.stateService.getPalabraActualIndex());
+  }
+
+  puedeirSiguiente(): boolean {
+    const currentIndex = this.stateService.getPalabraActualIndex();
+    const totalPalabras = this.stateService.getTotalPalabras();
+    return this.navigationService.puedeirSiguiente(currentIndex, totalPalabras);
+  }
+
+  obtenerColorBarra(): string {
+    const currentIndex = this.stateService.getPalabraActualIndex();
+    const totalPalabras = this.stateService.getTotalPalabras();
+    return this.navigationService.obtenerColorBarraProgreso(currentIndex, totalPalabras);
+  }
+
+  actividadCompletada(): boolean {
+    const currentIndex = this.stateService.getPalabraActualIndex();
+    const totalPalabras = this.stateService.getTotalPalabras();
+    return this.navigationService.actividadCompletada(currentIndex, totalPalabras);
+  }
+
+  obtenerTextoProgreso(): string {
+    const currentIndex = this.stateService.getPalabraActualIndex();
+    const totalPalabras = this.stateService.getTotalPalabras();
+    return this.navigationService.obtenerTextoProgreso(currentIndex, totalPalabras);
+  }
+
+  regresar(): void {
+    this.audioService.detenerAudio();
+    
+    const progressData = this.stateService.getProgressData();
+    const progreso = this.stateService.getProgreso();
+    const totalPalabras = this.stateService.getTotalPalabras();
+    
+    if (this.actividadCompletada()) {
+      const mensaje = '¡Has completado esta actividad!\n\n' +
+                     `Palabras vistas: ${progressData?.palabrasCompletadas || 0}\n` +
+                     `Progreso: ${progreso.toFixed(0)}%\n\n` +
+                     '¿Deseas salir?';
+      
+      if (confirm(mensaje)) {
+        this.location.back();
+      }
+    } else {
+      const mensaje = `Progreso actual: ${progreso.toFixed(0)}%\n` +
+                     `Palabras completadas: ${progressData?.palabrasCompletadas || 0} de ${totalPalabras}\n\n` +
+                     '¿Estás seguro de que deseas salir?';
+      
+      if (confirm(mensaje)) {
+        this.location.back();
+      }
+    }
   }
 }
