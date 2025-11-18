@@ -19,44 +19,80 @@ export interface VoiceOption {
 })
 export class SpeechService {
   private synthesis: SpeechSynthesis;
+  private selectedVoice: SpeechSynthesisVoice | null = null;
   private defaultConfig: SpeechConfig = {
     lang: 'es-MX',
-    rate: 0.9,
-    pitch: 1.0,
+    rate: 0.85,
+    pitch: 1.15,
     volume: 1.0
   };
 
   constructor() {
     this.synthesis = window.speechSynthesis;
+    this.initializeVoice();
+  }
+
+  private async initializeVoice(): Promise<void> {
+    const voices = await this.getAvailableVoices();
+    this.selectedVoice = this.selectBestVoice(voices);
+    console.log('Voz seleccionada:', this.selectedVoice?.name || 'Voz predeterminada del sistema');
+  }
+
+  private selectBestVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null {
+    const preferredVoices = [
+      'Google español de Estados Unidos',
+      'Microsoft Helena Online (Natural) - Spanish (Mexico)',
+      'Microsoft Sabina - Spanish (Mexico)',
+      'Paulina',
+      'Monica',
+      'es-MX-DaliaNeural',
+      'es-ES-ElviraNeural'
+    ];
+
+    for (const prefName of preferredVoices) {
+      const voice = voices.find(v => v.name.includes(prefName));
+      if (voice) return voice;
+    }
+
+    const femaleSpanishVoice = voices.find(v => 
+      v.lang.startsWith('es') && 
+      (v.name.toLowerCase().includes('female') || 
+       v.name.toLowerCase().includes('mujer') ||
+       v.name.includes('Monica') ||
+       v.name.includes('Paulina') ||
+       v.name.includes('Dalia') ||
+       v.name.includes('Helena') ||
+       v.name.includes('Elvira'))
+    );
+    if (femaleSpanishVoice) return femaleSpanishVoice;
+
+    const mexicanVoice = voices.find(v => v.lang === 'es-MX');
+    if (mexicanVoice) return mexicanVoice;
+
+    const spanishVoice = voices.find(v => v.lang.startsWith('es'));
+    if (spanishVoice) return spanishVoice;
+
+    return null;
   }
 
   isSupported(): boolean {
     return 'speechSynthesis' in window;
   }
 
-  getAvailableVoices(): Promise<VoiceOption[]> {
+  getAvailableVoices(): Promise<SpeechSynthesisVoice[]> {
     return new Promise((resolve) => {
       let voices = this.synthesis.getVoices();
       
       if (voices.length > 0) {
-        resolve(this.mapVoices(voices));
+        resolve(voices);
         return;
       }
 
       this.synthesis.onvoiceschanged = () => {
         voices = this.synthesis.getVoices();
-        resolve(this.mapVoices(voices));
+        resolve(voices);
       };
     });
-  }
-
-  private mapVoices(voices: SpeechSynthesisVoice[]): VoiceOption[] {
-    return voices.map(voice => ({
-      name: voice.name,
-      lang: voice.lang,
-      localService: voice.localService,
-      default: voice.default
-    }));
   }
 
   async speak(text: string, config?: SpeechConfig): Promise<void> {
@@ -80,12 +116,14 @@ export class SpeechService {
     utterance.pitch = finalConfig.pitch!;
     utterance.volume = finalConfig.volume!;
 
-    const voices = await this.getAvailableVoices();
-    const spanishVoice = voices.find(v => v.lang.startsWith('es'));
-    
-    if (spanishVoice) {
-      const voiceList = this.synthesis.getVoices();
-      utterance.voice = voiceList.find(v => v.name === spanishVoice.name) || null;
+    if (this.selectedVoice) {
+      utterance.voice = this.selectedVoice;
+    } else {
+      const voices = await this.getAvailableVoices();
+      this.selectedVoice = this.selectBestVoice(voices);
+      if (this.selectedVoice) {
+        utterance.voice = this.selectedVoice;
+      }
     }
 
     return new Promise((resolve, reject) => {
@@ -105,22 +143,22 @@ export class SpeechService {
 
   speakWord(word: string): Promise<void> {
     return this.speak(word, {
-      rate: 0.8,
-      pitch: 1.0
+      rate: 0.75,
+      pitch: 1.2
     });
   }
 
   speakSyllable(syllable: string): Promise<void> {
     return this.speak(syllable, {
-      rate: 0.7,
-      pitch: 1.1
+      rate: 0.65,
+      pitch: 1.25
     });
   }
 
   speakPhoneme(phoneme: string): Promise<void> {
     return this.speak(phoneme, {
-      rate: 0.6,
-      pitch: 1.2
+      rate: 0.55,
+      pitch: 1.3
     });
   }
 
@@ -158,7 +196,35 @@ export class SpeechService {
     return { ...this.defaultConfig };
   }
 
+  async setVoice(voiceName: string): Promise<boolean> {
+    const voices = await this.getAvailableVoices();
+    const voice = voices.find(v => v.name === voiceName);
+    
+    if (voice) {
+      this.selectedVoice = voice;
+      console.log('Voz cambiada a:', voice.name);
+      return true;
+    }
+    
+    return false;
+  }
+
+  async listSpanishVoices(): Promise<VoiceOption[]> {
+    const allVoices = await this.getAvailableVoices();
+    const spanishVoices = allVoices
+      .filter(v => v.lang.startsWith('es'))
+      .map(v => ({
+        name: v.name,
+        lang: v.lang,
+        localService: v.localService,
+        default: v.default
+      }));
+    
+    console.log('Voces en español disponibles:', spanishVoices);
+    return spanishVoices;
+  }
+
   async testVoice(): Promise<void> {
-    await this.speak('Hola, soy el asistente de voz de Nubo. ¿Puedes escucharme correctamente?');
+    await this.speak('Hola, soy tu asistente de voz. ¿Me escuchas bien?');
   }
 }
