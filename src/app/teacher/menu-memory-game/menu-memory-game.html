@@ -1,0 +1,42 @@
+<app-header *ngIf="!isTeacherView" view="Juegos" name="Yael Beranzos" role="Estudiante" school=""></app-header>
+
+<div class="container">
+    <div class="header">
+        <button class="btn-back" (click)="goBack()" aria-label="Atrás">
+            <img src="/Icon.svg" alt="Atrás" class="btn-back-icon" width="36" height="36">
+        </button>
+        <div class="action-buttons">
+            <ng-container *ngIf="isTeacherView">
+                <button class="btn-create" (click)="createGame()" *ngIf="!isDeleting">
+                    <span class="icon">+</span> Crear
+                </button>
+                <button class="btn-delete" (click)="deleteGame()" [disabled]="isDeleting && selectedGameIndex === -1">
+                    <span class="icon">🗑</span> {{ isDeleting ? 'Confirmar' : 'Eliminar' }}
+                </button>
+                <button class="btn-cancel" (click)="cancelDelete()" *ngIf="isDeleting">
+                    Cancelar
+                </button>
+            </ng-container>
+        </div>
+    </div>
+
+    <div class="games-grid">
+        <div class="game-card" *ngFor="let game of games; let i = index" 
+             [class.selected]="selectedGameIndex === i"
+             (click)="selectGame(i)">
+            <div class="selection-indicator" *ngIf="isDeleting">
+                <input type="radio" [checked]="selectedGameIndex === i" (click)="$event.stopPropagation(); selectGame(i)">
+            </div>
+            <div class="card-stack">
+                <div class="card front" [style.background-color]="game.color">
+                    <div class="card-title">{{ game.title }}</div>
+                    <img *ngIf="game.cards[0]?.imageUrl" [src]="game.cards[0].imageUrl" 
+                         class="card-preview" alt="Primera tarjeta">
+                    <button class="btn-start" *ngIf="!isDeleting" (click)="playGame(i); $event.stopPropagation()">Comenzar</button>
+                </div>
+                <div class="card middle" [style.background-color]="game.color"></div>
+                <div class="card back" [style.background-color]="game.color"></div>
+            </div>
+        </div>
+    </div>
+</div>

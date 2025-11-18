@@ -19,6 +19,10 @@ import { GaleriaJuegos } from './student/galeria-juegos/galeria-juegos';
 
 //COMPARTIDOS
 import { CardsHome } from './components/cards-home/cards-home';
+import { CardsPalabras } from './components/cards-palabras/cards-palabras';
+import { MenuMemoryGame } from './teacher/menu-memory-game/menu-memory-game';
+import { NewMemoryGame } from './teacher/new-memory-game/new-memory-game';
+import { MemoryGame } from './teacher/memory-game/memory-game';
 import { Shell } from './student/shell';
 import { ludicshell } from './student/ludic-shell';
 import { Memorama } from './components/cardGameMemorama/memorama';
@@ -42,6 +46,23 @@ export const routes: Routes = [
     component: Home,
     children: [
         { path: '', component: CardsHome },
+        { path: 'menu-memory-game', component: MenuMemoryGame },
+        { path: 'new-memory-game', component: NewMemoryGame },
+        { path: 'students', component: CreateStudent, children: [ { path: '', component: ViewStudent }, { path: 'new', component: NewStudent } ] },
+        { path: 'cognitive-abilities', component: GaleriaPalabras }
+    ]
+   },
+   {
+    path: 'teacher/memory-game',
+    component: MemoryGame
+   },
+   {
+    path: 'student',
+    component: StudentHome,
+    children: [
+        { path: '', component: CardsHome },
+        { path: 'cognitive-abilities', component: GaleriaPalabras, children: [] },
+        { path: 'menu-memory-game', component: MenuMemoryGame }
         { 
             path: 'students', 
             component: CreateStudent,
@@ -83,5 +104,9 @@ export const routes: Routes = [
             ]
         }
     ]
+   },
+   {
+    path: 'student/memory-game',
+    component: MemoryGame
    }
 ];

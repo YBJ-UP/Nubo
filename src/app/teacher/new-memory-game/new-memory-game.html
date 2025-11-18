@@ -1,0 +1,62 @@
+<div class="help-box">
+    <div class="help-title">
+        <span>¿Cómo puedo crear una actividad?</span>
+    </div>
+    <ol class="help-list">
+        <li>Escribe el titulo de la actividad en el espacio indicado</li>
+        <li>Sube una imagen representativa al tema seleccionado previamente</li>
+        <li>Carga la imagen de manera manual desde tu dispositivo</li>
+    </ol>
+</div>
+
+<div class="main-content">
+    <div class="title-section">
+        <label class="section-label">Título</label>
+        <input type="text" class="title-input" placeholder="Paso a paso">
+        <div class="divider"></div>
+    </div>
+
+    <div class="memorame-section">
+        <label class="section-label">Memorama :</label>
+        <div class="cards-grid">
+            <div class="memory-card" *ngFor="let card of cards">
+                <img [src]="card.imageUrl" [alt]="card.word">
+                <div class="card-overlay">
+                    <input type="text" [(ngModel)]="card.word" class="word-input" placeholder="Palabra">
+                </div>
+                <div class="card-actions">
+                    <button class="action-btn delete" (click)="deleteCard(card)">
+                        <span class="delete-icon">×</span>
+                    </button>
+                </div>
+            </div>
+            <div class="memory-card add-card" (click)="triggerFileInput()" *ngIf="currentCardCount < MAX_CARDS">
+                <span class="add-icon">+</span>
+            </div>
+         <input type="file" 
+             id="imageUpload" 
+             accept="image/*" 
+             multiple
+             style="display: none;"
+             (change)="onImageSelected($event)">
+        </div>
+    <div class="cards-counter">{{currentCardCount}}/{{MAX_CARDS}}</div>
+    </div>
+    <div class="form-actions">
+        <button class="btn-action btn-cancel" (click)="cancelMemoryGame()">
+            <span class="icon">✕</span>
+            Cancelar
+        </button>
+        <button class="btn-action btn-save" (click)="saveMemoryGame()">
+            <span class="icon">+</span>
+            Guardar
+        </button>
+    </div>
+</div>
+<div class="modal-overlay" *ngIf="showMaxCardsModal">
+    <div class="modal-content">
+        <h3>Límite de imágenes alcanzado</h3>
+    <p>Has alcanzado el límite máximo de {{MAX_CARDS}} imágenes.</p>
+        <button class="modal-button" (click)="closeMaxCardsModal()">Aceptar</button>
+    </div>
+</div>
