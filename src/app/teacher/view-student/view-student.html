@@ -1,1 +1,89 @@
-<p>view-student works!</p>
+<div class="view-student-container" *ngIf="student">
+    <div class="header-section">
+        <button (click)="regresar()" class="back-button">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <h2>Perfil del alumno</h2>
+    </div>
+
+    <div class="student-profile-card">
+        <div class="profile-header">
+            <img [src]="student.pfp" [alt]="student.name" class="profile-avatar">
+            <div class="profile-info">
+                <h3 class="profile-name">{{student.name}}</h3>
+                <p class="profile-fullname">{{student.firstName}} {{student.lastName}}</p>
+            </div>
+        </div>
+
+        <div class="modules-section">
+            <div class="modules-header">
+                <h4>Progreso de módulos</h4>
+            </div>
+
+            <div class="module-progress">
+                <div class="module-label">
+                    <div class="module-info">
+                        <div class="module-icon module-1">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <span class="module-name">Módulo 1: Área Cognitiva</span>
+                    </div>
+                    <span class="module-percentage">{{progresoModulo1}}%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div 
+                        class="progress-bar-fill module-1" 
+                        [style.width.%]="progresoModulo1"
+                    >
+                        <span *ngIf="progresoModulo1 > 15">{{progresoModulo1}}%</span>
+                    </div>
+                </div>
+                <div class="progress-details">
+                    <span>{{calcularActividadesCompletadas(progresoModulo1)}} actividades completadas</span>
+                    <span>{{calcularActividadesFaltantes(progresoModulo1)}} por completar</span>
+                </div>
+            </div>
+
+            <div class="module-progress">
+                <div class="module-label">
+                    <div class="module-info">
+                        <div class="module-icon module-2">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <span class="module-name">Módulo 2: Área Lúdica</span>
+                    </div>
+                    <span class="module-percentage">{{progresoModulo2}}%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div 
+                        class="progress-bar-fill module-2" 
+                        [style.width.%]="progresoModulo2"
+                    >
+                        <span *ngIf="progresoModulo2 > 15">{{progresoModulo2}}%</span>
+                    </div>
+                </div>
+                <div class="progress-details">
+                    <span>{{calcularActividadesCompletadas(progresoModulo2)}} actividades completadas</span>
+                    <span>{{calcularActividadesFaltantes(progresoModulo2)}} por completar</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-delete" (click)="eliminarAlumno()">
+                    <i class="fa-solid fa-trash-can"></i>
+                    Eliminar alumno
+                </button>
+                <button class="btn-login" (click)="ingresarComoAlumno()">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    Ingresar como alumno
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="not-found" *ngIf="!student">
+    <i class="fa-solid fa-user-slash"></i>
+    <h3>Estudiante no encontrado</h3>
+    <button (click)="regresar()" class="btn-back">Volver a la lista</button>
+</div>

@@ -1,91 +1,228 @@
 :host {
-    width: 80%;
+    width: 100%;
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.new-student-container {
+    width: 100%;
+    max-width: 600px;
+    font-family: 'Fredoka', sans-serif;
+}
+
+.header-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--color-font);
+    padding: 10px;
+    transition: transform 0.2s ease;
+}
+
+.back-button:hover {
+    transform: translateX(-5px);
+}
+
+.header-section h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-font);
+}
+
+.form-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .img-container {
-    width: 100%;
-    height: auto;
-    margin-block: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 40px;
+}
 
-    .pfp-preview {
-        width: 30%;
-        border-radius: 50%;
-        margin-bottom: 30px;
-    }
+.avatar-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
 
-    p {
-        border: 0;
-        text-align: center;
-        font-size: 25px;
-    }
+.pfp-preview {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #FFD0A7;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.change-photo-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 45px;
+    height: 45px;
+    background-color: #A2D8F2;
+    border: 3px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.change-photo-btn:hover {
+    background-color: #8BC9E8;
+    transform: scale(1.1);
+}
+
+.change-photo-btn i {
+    color: white;
+    font-size: 1.2rem;
+}
+
+.student-name-preview {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-font);
+    text-align: center;
+    min-height: 35px;
 }
 
 .formulario {
     display: flex;
     flex-direction: column;
+    gap: 25px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-group label {
+    display: flex;
     align-items: center;
-    margin-top: 2rem;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-font);
 }
 
-.formulario p {
-  display: flex;
-  align-items: center;
-  position: relative;
-  margin-bottom: 1rem;
+.form-group label i {
+    color: #999;
+    font-size: 1rem;
 }
 
-.formulario i {
-  position: absolute;
-  left: 15px;
-  color: #999;
-  font-size: 16px;
-  z-index: 1;
+.form-group input {
+    width: 100%;
+    padding: 15px;
+    font-size: 1rem;
+    font-family: 'Fredoka', sans-serif;
+    border: 2px solid #E5E5E5;
+    border-radius: 12px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    background-color: #FAFAFA;
+    box-sizing: border-box;
 }
 
-.formulario input {
-  width: 250px;
-  padding: 12px 15px 12px 45px;
-  border: none;
-  border-radius: 8px;
-  background-color: #F0EDDF;
-  color: #333;
-  font-size: 20px;
-  transition: all 0.3s ease;
-  border: 1px solid #ededed;
+.form-group input:focus {
+    border-color: #C9C7E9;
+    background-color: white;
 }
-.formulario input::placeholder {
-  color: #999;
+
+.form-group input::placeholder {
+    color: #BDBDBD;
 }
 
 .button-container {
-    width: 100%;
-    margin-top: 50px;
-    margin-bottom: 30px;
     display: flex;
-    justify-content: space-between;
+    gap: 15px;
+    margin-top: 20px;
+    padding-top: 30px;
+    border-top: 2px solid #f0f0f0;
 }
 
-button {
-    padding-inline: 30px;
-    padding-block: 15px;
-    border: 0;
-    border-radius: 10px;
-    font-size: large;
+.btn-cancel,
+.btn-submit {
+    flex: 1;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    font-family: 'Fredoka', sans-serif;
 }
 
-.cancel {
-    background-color: #D96073;
-}
-.cancel:hover {
-    background-color: #b44858;
+.btn-cancel {
+    background-color: #F28B8B;
+    color: #8B2E2E;
 }
 
-.add {
+.btn-cancel:hover {
+    background-color: #E67373;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(242, 139, 139, 0.4);
+}
+
+.btn-submit {
     background-color: #D6DC82;
+    color: #3E3300;
 }
-.add:hover {
-    background-color: #b3b95f;
+
+.btn-submit:hover {
+    background-color: #C8D26D;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(214, 220, 130, 0.4);
+}
+
+.btn-cancel i,
+.btn-submit i {
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .form-card {
+        padding: 25px 20px;
+    }
+
+    .pfp-preview {
+        width: 120px;
+        height: 120px;
+    }
+
+    .student-name-preview {
+        font-size: 1.3rem;
+    }
+
+    .button-container {
+        flex-direction: column;
+    }
+
+    .btn-cancel,
+    .btn-submit {
+        width: 100%;
+    }
 }
