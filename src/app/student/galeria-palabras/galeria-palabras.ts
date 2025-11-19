@@ -66,12 +66,14 @@ export class GaleriaPalabras implements OnInit {
         };
       });
 
-      this.palabras = [...actividadesConvertidas, ...PALABRAS_DATA_MOCK];
-      console.log('Total palabras cargadas:', this.palabras.length);
-      console.log('IDs finales:', this.palabras.map(p => ({ id: p.id, titulo: p.titulo })));
+      // Mostrar únicamente las actividades que se cargaron manualmente.
+      this.palabras = actividadesConvertidas;
+      console.log('Actividades manuales cargadas:', this.palabras.length);
+      console.log('IDs finales (manuales):', this.palabras.map(p => ({ id: p.id, titulo: p.titulo })));
     } else {
-      console.log('No hay actividades guardadas, usando MOCK');
-      this.palabras = PALABRAS_DATA_MOCK;
+      console.log('No hay actividades guardadas manualmente; sin actividades para mostrar');
+      // No cargar actividades por defecto: dejar la lista vacía
+      this.palabras = [];
     }
   }
 

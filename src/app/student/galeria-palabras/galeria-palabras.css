@@ -36,7 +36,7 @@
 
 .action-buttons {
     display: flex;
-    gap: 15px;
+    gap: 20px; /* match menu-memory-game spacing */
     align-items: center;
 }
 
