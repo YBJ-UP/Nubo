@@ -62,7 +62,7 @@ export const routes: Routes = [
     children: [
         { path: '', component: CardsHome },
         { path: 'cognitive-abilities', component: GaleriaPalabras, children: [] },
-        { path: 'menu-memory-game', component: MenuMemoryGame }
+        { path: 'menu-memory-game', component: MenuMemoryGame },
         { 
             path: 'students', 
             component: CreateStudent,
