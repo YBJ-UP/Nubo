@@ -61,48 +61,33 @@ export const routes: Routes = [
     component: StudentHome,
     children: [
         { path: '', component: CardsHome },
-        { path: 'cognitive-abilities', component: GaleriaPalabras, children: [] },
         { path: 'menu-memory-game', component: MenuMemoryGame },
-        { 
-            path: 'students', 
+        {
+            path: 'students',
             component: CreateStudent,
             children: [
+                { path: '', component: ViewStudent },
                 { path: 'new', component: NewStudent },
                 { path: 'view/:id', component: ViewStudent }
             ]
         },
-        { 
-            path: 'cognitive-abilities', 
+        {
+            path: 'cognitive-abilities',
             component: Shell,
             children: [
                 { path: '', component: GaleriaPalabras },
                 { path: 'actividad/:id', component: ActividadPalabras }
             ]
         },
-        { path: 'crear-actividad', component: CrearActividadComponent }
-    ]
-   },
-   {
-       path: 'student',
-    component: StudentHome,
-    children: [
-        { path: '', component: CardsHome },
-        { 
-            path: 'cognitive-abilities', 
-            component: Shell, 
-            children: [
-                { path: '', component: GaleriaPalabras },
-                { path: 'actividad/:id', component: ActividadPalabras}
-            ]
-        },
         {
-            path:'juego-ludico', 
+            path:'juego-ludico',
             component: ludicshell,
             children:[
-              {path: '', component: GaleriaJuegos},
-              {path: 'memorama/:id', component: Memorama}
+              { path: '', component: GaleriaJuegos },
+              { path: 'memorama/:id', component: Memorama }
             ]
-        }
+        },
+        { path: 'crear-actividad', component: CrearActividadComponent }
     ]
    },
    {
