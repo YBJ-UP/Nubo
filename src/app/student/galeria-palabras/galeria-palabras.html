@@ -4,12 +4,12 @@
             <i class="fa-solid fa-arrow-left"></i>
         </a>
         <div class="action-buttons" *ngIf="esProfesor">
-            <button class="btn-crear" (click)="irACrearActividad()">
+            <button class="btn-create" (click)="irACrearActividad()">
                 <i class="fa-solid fa-circle-plus"></i>
                 Crear
             </button>
             <button 
-                class="btn-eliminar" 
+                class="btn-delete" 
                 [class.active]="modoEliminar" 
                 (click)="toggleModoEliminar()"
             >
