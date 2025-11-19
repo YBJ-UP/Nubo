@@ -10,12 +10,13 @@ import { MemoramaData } from '../../interfaces/memorama';
 import { MEMORAMA_DATA_MOCK } from '../../data/memorama-data'; 
 
 import { CardsMemorama } from '../../components/cards-memorama/cards-memorama';
+import { FloatingMessage } from '../../shared/floating-message/floating-message';
 
 @Component({
   selector: 'app-galeria-juegos',
-  imports: [CommonModule, CardsMemorama, RouterModule],
+  imports: [CommonModule, CardsMemorama, RouterModule, FloatingMessage],
   templateUrl: './galeria-juegos.html',
-  styleUrl: './galeria-juegos.css'
+  styleUrls: ['./galeria-juegos.css']
 })
 export class GaleriaJuegos  implements OnInit {
   rondas : MemoramaData[] =[]; 

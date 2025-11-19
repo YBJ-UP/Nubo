@@ -27,6 +27,18 @@
         </div>
     </div>
 
+        <app-floating-message
+            [visible]="notice.visible"
+            [title]="notice.title"
+            [message]="notice.message"
+            [type]="notice.type"
+            [primaryLabel]="notice.primaryLabel"
+            [secondaryLabel]="notice.secondaryLabel"
+            (primary)="onNoticePrimary()"
+            (secondary)="onNoticeSecondary()"
+            (closed)="notice.visible = false"
+        ></app-floating-message>
+
     <div class="grid-cards">
         <div 
             *ngFor="let palabra of palabras"

@@ -1,0 +1,35 @@
+.fm-overlay{
+  position: fixed;
+  inset: 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(0,0,0,0.35);
+  z-index: 9999;
+}
+.fm-card{
+  background: #fff;
+  border-radius: 16px;
+  width: min(640px, 92%);
+  padding: 22px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  position: relative;
+  text-align: center;
+}
+.fm-card.success{ border: 6px solid #FFDE7A; }
+.fm-card.error{ border: 6px solid #F78C8C; }
+.fm-card.info{ border: 6px solid #C3D4FE; }
+.fm-close{
+  position:absolute;
+  right:12px;
+  top:8px;
+  border:none;
+  background:transparent;
+  font-size:22px;
+  cursor:pointer;
+}
+.fm-title{ margin: 6px 0 8px; font-size:20px; }
+.fm-message{ color:#333; margin-bottom:18px; }
+.fm-actions{ display:flex; gap:12px; justify-content:center; }
+.fm-primary{ background:#FFD966; border:none; padding:10px 18px; border-radius:30px; cursor:pointer; }
+.fm-secondary{ background:#EEE; border:none; padding:10px 18px; border-radius:30px; cursor:pointer; }
