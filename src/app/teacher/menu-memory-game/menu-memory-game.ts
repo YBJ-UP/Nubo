@@ -46,7 +46,8 @@ export class MenuMemoryGame implements OnInit, OnDestroy {
   }
 
   createGame() {
-    this.router.navigate(['/teacher/new-memory-game']);
+    const route = this.isTeacherView ? '/teacher/new-memory-game' : '/student/new-memory-game';
+    this.router.navigate([route]);
   }
 
   deleteGame() {

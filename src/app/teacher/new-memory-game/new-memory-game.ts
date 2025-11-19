@@ -57,7 +57,8 @@ export class NewMemoryGame {
     };
     
     this.gameService.addGame(newGame);
-    this.router.navigate(['/teacher/menu-memory-game']);
+    const route = this.router.url.startsWith('/teacher') ? '/teacher/menu-memory-game' : '/student/menu-memory-game';
+    this.router.navigate([route]);
   }
 
   private getRandomColor(): string {
@@ -66,7 +67,8 @@ export class NewMemoryGame {
   }
 
   cancelMemoryGame() {
-    this.router.navigate(['/teacher/menu-memory-game']);
+    const route = this.router.url.startsWith('/teacher') ? '/teacher/menu-memory-game' : '/student/menu-memory-game';
+    this.router.navigate([route]);
   }
 
   onImageSelected(event: Event) {
