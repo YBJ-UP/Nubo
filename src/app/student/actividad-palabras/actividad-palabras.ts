@@ -33,6 +33,8 @@ export class ActividadPalabras implements OnInit, OnDestroy {
   };
   private _primaryCb?: () => void;
   private _secondaryCb?: () => void;
+  // Background color for main image card (avoid calling random in template)
+  mainCardBgColor: string = '#FFFFFF';
 
   // Getters para el template
   get palabraActual(): PalabraCompleta | null {
@@ -162,6 +164,8 @@ export class ActividadPalabras implements OnInit, OnDestroy {
     
     this.stateService.setProgreso(progreso);
     this.stateService.setProgressData(progressData);
+    // deterministically pick a background color for the current card (avoids ExpressionChangedAfterItHasBeenCheckedError)
+    this.mainCardBgColor = this.navigationService.obtenerColorAleatorio();
   }
 
 
@@ -172,6 +176,8 @@ export class ActividadPalabras implements OnInit, OnDestroy {
       await this.audioService.reproducirPalabra(this.palabraActual.palabra);
     } catch (error) {
       console.error('Error al reproducir palabra completa:', error);
+      const msg = (error && (error as any).message) ? (error as any).message : String(error || 'Error al reproducir la palabra');
+      this.showNotice('Error de audio', msg, 'error', 'Aceptar');
     }
   }
 
@@ -180,6 +186,8 @@ export class ActividadPalabras implements OnInit, OnDestroy {
       await this.audioService.reproducirSilaba(silaba);
     } catch (error) {
       console.error('Error al reproducir sílaba:', error);
+      const msg = (error && (error as any).message) ? (error as any).message : String(error || 'Error al reproducir la sílaba');
+      this.showNotice('Error de audio', msg, 'error', 'Aceptar');
     }
   }
 
@@ -188,6 +196,8 @@ export class ActividadPalabras implements OnInit, OnDestroy {
       await this.audioService.reproducirFonema(fonema);
     } catch (error) {
       console.error('Error al reproducir fonema:', error);
+      const msg = (error && (error as any).message) ? (error as any).message : String(error || 'Error al reproducir el fonema');
+      this.showNotice('Error de audio', msg, 'error', 'Aceptar');
     }
   }
 
@@ -198,6 +208,8 @@ export class ActividadPalabras implements OnInit, OnDestroy {
       await this.audioService.reproducirSecuenciaSilabas(this.palabraActual);
     } catch (error) {
       console.error('Error al reproducir secuencia de sílabas:', error);
+      const msg = (error && (error as any).message) ? (error as any).message : String(error || 'Error al reproducir la secuencia de sílabas');
+      this.showNotice('Error de audio', msg, 'error', 'Aceptar');
     }
   }
 
@@ -208,6 +220,8 @@ export class ActividadPalabras implements OnInit, OnDestroy {
       await this.audioService.reproducirSecuenciaFonemas(this.palabraActual);
     } catch (error) {
       console.error('Error al reproducir secuencia de fonemas:', error);
+      const msg = (error && (error as any).message) ? (error as any).message : String(error || 'Error al reproducir la secuencia de fonemas');
+      this.showNotice('Error de audio', msg, 'error', 'Aceptar');
     }
   }
 
