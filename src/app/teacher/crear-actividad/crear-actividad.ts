@@ -23,7 +23,8 @@ export class CrearActividadComponent implements OnInit {
   
   constructor(
     private location: Location,
-    private actividadFormService: ActividadFormService
+    private actividadFormService: ActividadFormService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -131,7 +132,8 @@ export class CrearActividadComponent implements OnInit {
 
     alert(resultado.mensaje);
     if (resultado.exito) {
-      this.location.back();
+      // Navegar explícitamente a la lista de actividades cognitivas del teacher
+      this.router.navigate(['teacher', 'cognitive-abilities']);
     }
   }
 

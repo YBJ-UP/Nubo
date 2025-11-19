@@ -43,14 +43,13 @@ export class GaleriaPalabras implements OnInit {
         // Asegurarse de que el ID sea un número entero
         const idLimpio = Math.floor(Number(act.id));
         console.log(`Convirtiendo actividad: "${act.titulo}" con ID: ${idLimpio}`);
-        const base = this.esProfesor ? '/teacher' : '/student';
         
         return {
           id: idLimpio,
           titulo: act.titulo,
           colorFondo: this.obtenerColorAleatorio(),
           imagenUrl: act.imagenPortada || act.palabrasCompletas?.[0]?.imagenUrl || '/crds.webp',
-          enlace: `${base}/cognitive-abilities/actividad/${idLimpio}`
+          enlace: `/cognitive-abilities/actividad/${idLimpio}`
         };
       });
 
@@ -65,9 +64,7 @@ export class GaleriaPalabras implements OnInit {
 
   irACrearActividad(): void {
     if (this.esProfesor) {
-      this.router.navigate(['/teacher/cognitive-abilities/crear-actividad']);
-    } else {
-      this.router.navigate(['/student/crear-actividad']);
+      this.router.navigate(['/teacher/crear-actividad']);
     }
   }
 

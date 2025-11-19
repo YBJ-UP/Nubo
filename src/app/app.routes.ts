@@ -49,15 +49,15 @@ export const routes: Routes = [
         { path: 'menu-memory-game', component: MenuMemoryGame },
         { path: 'new-memory-game', component: NewMemoryGame },
         { path: 'students', component: CreateStudent, children: [ { path: '', component: ViewStudent }, { path: 'new', component: NewStudent } ] },
-                {
-                    path: 'cognitive-abilities',
-                    component: Shell,
-                    children: [
-                        { path: '', component: GaleriaPalabras },
-                        { path: 'crear-actividad', component: CrearActividadComponent },
-                        { path: 'actividad/:id', component: ActividadPalabras }
-                    ]
-                }
+        {
+            path: 'cognitive-abilities',
+            component: Shell,
+            children: [
+                { path: '', component: GaleriaPalabras },
+                { path: 'actividad/:id', component: ActividadPalabras }
+            ]
+        },
+        { path: 'crear-actividad', component: CrearActividadComponent }
     ]
    },
    {
@@ -70,17 +70,16 @@ export const routes: Routes = [
     children: [
         { path: '', component: CardsHome },
         { path: 'menu-memory-game', component: MenuMemoryGame },
-        {
-            path: 'students',
+        { 
+            path: 'students', 
             component: CreateStudent,
             children: [
-                { path: '', component: ViewStudent },
                 { path: 'new', component: NewStudent },
                 { path: 'view/:id', component: ViewStudent }
             ]
         },
-        {
-            path: 'cognitive-abilities',
+        { 
+            path: 'cognitive-abilities', 
             component: Shell,
             children: [
                 { path: '', component: GaleriaPalabras },
@@ -88,14 +87,13 @@ export const routes: Routes = [
             ]
         },
         {
-            path:'juego-ludico',
+            path:'juego-ludico', 
             component: ludicshell,
             children:[
-              { path: '', component: GaleriaJuegos },
-              { path: 'memorama/:id', component: Memorama }
+              {path: '', component: GaleriaJuegos},
+              {path: 'memorama/:id', component: Memorama}
             ]
-        },
-        { path: 'crear-actividad', component: CrearActividadComponent }
+        }
     ]
    },
    {
