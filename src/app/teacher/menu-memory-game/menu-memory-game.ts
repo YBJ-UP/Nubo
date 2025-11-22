@@ -7,7 +7,7 @@ import { MemoryGameService, MemoryGame } from '../../services/memory-game.servic
 @Component({
   selector: 'app-menu-memory-game',
   standalone: true,
-  imports: [CommonModule, Header],
+  imports: [CommonModule],
   templateUrl: './menu-memory-game.html',
   styleUrl: './menu-memory-game.css'
 })
