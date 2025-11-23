@@ -38,8 +38,10 @@
 
 section {
     width: 100%;
-    max-width: 1600px;
+    max-width: 1300px;
+    margin: 0 auto;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    padding: 20px 0;
+    padding: 20px 10% 20px 1%;
 }
