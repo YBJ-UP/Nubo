@@ -10,16 +10,31 @@ import { ActividadNavigationService } from '../../services/actividad.navegation.
 import { ProgressService, ProgressData } from '../../services/progress.service';
 import { AudioPlaybackService } from '../../services/audio-playback.service';
 import { ActividadStateService } from '../../services/actividad-state.service';
+import { FloatingMessage } from '../../shared/floating-message/floating-message';
 
 @Component({
   selector: 'app-actividad-palabras',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FloatingMessage],
   templateUrl: './actividad-palabras.html',
-  styleUrl: './actividad-palabras.css'
+  styleUrls: ['./actividad-palabras.css']
 })
 export class ActividadPalabras implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
+
+  // Floating message state
+  notice = {
+    visible: false,
+    title: '',
+    message: '',
+    type: 'info' as 'info' | 'success' | 'error',
+    primaryLabel: 'Aceptar',
+    secondaryLabel: undefined as string | undefined
+  };
+  private _primaryCb?: () => void;
+  private _secondaryCb?: () => void;
+  // Background color for main image card (avoid calling random in template)
+  mainCardBgColor: string = '#FFFFFF';
 
   // Getters para el template
   get palabraActual(): PalabraCompleta | null {
@@ -94,8 +109,7 @@ export class ActividadPalabras implements OnInit, OnDestroy {
       });
     } else {
       console.error('Actividad no encontrada o sin palabras');
-      alert('No se pudo cargar la actividad');
-      this.regresar();
+      this.showNotice('Error', 'No se pudo cargar la actividad', 'error', 'Volver', undefined, () => this.regresar());
     }
   }
 
@@ -124,7 +138,18 @@ export class ActividadPalabras implements OnInit, OnDestroy {
 
       if (this.navigationService.actividadCompletada(nuevoIndex, totalPalabras)) {
         setTimeout(() => {
-          alert('¡Felicidades! Has completado la actividad.');
+          this.showNotice(
+            '¡Excelente trabajo! ¡Lo lograste!',
+            'Has completado la actividad.',
+            'success',
+            'Repetir',
+            'Menú',
+            () => {
+              this.stateService.setPalabraActualIndex(0);
+              this.actualizarProgreso();
+            },
+            () => this.regresar()
+          );
         }, 500);
       }
     }
@@ -139,6 +164,8 @@ export class ActividadPalabras implements OnInit, OnDestroy {
     
     this.stateService.setProgreso(progreso);
     this.stateService.setProgressData(progressData);
+    // deterministically pick a background color for the current card (avoids ExpressionChangedAfterItHasBeenCheckedError)
+    this.mainCardBgColor = this.navigationService.obtenerColorAleatorio();
   }
 
 
@@ -149,6 +176,8 @@ export class ActividadPalabras implements OnInit, OnDestroy {
       await this.audioService.reproducirPalabra(this.palabraActual.palabra);
     } catch (error) {
       console.error('Error al reproducir palabra completa:', error);
+      const msg = (error && (error as any).message) ? (error as any).message : String(error || 'Error al reproducir la palabra');
+      this.showNotice('Error de audio', msg, 'error', 'Aceptar');
     }
   }
 
@@ -157,6 +186,8 @@ export class ActividadPalabras implements OnInit, OnDestroy {
       await this.audioService.reproducirSilaba(silaba);
     } catch (error) {
       console.error('Error al reproducir sílaba:', error);
+      const msg = (error && (error as any).message) ? (error as any).message : String(error || 'Error al reproducir la sílaba');
+      this.showNotice('Error de audio', msg, 'error', 'Aceptar');
     }
   }
 
@@ -165,6 +196,8 @@ export class ActividadPalabras implements OnInit, OnDestroy {
       await this.audioService.reproducirFonema(fonema);
     } catch (error) {
       console.error('Error al reproducir fonema:', error);
+      const msg = (error && (error as any).message) ? (error as any).message : String(error || 'Error al reproducir el fonema');
+      this.showNotice('Error de audio', msg, 'error', 'Aceptar');
     }
   }
 
@@ -175,6 +208,8 @@ export class ActividadPalabras implements OnInit, OnDestroy {
       await this.audioService.reproducirSecuenciaSilabas(this.palabraActual);
     } catch (error) {
       console.error('Error al reproducir secuencia de sílabas:', error);
+      const msg = (error && (error as any).message) ? (error as any).message : String(error || 'Error al reproducir la secuencia de sílabas');
+      this.showNotice('Error de audio', msg, 'error', 'Aceptar');
     }
   }
 
@@ -185,6 +220,8 @@ export class ActividadPalabras implements OnInit, OnDestroy {
       await this.audioService.reproducirSecuenciaFonemas(this.palabraActual);
     } catch (error) {
       console.error('Error al reproducir secuencia de fonemas:', error);
+      const msg = (error && (error as any).message) ? (error as any).message : String(error || 'Error al reproducir la secuencia de fonemas');
+      this.showNotice('Error de audio', msg, 'error', 'Aceptar');
     }
   }
 
@@ -241,18 +278,44 @@ export class ActividadPalabras implements OnInit, OnDestroy {
                      `Palabras vistas: ${progressData?.palabrasCompletadas || 0}\n` +
                      `Progreso: ${progreso.toFixed(0)}%\n\n` +
                      '¿Deseas salir?';
-      
-      if (confirm(mensaje)) {
-        this.location.back();
-      }
+
+      this.showNotice('Confirmar', mensaje, 'info', 'Sí', 'No', () => this.location.back());
     } else {
       const mensaje = `Progreso actual: ${progreso.toFixed(0)}%\n` +
                      `Palabras completadas: ${progressData?.palabrasCompletadas || 0} de ${totalPalabras}\n\n` +
                      '¿Estás seguro de que deseas salir?';
-      
-      if (confirm(mensaje)) {
-        this.location.back();
-      }
+
+      this.showNotice('Confirmar', mensaje, 'info', 'Sí', 'No', () => this.location.back());
     }
+  }
+
+  // Helpers for floating notice
+  private showNotice(
+    title: string,
+    message: string,
+    type: 'info' | 'success' | 'error' = 'info',
+    primaryLabel = 'Aceptar',
+    secondaryLabel?: string,
+    primaryCb?: () => void,
+    secondaryCb?: () => void
+  ) {
+    this.notice.title = title;
+    this.notice.message = message;
+    this.notice.type = type;
+    this.notice.primaryLabel = primaryLabel;
+    this.notice.secondaryLabel = secondaryLabel;
+    this._primaryCb = primaryCb;
+    this._secondaryCb = secondaryCb;
+    this.notice.visible = true;
+  }
+
+  onNoticePrimary(): void {
+    if (this._primaryCb) this._primaryCb();
+    this.notice.visible = false;
+  }
+
+  onNoticeSecondary(): void {
+    if (this._secondaryCb) this._secondaryCb();
+    this.notice.visible = false;
   }
 }

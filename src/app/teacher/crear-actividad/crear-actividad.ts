@@ -7,11 +7,12 @@ import {
   ActividadFormService, 
   PalabraCompleta
 } from '../../services/actividad.service';
+import { FloatingMessage } from '../../shared/floating-message/floating-message';
 
 @Component({
   selector: 'app-crear-actividad',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FloatingMessage],
   templateUrl: './crear-actividad.html',
   styleUrls: ['./crear-actividad.css']
 })
@@ -20,10 +21,22 @@ export class CrearActividadComponent implements OnInit {
   imagenPortada = 'perfil.jpg'; 
   palabrasCompletas: PalabraCompleta[] = [];
   mostrarInstrucciones = false;
+  // Floating message state
+  notice = {
+    visible: false,
+    title: '',
+    message: '',
+    type: 'info' as 'info' | 'success' | 'error',
+    primaryLabel: 'Aceptar',
+    secondaryLabel: undefined as string | undefined
+  };
+  private _primaryCb?: () => void;
+  private _secondaryCb?: () => void;
   
   constructor(
     private location: Location,
-    private actividadFormService: ActividadFormService
+    private actividadFormService: ActividadFormService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -48,7 +61,7 @@ export class CrearActividadComponent implements OnInit {
     if (resultado.exito && resultado.url) {
       this.imagenPortada = resultado.url;
     } else {
-      alert(resultado.mensaje);
+      this.showNotice('Error', resultado.mensaje, 'error', 'Aceptar');
     }
   }
 
@@ -62,7 +75,7 @@ export class CrearActividadComponent implements OnInit {
     if (resultado.exito && resultado.url) {
       this.palabrasCompletas[palabraIndex].imagenUrl = resultado.url;
     } else {
-      alert(resultado.mensaje);
+      this.showNotice('Error', resultado.mensaje, 'error', 'Aceptar');
     }
   }
 
@@ -75,7 +88,7 @@ export class CrearActividadComponent implements OnInit {
   eliminarSilaba(palabraIndex: number, silabaId: number): void {
     const silabas = this.palabrasCompletas[palabraIndex].silabas;
     if (!this.actividadFormService.puedeEliminarItem(silabas.length)) {
-      alert('Debe haber al menos una sílaba.');
+      this.showNotice('Error', 'Debe haber al menos una sílaba.', 'error', 'Aceptar');
       return;
     }
     this.palabrasCompletas[palabraIndex].silabas = silabas.filter(s => s.id !== silabaId);
@@ -90,7 +103,7 @@ export class CrearActividadComponent implements OnInit {
   eliminarFonema(palabraIndex: number, fonemaId: number): void {
     const fonemas = this.palabrasCompletas[palabraIndex].fonemas;
     if (!this.actividadFormService.puedeEliminarItem(fonemas.length)) {
-      alert('Debe haber al menos un fonema.');
+      this.showNotice('Error', 'Debe haber al menos un fonema.', 'error', 'Aceptar');
       return;
     }
     this.palabrasCompletas[palabraIndex].fonemas = fonemas.filter(f => f.id !== fonemaId);
@@ -112,14 +125,12 @@ export class CrearActividadComponent implements OnInit {
 
   eliminarPalabraCompleta(index: number): void {
     if (this.palabrasCompletas.length === 1) {
-      alert('Debe haber al menos una palabra en la actividad.');
+      this.showNotice('Error', 'Debe haber al menos una palabra en la actividad.', 'error', 'Aceptar');
       return;
     }
-
-    const confirmacion = confirm('¿Estás seguro de que deseas eliminar esta palabra?');
-    if (confirmacion) {
+    this.showNotice('Confirmar', '¿Estás seguro de que deseas eliminar esta palabra?', 'info', 'Eliminar', 'Cancelar', () => {
       this.palabrasCompletas.splice(index, 1);
-    }
+    });
   }
 
   async guardarActividad(): Promise<void> {
@@ -129,9 +140,12 @@ export class CrearActividadComponent implements OnInit {
       this.palabrasCompletas
     );
 
-    alert(resultado.mensaje);
     if (resultado.exito) {
-      this.location.back();
+      this.showNotice('Éxito', resultado.mensaje, 'success', 'Aceptar', undefined, () => {
+        this.router.navigate(['teacher', 'cognitive-abilities']);
+      });
+    } else {
+      this.showNotice('Error', resultado.mensaje, 'error', 'Aceptar');
     }
   }
 
@@ -141,11 +155,39 @@ export class CrearActividadComponent implements OnInit {
       this.imagenPortada, 
       this.palabrasCompletas
     )) {
-      if (confirm('¿Estás seguro de que deseas salir? Los cambios no guardados se perderán.')) {
-        this.location.back();
-      }
+      this.showNotice('Confirmar', '¿Estás seguro de que deseas salir? Los cambios no guardados se perderán.', 'info', 'Sí', 'No', () => this.location.back());
     } else {
       this.location.back();
     }
+  }
+
+  // Helpers for floating notice
+  private showNotice(
+    title: string,
+    message: string,
+    type: 'info' | 'success' | 'error' = 'info',
+    primaryLabel = 'Aceptar',
+    secondaryLabel?: string,
+    primaryCb?: () => void,
+    secondaryCb?: () => void
+  ) {
+    this.notice.title = title;
+    this.notice.message = message;
+    this.notice.type = type;
+    this.notice.primaryLabel = primaryLabel;
+    this.notice.secondaryLabel = secondaryLabel;
+    this._primaryCb = primaryCb;
+    this._secondaryCb = secondaryCb;
+    this.notice.visible = true;
+  }
+
+  onNoticePrimary(): void {
+    if (this._primaryCb) this._primaryCb();
+    this.notice.visible = false;
+  }
+
+  onNoticeSecondary(): void {
+    if (this._secondaryCb) this._secondaryCb();
+    this.notice.visible = false;
   }
 }

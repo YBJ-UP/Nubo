@@ -5,18 +5,31 @@ import { CardsPalabras } from "../../components/cards-palabras/cards-palabras";
 import { PalabraData } from '../../interfaces/PalabraData';
 import { PALABRAS_DATA_MOCK } from '../../data/palabra-data';
 import { ActividadFormService } from '../../services/actividad.service';
+import { FloatingMessage } from '../../shared/floating-message/floating-message';
 
 @Component({
   selector: 'app-galeria-palabras',
-  imports: [CardsPalabras, CommonModule, RouterModule],
+  imports: [CardsPalabras, CommonModule, RouterModule, FloatingMessage],
   templateUrl: './galeria-palabras.html',
-  styleUrl: './galeria-palabras.css'
+  styleUrls: ['./galeria-palabras.css']
 })
 export class GaleriaPalabras implements OnInit {
   palabras: PalabraData[] = [];
   modoEliminar: boolean = false;
   actividadesSeleccionadas: Set<number> = new Set();
   esProfesor: boolean = false; 
+
+  // Floating message
+  notice = {
+    visible: false,
+    title: '',
+    message: '',
+    type: 'info' as 'info' | 'success' | 'error',
+    primaryLabel: 'Aceptar',
+    secondaryLabel: undefined as string | undefined
+  };
+  private _primaryCb?: () => void;
+  private _secondaryCb?: () => void;
 
   constructor(
     private router: Router,
@@ -53,12 +66,14 @@ export class GaleriaPalabras implements OnInit {
         };
       });
 
-      this.palabras = [...actividadesConvertidas, ...PALABRAS_DATA_MOCK];
-      console.log('Total palabras cargadas:', this.palabras.length);
-      console.log('IDs finales:', this.palabras.map(p => ({ id: p.id, titulo: p.titulo })));
+      // Mostrar únicamente las actividades que se cargaron manualmente.
+      this.palabras = actividadesConvertidas;
+      console.log('Actividades manuales cargadas:', this.palabras.length);
+      console.log('IDs finales (manuales):', this.palabras.map(p => ({ id: p.id, titulo: p.titulo })));
     } else {
-      console.log('No hay actividades guardadas, usando MOCK');
-      this.palabras = PALABRAS_DATA_MOCK;
+      console.log('No hay actividades guardadas manualmente; sin actividades para mostrar');
+      // No cargar actividades por defecto: dejar la lista vacía
+      this.palabras = [];
     }
   }
 
@@ -100,36 +115,62 @@ export class GaleriaPalabras implements OnInit {
     if (!this.esProfesor || this.actividadesSeleccionadas.size === 0) {
       return;
     }
-
     const cantidad = this.actividadesSeleccionadas.size;
-    const confirmacion = confirm(
-      `¿Estás seguro de que deseas eliminar ${cantidad} actividad(es)?\n\n` +
-      `Esta acción no se puede deshacer.`
-    );
+    const mensaje = `¿Estás seguro de que deseas eliminar ${cantidad} actividad(es)?\n\n` +
+                    `Esta acción no se puede deshacer.`;
 
-    if (!confirmacion) return;
+    this.showNotice('Confirmar', mensaje, 'info', 'Eliminar', 'Cancelar', () => {
+      let eliminadas = 0;
+      this.actividadesSeleccionadas.forEach(id => {
+        if (this.actividadService.deleteActividad(id)) {
+          eliminadas++;
+        }
+      });
 
-    let eliminadas = 0;
-    this.actividadesSeleccionadas.forEach(id => {
-      if (this.actividadService.deleteActividad(id)) {
-        eliminadas++;
+      if (eliminadas > 0) {
+        this.actividadesSeleccionadas.clear();
+        this.modoEliminar = false;
+        this.cargarActividades();
+        console.log('Actividades eliminadas exitosamente:', eliminadas);
+        this.showNotice('Éxito', `${eliminadas} actividad(es) eliminada(s) exitosamente`, 'success', 'Aceptar');
+      } else {
+        console.error('Error al eliminar actividades');
+        this.showNotice('Error', 'Error al eliminar las actividades', 'error', 'Aceptar');
       }
     });
-
-    if (eliminadas > 0) {
-      alert(`${eliminadas} actividad(es) eliminada(s) exitosamente`);
-      this.actividadesSeleccionadas.clear();
-      this.modoEliminar = false;
-      this.cargarActividades();
-      console.log('Actividades eliminadas exitosamente:', eliminadas);
-    } else {
-      alert('Error al eliminar las actividades');
-      console.error('Error al eliminar actividades');
-    }
   }
 
   private obtenerColorAleatorio(): string {
     const colores = ['#BDE0FE', '#F78C8C', '#D4BFFF', '#FEF9C3', '#D9F7C4', '#C3D4FE'];
     return colores[Math.floor(Math.random() * colores.length)];
+  }
+
+  private showNotice(
+    title: string,
+    message: string,
+    type: 'info' | 'success' | 'error' = 'info',
+    primaryLabel = 'Aceptar',
+    secondaryLabel?: string,
+    primaryCb?: () => void,
+    secondaryCb?: () => void
+  ) {
+    this.notice.title = title;
+    this.notice.message = message;
+    this.notice.type = type;
+    this.notice.primaryLabel = primaryLabel;
+    this.notice.secondaryLabel = secondaryLabel;
+    this._primaryCb = primaryCb;
+    this._secondaryCb = secondaryCb;
+    this.notice.visible = true;
+  }
+
+  onNoticePrimary(): void {
+    if (this._primaryCb) this._primaryCb();
+    this.notice.visible = false;
+  }
+
+  onNoticeSecondary(): void {
+    if (this._secondaryCb) this._secondaryCb();
+    this.notice.visible = false;
   }
 }

@@ -4,12 +4,12 @@
             <i class="fa-solid fa-arrow-left"></i>
         </a>
         <div class="action-buttons" *ngIf="esProfesor">
-            <button class="btn-crear" (click)="irACrearActividad()">
+            <button class="btn-create" (click)="irACrearActividad()">
                 <i class="fa-solid fa-circle-plus"></i>
                 Crear
             </button>
             <button 
-                class="btn-eliminar" 
+                class="btn-delete" 
                 [class.active]="modoEliminar" 
                 (click)="toggleModoEliminar()"
             >
@@ -26,6 +26,18 @@
             </button>
         </div>
     </div>
+
+        <app-floating-message
+            [visible]="notice.visible"
+            [title]="notice.title"
+            [message]="notice.message"
+            [type]="notice.type"
+            [primaryLabel]="notice.primaryLabel"
+            [secondaryLabel]="notice.secondaryLabel"
+            (primary)="onNoticePrimary()"
+            (secondary)="onNoticeSecondary()"
+            (closed)="notice.visible = false"
+        ></app-floating-message>
 
     <div class="grid-cards">
         <div 

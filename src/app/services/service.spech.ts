@@ -134,7 +134,15 @@ export class SpeechService {
 
       utterance.onerror = (event) => {
         console.error('Error en speech synthesis:', event);
-        reject(event.error);
+        // Normalize error into an Error with a readable message
+        try {
+          const anyEvent: any = event;
+          const err = anyEvent && anyEvent.error ? anyEvent.error : anyEvent;
+          const message = (err && err.message) ? err.message : String(err || 'Speech synthesis error');
+          reject(new Error(message));
+        } catch (e) {
+          reject(new Error('Speech synthesis error'));
+        }
       };
 
       this.synthesis.speak(utterance);

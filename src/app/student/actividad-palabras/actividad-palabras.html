@@ -40,7 +40,7 @@
                 <i class="fa-solid fa-arrow-left"></i>
             </button>
             
-            <div class="main-image-card" [style.background-color]="navigationService.obtenerColorAleatorio()">
+            <div class="main-image-card" [style.background-color]="mainCardBgColor">
                 <img [src]="palabraActual.imagenUrl" [alt]="palabraActual.palabra" class="main-image">
             </div>
             
@@ -137,3 +137,15 @@
     <p>No se pudo cargar la actividad</p>
     <button (click)="regresar()" class="btn-regresar">Volver</button>
 </div>
+
+<app-floating-message
+    [visible]="notice.visible"
+    [title]="notice.title"
+    [message]="notice.message"
+    [type]="notice.type"
+    [primaryLabel]="notice.primaryLabel"
+    [secondaryLabel]="notice.secondaryLabel"
+    (primary)="onNoticePrimary()"
+    (secondary)="onNoticeSecondary()"
+    (closed)="notice.visible = false"
+></app-floating-message>

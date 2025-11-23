@@ -2,23 +2,23 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Location } from '@angular/common';
 import { ImageService } from '../../services/image.service';
 import { StudentService } from '../../services/sstudent.service';
 
 @Component({
   selector: 'app-new-student',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './new-student.html',
-  styleUrl: './new-student.css'
+  styleUrls: ['./new-student.css']
 })
 export class NewStudent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   inputTextFields: string[] = ['', '', ''];
   inputText: string = '';
-  imagenPreview: string;
+  imagenPreview: string = '';
   isUploading: boolean = false;
 
   constructor(

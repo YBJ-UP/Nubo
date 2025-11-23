@@ -36,7 +36,7 @@
 
 .action-buttons {
     display: flex;
-    gap: 15px;
+    gap: 20px; /* match menu-memory-game spacing */
     align-items: center;
 }
 
@@ -207,4 +207,54 @@
         padding: 10px 18px;
         font-size: 0.9rem;
     }
+}
+
+/* Styles copied/adapted from menu-memory-game to match ludic area buttons */
+.btn-create {
+    background: #90CAF9;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 24px;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-create:hover {
+    transform: scale(1.05);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+.btn-delete {
+    background: #EF5350;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 24px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-delete:hover {
+    transform: scale(1.05);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+.btn-delete:disabled {
+    background: #ffcdd2;
+    color: white;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
