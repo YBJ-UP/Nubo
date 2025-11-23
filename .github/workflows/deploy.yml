@@ -38,4 +38,4 @@ jobs:
                 aws-region: us-east-1
 
             - name: Deploy to S3
-              run: aws s3 sync dist/EXAMPLE_APP/browser s3://amzn-bucket-static-nubo0002 --delete --exclude ".*"
+              run: aws s3 sync dist/Nubo/browser s3://amzn-bucket-static-nubo0002 --delete --exclude ".*"
