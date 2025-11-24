@@ -2,7 +2,7 @@
     <div>
         @if (selected == 1){
             <a routerLink="../teacher" class="selected" (click)="toHome()"><i class="fa-solid fa-house"></i></a>
-            <a routerLink="./students" (click)="toStudents()"><i class="fa-solid fa-graduation-cap"></i></a>
+            <a routerLink="./students/new" (click)="toStudents()"><i class="fa-solid fa-graduation-cap"></i></a>
         }@else {
             <a routerLink="../teacher" (click)="toHome()"><i class="fa-solid fa-house"></i></a>
             <a routerLink="./students/new" class="selected" (click)="toStudents()"><i class="fa-solid fa-graduation-cap"></i></a>
