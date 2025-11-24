@@ -48,7 +48,7 @@ export const routes: Routes = [
         { path: '', component: CardsHome },
         { path: 'menu-memory-game', component: MenuMemoryGame },
         { path: 'new-memory-game', component: NewMemoryGame },
-        { path: 'students', component: CreateStudent, children: [ { path: '', component: ViewStudent }, { path: 'new', component: NewStudent } ] },
+        { path: 'students', component: CreateStudent, children: [ { path: 'new', component: NewStudent }, { path: 'view/:id', component: ViewStudent } ] },
         {
             path: 'cognitive-abilities',
             component: Shell,
