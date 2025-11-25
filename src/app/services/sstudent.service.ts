@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Student } from '../interfaces/student';
 import studentData from '../../../public/placeholderData/studentData.json';
 
@@ -14,6 +15,8 @@ interface StudentProgress {
 export class StudentService {
   private readonly STORAGE_KEY = 'students';
   private readonly PROGRESS_PREFIX = 'progreso_';
+  // Emit events when the students list changes so UI can react in real-time
+  private studentsChanged = new Subject<void>();
 
   getAllStudents(): Student[] {
     const stored = localStorage.getItem(this.STORAGE_KEY);
@@ -35,6 +38,7 @@ export class StudentService {
 
     students.push(newStudent);
     this.saveStudents(students);
+    this.studentsChanged.next();
     
     return newStudent;
   }
@@ -47,6 +51,7 @@ export class StudentService {
     
     students[index] = { ...students[index], ...updates };
     this.saveStudents(students);
+    this.studentsChanged.next();
     
     return true;
   }
@@ -59,6 +64,7 @@ export class StudentService {
     
     this.saveStudents(filtered);
     this.deleteProgress(id);
+    this.studentsChanged.next();
     
     return true;
   }
@@ -92,6 +98,11 @@ export class StudentService {
       lastUpdated: new Date()
     };
     localStorage.setItem(key, JSON.stringify(progressWithDate));
+  }
+
+  /** Observable para suscribirse cuando la lista de estudiantes cambia */
+  onStudentsChanged() {
+    return this.studentsChanged.asObservable();
   }
 
   updateProgress(studentId: number, module: 'modulo1' | 'modulo2', value: number): void {

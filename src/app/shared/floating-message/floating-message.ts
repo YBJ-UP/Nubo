@@ -15,6 +15,7 @@ export class FloatingMessage {
   @Input() type: 'success' | 'error' | 'info' = 'info';
   @Input() primaryLabel = 'Aceptar';
   @Input() secondaryLabel?: string;
+  @Input() stackButtons = false;
 
   @Output() primary = new EventEmitter<void>();
   @Output() secondary = new EventEmitter<void>();

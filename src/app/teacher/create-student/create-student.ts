@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from "@angular/router";
+import { StudentService } from '../../services/sstudent.service';
 import { Student } from '../../interfaces/student';
 import studentData from '../../../../public/placeholderData/studentData.json';
 
@@ -14,11 +15,34 @@ export class CreateStudent implements OnInit {
   data: Student[] = [];
   mostrarVistaHija: boolean = false;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private studentService: StudentService) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.actualizarVistaHija();
+        // recargar la lista cuando la ruta cambia (asegura que los nuevos alumnos aparezcan)
+        this.cargarEstudiantes();
+        // si la URL incluye query param para hacer scroll, desplazar al final
+        try {
+          const url = this.router.url;
+          if (url.includes('scroll=bottom')) {
+            setTimeout(() => {
+              const grid = document.querySelector('.students-grid') as HTMLElement | null;
+              if (grid) {
+                grid.scrollTo({ top: grid.scrollHeight, behavior: 'smooth' });
+              } else {
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+              }
+            }, 120);
+          }
+        } catch (err) {
+          console.warn('Scroll to bottom error', err);
+        }
       }
+    });
+
+    // Suscribirse a cambios en la lista para actualizar en tiempo real
+    this.studentService.onStudentsChanged().subscribe(() => {
+      this.cargarEstudiantes();
     });
   }
 

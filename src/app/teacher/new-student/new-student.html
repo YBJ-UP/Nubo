@@ -78,7 +78,7 @@
                 >
             </div>
 
-            <div class="button-container">
+            <div class="button-container" #buttonContainer>
                 <button type="button" class="btn-cancel" (click)="cancelar()">
                     <i class="fa-solid fa-xmark"></i>
                     Cancelar
@@ -91,3 +91,17 @@
         </form>
     </div>
 </div>
+
+<!-- Floating message reuse -->
+<app-floating-message
+  [visible]="fmVisible"
+  [title]="fmTitle"
+  [message]="fmMessage"
+  [type]="fmType"
+  [primaryLabel]="fmPrimaryLabel"
+  [secondaryLabel]="fmSecondaryLabel"
+    [stackButtons]="fmStackButtons"
+  (primary)="onFloatingPrimary()"
+  (secondary)="onFloatingSecondary()"
+  (closed)="onFloatingClosed()"
+></app-floating-message>

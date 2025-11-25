@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FloatingMessage } from '../../shared/floating-message/floating-message';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Student } from '../../interfaces/student';
@@ -7,7 +8,7 @@ import { StudentService } from '../../services/sstudent.service';
 
 @Component({
   selector: 'app-view-student',
-  imports: [CommonModule],
+  imports: [CommonModule, FloatingMessage],
   templateUrl: './view-student.html',
   styleUrl: './view-student.css'
 })
@@ -17,6 +18,16 @@ export class ViewStudent implements OnInit {
   progresoModulo2: number = 0;
   
   private readonly TOTAL_ACTIVIDADES = 10;
+
+  // FloatingMessage state
+  fmVisible = false;
+  fmTitle = '';
+  fmMessage = '';
+  fmType: 'success' | 'error' | 'info' = 'info';
+  fmPrimaryLabel = 'Aceptar';
+  fmSecondaryLabel?: string | undefined;
+  private fmPrimaryCb?: () => void;
+  private fmSecondaryCb?: () => void;
 
   constructor(
     private route: ActivatedRoute,
@@ -60,38 +71,80 @@ export class ViewStudent implements OnInit {
   eliminarAlumno(): void {
     if (!this.student) return;
 
-    const confirmacion = confirm(
-      `¿Estás seguro de que deseas eliminar a ${this.student.name}?\n\n` +
-      `Esta acción eliminará:\n` +
-      `• El perfil del estudiante\n` +
-      `• Todo su progreso\n` +
-      `• Sus datos de acceso\n\n` +
-      `Esta acción no se puede deshacer.`
-    );
+    const title = `Eliminar alumno`;
+    const message = `¿Estás seguro de que deseas eliminar a ${this.student.name}?\n\nEsta acción eliminará:\n• El perfil del estudiante\n• Todo su progreso\n• Sus datos de acceso\n\nEsta acción no se puede deshacer.`;
 
-    if (confirmacion) {
-      const eliminado = this.studentService.deleteStudent(this.student.id);
-      
-      if (eliminado) {
-        alert(`${this.student.name} ha sido eliminado exitosamente.`);
-        this.router.navigate(['/teacher/students']);
-      } else {
-        alert('Error al eliminar el estudiante. Intenta de nuevo.');
-      }
-    }
+    this.showFloating(
+      title,
+      message,
+      'info',
+      'Eliminar',
+      'Cancelar',
+      () => {
+        // primary: proceed to delete
+        if (!this.student) return;
+        const eliminado = this.studentService.deleteStudent(this.student.id);
+        if (eliminado) {
+          this.showFloating('Eliminado', `${this.student!.name} ha sido eliminado exitosamente.`, 'success');
+          this.router.navigate(['/teacher/students']);
+        } else {
+          this.showFloating('Error', 'Error al eliminar el estudiante. Intenta de nuevo.', 'error');
+        }
+      },
+      () => { /* cancel */ }
+    );
   }
 
   ingresarComoAlumno(): void {
     if (!this.student) return;
 
-    const confirmacion = confirm(
-      `¿Deseas ingresar como ${this.student.name}?\n\n` +
-      `Esto te permitirá ver la plataforma desde su perspectiva.`
-    );
+    const title = `Ingresar como alumno`;
+    const message = `¿Deseas ingresar como ${this.student.name}?\n\nEsto te permitirá ver la plataforma desde su perspectiva.`;
 
-    if (confirmacion) {
-      sessionStorage.setItem('current_student', JSON.stringify(this.student));
-      this.router.navigate(['/student']);
-    }
+    this.showFloating(
+      title,
+      message,
+      'info',
+      'Ingresar',
+      'Cancelar',
+      () => {
+        sessionStorage.setItem('current_student', JSON.stringify(this.student));
+        this.router.navigate(['/student']);
+      },
+      () => { /* cancel */ }
+    );
+  }
+
+  showFloating(
+    title: string,
+    message: string,
+    type: 'success' | 'error' | 'info' = 'info',
+    primaryLabel = 'Aceptar',
+    secondaryLabel?: string,
+    primaryCb?: () => void,
+    secondaryCb?: () => void
+  ): void {
+    this.fmTitle = title;
+    this.fmMessage = message;
+    this.fmType = type;
+    this.fmPrimaryLabel = primaryLabel;
+    this.fmSecondaryLabel = secondaryLabel;
+    this.fmPrimaryCb = primaryCb;
+    this.fmSecondaryCb = secondaryCb;
+    this.fmVisible = true;
+  }
+
+  onFloatingPrimary(): void {
+    if (this.fmPrimaryCb) this.fmPrimaryCb();
+    this.fmVisible = false;
+  }
+
+  onFloatingSecondary(): void {
+    if (this.fmSecondaryCb) this.fmSecondaryCb();
+    this.fmVisible = false;
+  }
+
+  onFloatingClosed(): void {
+    this.fmVisible = false;
   }
 }
