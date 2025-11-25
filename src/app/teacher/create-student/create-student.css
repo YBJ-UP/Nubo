@@ -19,6 +19,14 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+/* make the panel a column so the grid can scroll inside it */
+.management-panel {
+    display: flex;
+    flex-direction: column;
+    /* limit height to viewport so scrolling stays inside the card */
+    max-height: calc(100vh - 180px);
+}
+
 .title {
     display: flex;
     justify-content: space-between;
@@ -68,7 +76,20 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
+    /* allow vertical scrolling when there are many students */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    /* let the grid take remaining space in the panel */
+    flex: 1 1 auto;
+    padding-right: 8px; /* avoid cards under scrollbar */
+    scrollbar-gutter: stable;
 }
+
+/* Scrollbar styling for WebKit browsers */
+.students-grid::-webkit-scrollbar{ width:10px; }
+.students-grid::-webkit-scrollbar-thumb{ background: rgba(0,0,0,0.08); border-radius:8px; }
+.students-grid::-webkit-scrollbar-track{ background: transparent; }
+.students-grid{ -ms-overflow-style: auto; }
 
 .student-card {
     background: white;
