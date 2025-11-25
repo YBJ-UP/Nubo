@@ -6,11 +6,10 @@ import { Router, RouterModule } from '@angular/router';
 import { Location } from '@angular/common';
 import { ImageService } from '../../services/image.service';
 import { StudentService } from '../../services/sstudent.service';
-import { FloatingMessage } from '../../shared/floating-message/floating-message';
 
 @Component({
   selector: 'app-new-student',
-  imports: [CommonModule, FormsModule, RouterModule, FloatingMessage],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './new-student.html',
   styleUrls: ['./new-student.css']
 })
@@ -21,15 +20,6 @@ export class NewStudent implements OnInit {
   inputText: string = '';
   imagenPreview: string = '';
   isUploading: boolean = false;
-  // FloatingMessage state
-  fmVisible = false;
-  fmTitle = '';
-  fmMessage = '';
-  fmType: 'success' | 'error' | 'info' = 'info';
-  fmPrimaryLabel = 'Aceptar';
-  fmSecondaryLabel?: string | undefined;
-  private fmPrimaryCb?: () => void;
-  private fmSecondaryCb?: () => void;
 
   constructor(
     private router: Router,
@@ -70,11 +60,11 @@ export class NewStudent implements OnInit {
       if (result.valid && result.imageUrl) {
         this.imagenPreview = result.imageUrl;
       } else {
-        this.showFloating('Error', result.message || 'Error al procesar la imagen', 'error');
+        alert(result.message);
       }
     } catch (error) {
       console.error('Error al cargar imagen:', error);
-      this.showFloating('Error', 'Error inesperado al cargar la imagen', 'error');
+      alert('Error inesperado al cargar la imagen');
     } finally {
       this.isUploading = false;
       input.value = '';
@@ -91,7 +81,7 @@ export class NewStudent implements OnInit {
     );
 
     if (validationError) {
-      this.showFloating('Error', validationError, 'error');
+      alert(validationError);
       return;
     }
 
@@ -106,47 +96,13 @@ export class NewStudent implements OnInit {
       password
     });
 
-    this.showFloating(
-      'Alumno creado',
-      `Alumno ${nuevoEstudiante.name} creado exitosamente\n\nContraseña generada: ${password}\n\nGuarda esta contraseña para que el alumno pueda ingresar.`,
-      'success',
+    alert(
+      `Alumno ${nuevoEstudiante.name} creado exitosamente\n\n` +
+      `Contraseña generada: ${password}\n\n` +
+      `Guarda esta contraseña para que el alumno pueda ingresar.`
     );
-    // set primary callback to navigate back after user accepts
-    this.fmPrimaryCb = () => this.router.navigate(['/teacher/students']);
-  }
-
-  showFloating(
-    title: string,
-    message: string,
-    type: 'success' | 'error' | 'info' = 'info',
-    primaryLabel = 'Aceptar',
-    secondaryLabel?: string,
-    primaryCb?: () => void,
-    secondaryCb?: () => void
-  ): void {
-    this.fmTitle = title;
-    this.fmMessage = message;
-    this.fmType = type;
-    this.fmPrimaryLabel = primaryLabel;
-    this.fmSecondaryLabel = secondaryLabel;
-    this.fmPrimaryCb = primaryCb;
-    this.fmSecondaryCb = secondaryCb;
-    this.fmVisible = true;
-  }
-
-  onFloatingPrimary(): void {
-    if (this.fmPrimaryCb) this.fmPrimaryCb();
-    this.fmVisible = false;
-  }
-
-  onFloatingSecondary(): void {
-    if (this.fmSecondaryCb) this.fmSecondaryCb();
-    this.fmVisible = false;
-  }
-
-  onFloatingClosed(): void {
-    // close without action
-    this.fmVisible = false;
+    
+    this.router.navigate(['/teacher/students']);
   }
 
   cancelar(): void {
@@ -154,15 +110,9 @@ export class NewStudent implements OnInit {
                        this.imagenPreview !== this.imageService.getDefaultAvatar();
 
     if (hasChanges) {
-      this.showFloating(
-        'Confirmar',
-        '¿Estás seguro de que deseas cancelar? Los datos ingresados se perderán.',
-        'info',
-        'Sí',
-        'No',
-        () => this.location.back(),
-        undefined
-      );
+      if (confirm('¿Estás seguro de que deseas cancelar? Los datos ingresados se perderán.')) {
+        this.location.back();
+      }
     } else {
       this.location.back();
     }
