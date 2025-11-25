@@ -80,6 +80,18 @@
   object-fit: contain;
 }
 
+/* make the ludica svg a bit larger so nuboConCartas fits nicely */
+.categoria-card.ludica .card-icon {
+  width: 160px;
+  height: 140px;
+}
+
+.categoria-card.ludica .card-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .card-title {
   font-size: 1.5rem;
   font-weight: 600;
