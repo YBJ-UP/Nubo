@@ -11,7 +11,7 @@ import { RouterModule } from "@angular/router";
 })
 export class Home {
 
-  /*getData(): string {
+  getData(): string {
     if (typeof this.data === "string"){
       return JSON.parse(this.data)
     }else{
@@ -25,5 +25,5 @@ export class Home {
   saySmth(): void {
     console.log(this.data)
     console.log(this.name)
-  }*/
+  }
 }

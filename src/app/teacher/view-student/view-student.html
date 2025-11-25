@@ -16,55 +16,17 @@
         </div>
 
         <div class="modules-section">
-            <div class="modules-header">
-                <h4>Progreso de módulos</h4>
-            </div>
-
-            <div class="module-progress">
-                <div class="module-label">
-                    <div class="module-info">
-                        <div class="module-icon module-1">
-                            <i class="fa-solid fa-graduation-cap"></i>
-                        </div>
-                        <span class="module-name">Módulo 1: Área Cognitiva</span>
-                    </div>
-                    <span class="module-percentage">{{progresoModulo1}}%</span>
+            <!-- Se eliminó el título y las barras de progreso; solo se muestran las cantidades de actividades completadas -->
+            <div class="progress-summary">
+                <div class="progress-item mod-1">
+                    <span class="module-name">Área cognitica</span>
+                    <span class="progress-count">{{calcularActividadesCompletadas(progresoModulo1)}}</span>
+                    <span class="progress-sub">actividades completadas</span>
                 </div>
-                <div class="progress-bar-container">
-                    <div 
-                        class="progress-bar-fill module-1" 
-                        [style.width.%]="progresoModulo1"
-                    >
-                        <span *ngIf="progresoModulo1 > 15">{{progresoModulo1}}%</span>
-                    </div>
-                </div>
-                <div class="progress-details">
-                    <span>{{calcularActividadesCompletadas(progresoModulo1)}} actividades completadas</span>
-                    <span>{{calcularActividadesFaltantes(progresoModulo1)}} por completar</span>
-                </div>
-            </div>
-
-            <div class="module-progress">
-                <div class="module-label">
-                    <div class="module-info">
-                        <div class="module-icon module-2">
-                            <i class="fa-solid fa-gamepad"></i>
-                        </div>
-                        <span class="module-name">Módulo 2: Área Lúdica</span>
-                    </div>
-                    <span class="module-percentage">{{progresoModulo2}}%</span>
-                </div>
-                <div class="progress-bar-container">
-                    <div 
-                        class="progress-bar-fill module-2" 
-                        [style.width.%]="progresoModulo2"
-                    >
-                        <span *ngIf="progresoModulo2 > 15">{{progresoModulo2}}%</span>
-                    </div>
-                </div>
-                <div class="progress-details">
-                    <span>{{calcularActividadesCompletadas(progresoModulo2)}} actividades completadas</span>
-                    <span>{{calcularActividadesFaltantes(progresoModulo2)}} por completar</span>
+                <div class="progress-item mod-2">
+                    <span class="module-name">Área Lúdica</span>
+                    <span class="progress-count">{{calcularActividadesCompletadas(progresoModulo2)}}</span>
+                    <span class="progress-sub">actividades completadas</span>
                 </div>
             </div>
 
