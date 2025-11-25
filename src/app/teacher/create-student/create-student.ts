@@ -18,6 +18,8 @@ export class CreateStudent implements OnInit {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.actualizarVistaHija();
+        // recargar la lista cuando la ruta cambia (asegura que los nuevos alumnos aparezcan)
+        this.cargarEstudiantes();
       }
     });
   }

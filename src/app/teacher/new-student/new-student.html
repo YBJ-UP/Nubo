@@ -91,3 +91,16 @@
         </form>
     </div>
 </div>
+
+<!-- Reutiliza el componente FloatingMessage para mostrar mensajes dentro de un recuadro -->
+<app-floating-message
+    [visible]="fmVisible"
+    [title]="fmTitle"
+    [message]="fmMessage"
+    [type]="fmType"
+    [primaryLabel]="fmPrimaryLabel"
+    [secondaryLabel]="fmSecondaryLabel"
+    (primary)="onFloatingPrimary()"
+    (secondary)="onFloatingSecondary()"
+    (closed)="onFloatingClosed()"
+></app-floating-message>
