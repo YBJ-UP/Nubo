@@ -92,6 +92,18 @@
   object-fit: contain;
 }
 
+/* make the cognitiva svg a bit larger so nuboPalabras fits nicely */
+.categoria-card.cognitiva .card-icon {
+  width: 150px;
+  height: 130px;
+}
+
+.categoria-card.cognitiva .card-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .card-title {
   font-size: 1.5rem;
   font-weight: 600;
