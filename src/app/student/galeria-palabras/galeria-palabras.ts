@@ -6,6 +6,7 @@ import { PalabraData } from '../../interfaces/PalabraData';
 import { PALABRAS_DATA_MOCK } from '../../data/palabra-data';
 import { ActividadFormService } from '../../services/actividad.service';
 import { FloatingMessage } from '../../shared/floating-message/floating-message';
+import { StudentActivityService } from '../../services/student-activity.service';
 
 @Component({
   selector: 'app-galeria-palabras',
@@ -19,7 +20,6 @@ export class GaleriaPalabras implements OnInit {
   actividadesSeleccionadas: Set<number> = new Set();
   esProfesor: boolean = false; 
 
-  // Floating message
   notice = {
     visible: false,
     title: '',
@@ -33,7 +33,8 @@ export class GaleriaPalabras implements OnInit {
 
   constructor(
     private router: Router,
-    private actividadService: ActividadFormService
+    private actividadService: ActividadFormService,
+    private studentActivityService: StudentActivityService
   ) {}
 
   ngOnInit(): void {
@@ -47,13 +48,36 @@ export class GaleriaPalabras implements OnInit {
     console.log('👤 Es profesor:', this.esProfesor);
   }
 
-  cargarActividades(): void {
+  async cargarActividades(): Promise<void> {
+    if (!this.esProfesor) {
+      try {
+        const result = await this.studentActivityService.getCognitiveActivities();
+        
+        if (result.success && result.activities) {
+          this.palabras = result.activities.map((act) => ({
+            id: Number(act.id),
+            titulo: act.title,
+            colorFondo: this.obtenerColorAleatorio(),
+            imagenUrl: act.thumbnail || '/crds.webp', 
+            enlace: `/cognitive-abilities/actividad/${act.id}`
+          }));
+          
+          console.log('Actividades cargadas desde API:', this.palabras.length);
+          return;
+        } else {
+          console.warn('No se pudieron cargar actividades de la API:', result.message);
+        }
+      } catch (error) {
+        console.error('Error al cargar actividades de la API:', error);
+      }
+      return;
+    }
+
     const actividadesGuardadas = this.actividadService.getAllActividades();
     console.log('Actividades guardadas en localStorage:', actividadesGuardadas);
     
     if (actividadesGuardadas.length > 0) {
       const actividadesConvertidas: PalabraData[] = actividadesGuardadas.map((act: any) => {
-        // Asegurarse de que el ID sea un número entero
         const idLimpio = Math.floor(Number(act.id));
         console.log(`Convirtiendo actividad: "${act.titulo}" con ID: ${idLimpio}`);
         
@@ -66,13 +90,11 @@ export class GaleriaPalabras implements OnInit {
         };
       });
 
-      // Mostrar únicamente las actividades que se cargaron manualmente.
       this.palabras = actividadesConvertidas;
       console.log('Actividades manuales cargadas:', this.palabras.length);
       console.log('IDs finales (manuales):', this.palabras.map(p => ({ id: p.id, titulo: p.titulo })));
     } else {
       console.log('No hay actividades guardadas manualmente; sin actividades para mostrar');
-      // No cargar actividades por defecto: dejar la lista vacía
       this.palabras = [];
     }
   }
