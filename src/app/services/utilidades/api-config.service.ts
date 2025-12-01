@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class ApiConfigService {
-  private readonly baseUrl: string = environment.apiUrl || 'http://localhost:9000';
+  private readonly baseUrl: string = environment.apiUrl || 'http://54.226.246.30\:9000';
 
   constructor() {
     console.log('API Base URL:', this.baseUrl);

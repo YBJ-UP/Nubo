@@ -8,9 +8,10 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
+  standalone: true,
   imports: [Cloud, RouterLink, FormsModule, Nube, CommonModule],
   templateUrl: './register.html',
-  styleUrl: './register.css'
+  styleUrls: ['./register.css']
 })
 export class Register {
   isLoading = false;
