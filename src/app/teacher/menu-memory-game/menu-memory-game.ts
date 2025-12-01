@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Header } from '../../components/header/header';
-import { MemoryGameService, MemoryGame } from '../../services/memory-game.service';
+import { MemoryGameService, MemoryGame } from '../../services/utilidades/memory-game.service';
 
 @Component({
   selector: 'app-menu-memory-game',

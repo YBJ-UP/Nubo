@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Location } from '@angular/common';
-import { ImageService } from '../../services/image.service';
-import { StudentService } from '../../services/sstudent.service';
+import { ImageService } from '../../services/utilidades/image.service';
+import { StudentService } from '../../services/estudiantes/sstudent.service';
 import { FloatingMessage } from '../../shared/floating-message/floating-message';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Student } from '../interfaces/student';
-import studentData from '../../../public/placeholderData/studentData.json';
+import { Student } from '../../interfaces/student';
+import studentData from '../../../../public/placeholderData/studentData.json';
 
 interface StudentProgress {
   modulo1: number;

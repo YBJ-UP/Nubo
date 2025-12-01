@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from "@angular/router";
-import { StudentService } from '../../services/sstudent.service';
+import { StudentService } from '../../services/estudiantes/sstudent.service';
 import { Student } from '../../interfaces/student';
 import studentData from '../../../../public/placeholderData/studentData.json';
 
