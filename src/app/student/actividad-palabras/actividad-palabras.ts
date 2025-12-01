@@ -3,14 +3,13 @@ import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-
-// Services
 import { ActividadFormService, PalabraCompleta } from '../../services/actividad.service';
 import { ActividadNavigationService } from '../../services/actividad.navegation.service';
 import { ProgressService, ProgressData } from '../../services/progress.service';
 import { AudioPlaybackService } from '../../services/audio-playback.service';
 import { ActividadStateService } from '../../services/actividad-state.service';
 import { FloatingMessage } from '../../shared/floating-message/floating-message';
+import { StudentActivityService } from '../../services/student-activity.service';
 
 @Component({
   selector: 'app-actividad-palabras',
@@ -22,7 +21,6 @@ import { FloatingMessage } from '../../shared/floating-message/floating-message'
 export class ActividadPalabras implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
-  // Floating message state
   notice = {
     visible: false,
     title: '',
@@ -33,10 +31,8 @@ export class ActividadPalabras implements OnInit, OnDestroy {
   };
   private _primaryCb?: () => void;
   private _secondaryCb?: () => void;
-  // Background color for main image card (avoid calling random in template)
   mainCardBgColor: string = '#FFFFFF';
 
-  // Getters para el template
   get palabraActual(): PalabraCompleta | null {
     return this.stateService.getPalabraActual();
   }
@@ -64,7 +60,8 @@ export class ActividadPalabras implements OnInit, OnDestroy {
     public navigationService: ActividadNavigationService,
     private progressService: ProgressService,
     private audioService: AudioPlaybackService,
-    private stateService: ActividadStateService
+    private stateService: ActividadStateService,
+    private studentActivityService: StudentActivityService 
   ) {}
 
   ngOnInit(): void {
@@ -79,12 +76,12 @@ export class ActividadPalabras implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private inicializarActividad(): void {
+  private async inicializarActividad(): Promise<void> {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       const actividadId = parseInt(id);
       this.stateService.setActividadId(actividadId);
-      this.cargarActividad(actividadId);
+      await this.cargarActividad(actividadId);
     }
   }
 
@@ -94,7 +91,27 @@ export class ActividadPalabras implements OnInit, OnDestroy {
     }
   }
 
-  private cargarActividad(id: number): void {
+  private async cargarActividad(id: number): Promise<void> {
+    try {
+      const apiResult = await this.studentActivityService.getActivityById(String(id));
+      
+      if (apiResult.success && apiResult.activity) {
+        const actividadLocal = this.studentActivityService.convertToLocalFormat(apiResult.activity);
+        
+        this.stateService.setPalabras(actividadLocal.palabrasCompletas);
+        this.stateService.setTituloActividad(actividadLocal.titulo);
+        this.actualizarProgreso();
+        
+        console.log('Actividad cargada desde API:', {
+          titulo: actividadLocal.titulo,
+          id: id
+        });
+        return; 
+      }
+    } catch (error) {
+      console.warn('Error al intentar cargar desde API, intentando local...', error);
+    }
+
     const actividad = this.actividadService.getActividadById(id);
     
     if (actividad && actividad.palabrasCompletas) {
@@ -102,13 +119,13 @@ export class ActividadPalabras implements OnInit, OnDestroy {
       this.stateService.setTituloActividad(actividad.titulo);
       this.actualizarProgreso();
       
-      console.log('Actividad cargada:', {
+      console.log('Actividad cargada desde localStorage:', {
         titulo: actividad.titulo,
         totalPalabras: actividad.palabrasCompletas.length,
         id: actividad.id
       });
     } else {
-      console.error('Actividad no encontrada o sin palabras');
+      console.error('Actividad no encontrada ni en API ni local');
       this.showNotice('Error', 'No se pudo cargar la actividad', 'error', 'Volver', undefined, () => this.regresar());
     }
   }
@@ -164,10 +181,8 @@ export class ActividadPalabras implements OnInit, OnDestroy {
     
     this.stateService.setProgreso(progreso);
     this.stateService.setProgressData(progressData);
-    // deterministically pick a background color for the current card (avoids ExpressionChangedAfterItHasBeenCheckedError)
     this.mainCardBgColor = this.navigationService.obtenerColorAleatorio();
   }
-
 
   async reproducirPalabraCompleta(): Promise<void> {
     if (!this.palabraActual) return;
@@ -229,7 +244,6 @@ export class ActividadPalabras implements OnInit, OnDestroy {
     this.audioService.detenerAudio();
   }
 
-  // Métodos de utilidad para el template
   obtenerColorSilaba(index: number): string {
     return this.navigationService.obtenerColorSilaba(index);
   }
@@ -275,21 +289,20 @@ export class ActividadPalabras implements OnInit, OnDestroy {
     
     if (this.actividadCompletada()) {
       const mensaje = '¡Has completado esta actividad!\n\n' +
-                     `Palabras vistas: ${progressData?.palabrasCompletadas || 0}\n` +
-                     `Progreso: ${progreso.toFixed(0)}%\n\n` +
-                     '¿Deseas salir?';
+                      `Palabras vistas: ${progressData?.palabrasCompletadas || 0}\n` +
+                      `Progreso: ${progreso.toFixed(0)}%\n\n` +
+                      '¿Deseas salir?';
 
       this.showNotice('Confirmar', mensaje, 'info', 'Sí', 'No', () => this.location.back());
     } else {
       const mensaje = `Progreso actual: ${progreso.toFixed(0)}%\n` +
-                     `Palabras completadas: ${progressData?.palabrasCompletadas || 0} de ${totalPalabras}\n\n` +
-                     '¿Estás seguro de que deseas salir?';
+                      `Palabras completadas: ${progressData?.palabrasCompletadas || 0} de ${totalPalabras}\n\n` +
+                      '¿Estás seguro de que deseas salir?';
 
       this.showNotice('Confirmar', mensaje, 'info', 'Sí', 'No', () => this.location.back());
     }
   }
 
-  // Helpers for floating notice
   private showNotice(
     title: string,
     message: string,
