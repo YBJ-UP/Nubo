@@ -1,16 +1,13 @@
-// src/app/services/teacher-activity.service.ts
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { firstValueFrom, catchError, throwError } from 'rxjs';
 import { ApiConfigService } from '../utilidades/api-config.service';
 import { TeacherAuthService } from '../autenticacion/teacher-auth.service';
 import { ActivityMapperService } from '../mappers/activity-mapper.service';
 
-/**
- * Identificadores de módulos en el sistema
- * Estos UUIDs deben coincidir exactamente con los de la base de datos
- */
 interface ModuleIds {
-  COGNITIVE: string;  // Módulo de actividades cognitivas
-  LUDIC: string;      // Módulo de juegos lúdicos
+  COGNITIVE: string;
+  LUDIC: string;
 }
 
 interface ContentItem {
@@ -40,33 +37,23 @@ interface ActivityResponse {
   content: ContentItem[];
 }
 
-/**
- * Servicio para gestionar actividades de maestros
- * Maneja la comunicación con la API para CRUD de actividades
- */
 @Injectable({
   providedIn: 'root'
 })
 export class TeacherActivityService {
   
-  /**
-   * IDs de módulos del sistema
-   * IMPORTANTE: Estos deben coincidir con los UUIDs en tu base de datos
-   */
   private readonly MODULE_IDS: ModuleIds = {
     COGNITIVE: '14387d49-4a1a-47d1-aa47-5a700db3493a',
     LUDIC: '6297d1fa-a65f-43cd-8070-5960bd89215b'
   };
 
   constructor(
+    private http: HttpClient,
     private apiConfig: ApiConfigService,
     private authService: TeacherAuthService,
     private mapper: ActivityMapperService
   ) {}
 
-  /**
-   * Crea una actividad cognitiva (Módulo 1)
-   */
   async createCognitiveActivity(activityData: {
     title: string;
     thumbnail: string;
@@ -79,9 +66,6 @@ export class TeacherActivityService {
     });
   }
 
-  /**
-   * Crea una actividad de memorama (Módulo 2)
-   */
   async createMemoramaActivity(activityData: {
     title: string;
     thumbnail: string;
@@ -94,9 +78,6 @@ export class TeacherActivityService {
     });
   }
 
-  /**
-   * Método privado para crear cualquier tipo de actividad
-   */
   private async createActivity(activityData: {
     title: string;
     thumbnail: string;
@@ -123,42 +104,30 @@ export class TeacherActivityService {
         content: activityData.content
       };
 
-      const response = await fetch(
-        this.apiConfig.getEndpoint(`/teacher/${teacher.id}/activities`),
-        {
-          method: 'POST',
-          headers: this.apiConfig.getAuthHeaders(),
-          body: JSON.stringify(requestData)
-        }
+      const activity = await firstValueFrom(
+        this.http.post<ActivityResponse>(
+          this.apiConfig.getEndpoint(`/teacher/${teacher.id}/activities`),
+          requestData,
+          { headers: this.apiConfig.getAuthHeaders() }
+        ).pipe(
+          catchError(this.handleError)
+        )
       );
-
-      if (!response.ok) {
-        const error = await response.json();
-        return {
-          success: false,
-          message: error.error || 'Error al crear actividad'
-        };
-      }
-
-      const activity: ActivityResponse = await response.json();
       
       return {
         success: true,
         message: 'Actividad creada exitosamente',
         activity
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error al crear actividad:', error);
       return {
         success: false,
-        message: 'Error de conexión con el servidor'
+        message: error.error?.error || 'Error de conexión con el servidor'
       };
     }
   }
 
-  /**
-   * Obtiene todas las actividades del maestro autenticado
-   */
   async getMyActivities(): Promise<{ 
     success: boolean; 
     message: string; 
@@ -175,44 +144,30 @@ export class TeacherActivityService {
     }
 
     try {
-      const response = await fetch(
-        this.apiConfig.getEndpoint(`/teacher/${teacher.id}/activities`),
-        {
-          method: 'GET',
-          headers: this.apiConfig.getAuthHeaders()
-        }
+      const activities = await firstValueFrom(
+        this.http.get<ActivityResponse[]>(
+          this.apiConfig.getEndpoint(`/teacher/${teacher.id}/activities`),
+          { headers: this.apiConfig.getAuthHeaders() }
+        ).pipe(
+          catchError(this.handleError)
+        )
       );
-
-      if (!response.ok) {
-        const error = await response.json();
-        return {
-          success: false,
-          message: error.error || 'Error al obtener actividades',
-          activities: []
-        };
-      }
-
-      const activities: ActivityResponse[] = await response.json();
       
       return {
         success: true,
         message: 'Actividades obtenidas exitosamente',
         activities
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error al obtener actividades:', error);
       return {
         success: false,
-        message: 'Error de conexión con el servidor',
+        message: error.error?.error || 'Error de conexión con el servidor',
         activities: []
       };
     }
   }
 
-  /**
-   * Elimina una actividad específica
-   * Verifica que el maestro sea el dueño de la actividad
-   */
   async deleteActivity(activityId: string): Promise<{ 
     success: boolean; 
     message: string 
@@ -227,47 +182,45 @@ export class TeacherActivityService {
     }
 
     try {
-      const response = await fetch(
-        this.apiConfig.getEndpoint(`/teacher/${teacher.id}/activities/${activityId}`),
-        {
-          method: 'DELETE',
-          headers: this.apiConfig.getAuthHeaders()
-        }
+      await firstValueFrom(
+        this.http.delete(
+          this.apiConfig.getEndpoint(`/teacher/${teacher.id}/activities/${activityId}`),
+          { headers: this.apiConfig.getAuthHeaders() }
+        ).pipe(
+          catchError(this.handleError)
+        )
       );
-
-      if (!response.ok) {
-        const error = await response.json();
-        return {
-          success: false,
-          message: error.error || 'Error al eliminar actividad'
-        };
-      }
 
       return {
         success: true,
         message: 'Actividad eliminada exitosamente'
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error al eliminar actividad:', error);
       return {
         success: false,
-        message: 'Error de conexión con el servidor'
+        message: error.error?.error || 'Error de conexión con el servidor'
       };
     }
   }
 
-  /**
-   * Convierte contenido local al formato de la API
-   * Delega al servicio mapper
-   */
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Error desconocido';
+    
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      errorMessage = error.error?.error || `Error ${error.status}: ${error.message}`;
+    }
+    
+    console.error('HttpClient Error:', errorMessage);
+    return throwError(() => error);
+  }
+
   convertContentToApiFormat(localContent: any[]): ContentItem[] {
     return this.mapper.convertToApiFormat(localContent);
   }
 
-  /**
-   * Convierte actividad de API a formato local
-   * Delega al servicio mapper
-   */
   convertToLocalFormat(activity: ActivityResponse): any {
     return this.mapper.convertToLocalFormat(activity);
   }
