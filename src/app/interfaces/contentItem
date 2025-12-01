@@ -1,7 +1,0 @@
-export interface ContentItem {
-  id?: string;
-  texto: string;
-  imagenUrl: string;
-  silabas: string[]; 
-  grafemas: string[];
-}

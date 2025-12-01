@@ -1,4 +1,5 @@
 
+
 export interface Activity {
   id?: string;
   teacherId: string;
@@ -6,5 +7,12 @@ export interface Activity {
   titulo: string;
   thumbnail: string;
   public: boolean;
-  //content: ContentItem[]; 
+  content: ContentItem[]; 
+}
+export interface ContentItem {
+  id?: string;
+  texto: string;
+  imagenUrl: string;
+  silabas: string[]; 
+  grafemas: string[];
 }
