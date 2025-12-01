@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiConfigService } from '../utilidades/api-config.service';
-import { Teacher } from '../interfaces/teacher';
+import { Teacher } from '../../interfaces/teacher';
 
 interface TeacherAuthResponse {
   id: string;
