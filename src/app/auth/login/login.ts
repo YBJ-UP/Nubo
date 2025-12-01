@@ -1,13 +1,15 @@
-import { Component, signal } from '@angular/core';
-import { Cloud } from "../../components/cloud/cloud";
-import { RouterLink, Router } from "@angular/router";
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
+import { RouterLink, Router } from "@angular/router";
+import { Cloud } from "../../components/cloud/cloud";
 import { Nube } from "../../components/nube/nube";
 import { TeacherAuthService } from '../../services/teacher-auth.service';
-import { CommonModule } from '@angular/common';
+import { StudentAuthService } from '../../services/student-auth.service';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [Cloud, RouterLink, FormsModule, Nube, CommonModule],
   templateUrl: './login.html',
   styleUrl: '../register/register.css'
@@ -15,11 +17,12 @@ import { CommonModule } from '@angular/common';
 export class Login {
   role = "Maestro";
   isLoading = false;
-  errorMessage = '';
+  errorMessage = ''
 
   constructor(
     private router: Router,
-    private authService: TeacherAuthService
+    private authService: TeacherAuthService,
+    private studentAuthService: StudentAuthService
   ) {}
 
   swicthRole(): void {
@@ -83,8 +86,21 @@ export class Login {
       return;
     }
 
-    console.log('Login de estudiante:', { firstName, psw });
-    
-    this.router.navigate(['student']);
+    const nombres = psw.trim().split(' ');
+    const apellidoP = nombres[0] || '';
+    const apellidoM = nombres.slice(1).join(' ') || ''; 
+
+    const result = await this.studentAuthService.login({
+      nombre: firstName.trim(),
+      apellidoP: apellidoP,
+      apellidoM: apellidoM
+    });
+
+    if (result.success && result.student) {
+      console.log('Login de estudiante exitoso:', result.student);
+      this.router.navigate(['student']);
+    } else {
+      this.errorMessage = result.message;
+    }
   }
 }
