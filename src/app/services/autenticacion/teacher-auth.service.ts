@@ -25,7 +25,7 @@ interface RegisterData {
   apellidos: string;
   email: string;
   contraseña: string;
-  escuela?: string;
+  escuela: string;
 }
 
 @Injectable({
@@ -49,6 +49,7 @@ export class TeacherAuthService {
     token?: string;
   }> {
     try {
+      console.log('Registering teacher with data:', data);
       const response = await fetch(
         this.apiConfig.getEndpoint('/teacher/register'), 
         {
