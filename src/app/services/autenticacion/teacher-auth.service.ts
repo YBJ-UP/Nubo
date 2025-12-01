@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { firstValueFrom, catchError, throwError } from 'rxjs';
 import { ApiConfigService } from '../utilidades/api-config.service';
 import { Teacher } from '../../interfaces/teacher';
 
@@ -8,7 +10,6 @@ interface TeacherAuthResponse {
   email: string;
   escuela?: string;
 }
-
 
 interface AuthApiResponse {
   token: string;
@@ -38,7 +39,10 @@ export class TeacherAuthService {
   private readonly TEACHER_KEY = 'currentTeacher';
   private readonly TOKEN_KEY = 'teacher_token';
 
-  constructor(private apiConfig: ApiConfigService) {
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) {
     this.loadFromStorage();
   }
 
@@ -49,24 +53,15 @@ export class TeacherAuthService {
     token?: string;
   }> {
     try {
-      const response = await fetch(
-        this.apiConfig.getEndpoint('/teacher/register'), 
-        {
-          method: 'POST',
-          headers: this.apiConfig.getCommonHeaders(),
-          body: JSON.stringify(data)
-        }
+      const result = await firstValueFrom(
+        this.http.post<AuthApiResponse>(
+          this.apiConfig.getEndpoint('/teacher/register'),
+          data,
+          { headers: this.apiConfig.getCommonHeaders() }
+        ).pipe(
+          catchError(this.handleError)
+        )
       );
-
-      if (!response.ok) {
-        const error = await response.json();
-        return {
-          success: false,
-          message: error.error || 'Error al registrar maestro'
-        };
-      }
-
-      const result: AuthApiResponse = await response.json();
 
       this.saveToStorage(result.teacher, result.token);
       
@@ -76,11 +71,11 @@ export class TeacherAuthService {
         teacher: result.teacher,
         token: result.token
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error en registro:', error);
       return {
         success: false,
-        message: 'Error de conexión con el servidor. Verifica que la API esté ejecutándose.'
+        message: error.error?.error || 'Error de conexión con el servidor. Verifica que la API esté ejecutándose.'
       };
     }
   }
@@ -92,24 +87,15 @@ export class TeacherAuthService {
     token?: string;
   }> {
     try {
-      const response = await fetch(
-        this.apiConfig.getEndpoint('/teacher/login'), 
-        {
-          method: 'POST',
-          headers: this.apiConfig.getCommonHeaders(),
-          body: JSON.stringify(credentials)
-        }
+      const result = await firstValueFrom(
+        this.http.post<AuthApiResponse>(
+          this.apiConfig.getEndpoint('/teacher/login'),
+          credentials,
+          { headers: this.apiConfig.getCommonHeaders() }
+        ).pipe(
+          catchError(this.handleError)
+        )
       );
-
-      if (!response.ok) {
-        const error = await response.json();
-        return {
-          success: false,
-          message: error.error || 'Credenciales inválidas'
-        };
-      }
-
-      const result: AuthApiResponse = await response.json();
      
       this.saveToStorage(result.teacher, result.token);
       
@@ -119,13 +105,26 @@ export class TeacherAuthService {
         teacher: result.teacher,
         token: result.token
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error en login:', error);
       return {
         success: false,
-        message: 'Error de conexión con el servidor. Verifica que la API esté ejecutándose.'
+        message: error.error?.error || 'Error de conexión con el servidor. Verifica que la API esté ejecutándose.'
       };
     }
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Error desconocido';
+    
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      errorMessage = error.error?.error || `Error ${error.status}: ${error.message}`;
+    }
+    
+    console.error('HttpClient Error:', errorMessage);
+    return throwError(() => error);
   }
 
   logout(): void {
@@ -143,7 +142,6 @@ export class TeacherAuthService {
   getAuthToken(): string | null {
     return this.authToken;
   }
-
 
   isAuthenticated(): boolean {
     return this.currentTeacher !== null && this.authToken !== null;
