@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActividadFormService, PalabraCompleta, Palabra, Fonema } from './actividad.service';
+import { ActividadFormService, PalabraCompleta, Palabra, Fonema } from '../actividades/actividad.service';
 
 export interface WordOperationResult {
   success: boolean;

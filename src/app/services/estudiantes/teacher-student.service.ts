@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ApiConfigService } from './api-config.service';
-import { TeacherAuthService } from './teacher-auth.service';
+import { ApiConfigService } from '../utilidades/api-config.service';
+import { TeacherAuthService } from '../autenticacion/teacher-auth.service';
 
 interface StudentResponse {
   studentId: string;

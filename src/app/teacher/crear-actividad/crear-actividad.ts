@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 import { CrearActividadPresenter } from '../../services/presenter/crear-actividad.presenter';
-import { ActivityFormStateService } from '../../services/activity-form-state.service';
-import { NotificationService } from '../../services/notification.service';
+import { ActivityFormStateService } from '../../services/actividades/activity-form-state.service';
+import { NotificationService } from '../../services/utilidades/notification.service';
 import { FloatingMessage } from '../../shared/floating-message/floating-message';
-import { PalabraCompleta } from '../../services/actividad.service';
+import { PalabraCompleta } from '../../services/actividades/actividad.service';
 
 @Component({
   selector: 'app-crear-actividad',

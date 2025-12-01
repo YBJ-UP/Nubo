@@ -1,10 +1,12 @@
+// src/app/services/mappers/activity-mapper.service.ts
 import { Injectable } from '@angular/core';
-import { PalabraCompleta } from './actividad.service';
+import { PalabraCompleta } from '../actividades/actividad.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActivityMapperService {
+  
   convertToApiFormat(localContent: any[]): any[] {
     return localContent.map(item => ({
       texto: item.palabra || item.texto,

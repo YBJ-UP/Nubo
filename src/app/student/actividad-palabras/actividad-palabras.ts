@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { ActividadFormService, PalabraCompleta } from '../../services/actividad.service';
-import { ActividadNavigationService } from '../../services/actividad.navegation.service';
-import { ProgressService, ProgressData } from '../../services/progress.service';
-import { AudioPlaybackService } from '../../services/audio-playback.service';
-import { ActividadStateService } from '../../services/actividad-state.service';
+import { ActividadFormService, PalabraCompleta } from '../../services/actividades/actividad.service';
+import { ActividadNavigationService } from '../../services/actividades/actividad.navegation.service';  
+import { ProgressService, ProgressData } from '../../services/utilidades/progress.service';
+import { AudioPlaybackService } from '../../services/audio/audio-playback.service';
+import { ActividadStateService } from '../../services/actividades/actividad-state.service';
 import { FloatingMessage } from '../../shared/floating-message/floating-message';
-import { StudentActivityService } from '../../services/student-activity.service';
+import { StudentActivityService } from '../../services/actividades/student-activity.service';
 
 @Component({
   selector: 'app-actividad-palabras',

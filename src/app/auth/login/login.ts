@@ -4,8 +4,8 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { RouterLink, Router } from "@angular/router";
 import { Cloud } from "../../components/cloud/cloud";
 import { Nube } from "../../components/nube/nube";
-import { TeacherAuthService } from '../../services/teacher-auth.service';
-import { StudentAuthService } from '../../services/student-auth.service';
+import { TeacherAuthService } from '../../services/autenticacion/teacher-auth.service';
+import { StudentAuthService } from '../../services/autenticacion/student-auth.service';
 
 @Component({
   selector: 'app-login',

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActividadFormService } from './actividad.service';
+import { ActividadFormService } from '../actividades/actividad.service';
 
 export interface ImageUploadResult {
   success: boolean;

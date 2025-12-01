@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PalabraCompleta } from './actividad.service';
-import { ProgressData } from './progress.service';
+import { ProgressData } from '../utilidades/progress.service';
 
 @Injectable({
   providedIn: 'root'

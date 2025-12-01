@@ -4,9 +4,9 @@ import { Router, RouterModule } from '@angular/router';
 import { CardsPalabras } from "../../components/cards-palabras/cards-palabras";
 import { PalabraData } from '../../interfaces/PalabraData';
 import { PALABRAS_DATA_MOCK } from '../../data/palabra-data';
-import { ActividadFormService } from '../../services/actividad.service';
+import { ActividadFormService } from '../../services/actividades/actividad.service';
 import { FloatingMessage } from '../../shared/floating-message/floating-message';
-import { StudentActivityService } from '../../services/student-activity.service';
+import { StudentActivityService } from '../../services/actividades/student-activity.service';
 
 @Component({
   selector: 'app-galeria-palabras',

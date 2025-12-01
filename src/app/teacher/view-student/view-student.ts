@@ -4,7 +4,7 @@ import { FloatingMessage } from '../../shared/floating-message/floating-message'
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Student } from '../../interfaces/student';
-import { StudentService } from '../../services/sstudent.service';
+import { StudentService } from '../../services/estudiantes/sstudent.service';
 
 @Component({
   selector: 'app-view-student',

@@ -3,14 +3,14 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Subject } from 'rxjs';
 
-import { PalabraCompleta } from '../actividad.service';
-import { ActivityValidationService } from '../activity-validation.service';
-import { ActivityFormStateService } from '../activity-form-state.service';
-import { ActivitySyncService, SyncResult } from '../activity-sync.service';
-import { NotificationService } from '../notification.service';
-import { WordManagerService } from '../word-manager.service';
-import { ImageUploadService } from '../image-upload.service';
-import { TeacherAuthService } from '../teacher-auth.service';
+import { PalabraCompleta } from '../actividades/actividad.service';
+import { ActivityValidationService } from '../actividades/activity-validation.service';
+import { ActivityFormStateService } from '../actividades/activity-form-state.service';
+import { ActivitySyncService, SyncResult } from '../actividades/activity-sync.service';
+import { NotificationService } from '../utilidades/notification.service';
+import { WordManagerService } from '../utilidades/word-manager.service';
+import { ImageUploadService } from '../utilidades/image-upload.service';
+import { TeacherAuthService } from '../autenticacion/teacher-auth.service';
 
 @Injectable()
 export class CrearActividadPresenter implements OnDestroy {
