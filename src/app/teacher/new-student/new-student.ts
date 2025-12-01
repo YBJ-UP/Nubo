@@ -141,7 +141,7 @@ export class NewStudent implements OnInit, AfterViewInit {
       ta.select();
       document.execCommand('copy');
       document.body.removeChild(ta);
-      // Instead of navigating immediately, show the floating message and let user choose
+
       this.showFloating(
         'Copiado',
         'Contraseña copiada al portapapeles',
@@ -161,7 +161,7 @@ export class NewStudent implements OnInit, AfterViewInit {
   private copyPasswordAndGo(text: string): void {
     if (navigator && (navigator as any).clipboard && (navigator as any).clipboard.writeText) {
       (navigator as any).clipboard.writeText(text).then(() => {
-        // Show dialog offering to go back to list (less abrupt)
+
         this.showFloating(
           'Copiado',
           'Contraseña copiada al portapapeles',
@@ -247,9 +247,7 @@ export class NewStudent implements OnInit, AfterViewInit {
       if (el && typeof el.getBoundingClientRect === 'function') {
         const rect = el.getBoundingClientRect();
         const vwHeight = window.innerHeight || document.documentElement.clientHeight;
-        // Only scroll minimally if the element is not fully visible
         if (rect.bottom > vwHeight || rect.top < 0) {
-          // Use 'nearest' so the element is brought into view without centering
           if (typeof el.scrollIntoView === 'function') {
             el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           } else {
@@ -257,10 +255,8 @@ export class NewStudent implements OnInit, AfterViewInit {
           }
         }
       } else {
-        // fallback: do nothing to avoid forcing center
       }
     } catch (err) {
-      // ignore
     }
   }
 }

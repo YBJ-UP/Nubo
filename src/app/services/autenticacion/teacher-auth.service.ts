@@ -12,7 +12,12 @@ interface TeacherAuthResponse {
   escuela?: string;
 }
 
-interface AuthApiResponse {
+interface TeacherRegisterResponse {
+  token: string;
+  teacher: TeacherAuthResponse;
+}
+
+interface TeacherLoginResponse {
   token: string;
   teacher: TeacherAuthResponse;
 }
@@ -57,7 +62,7 @@ export class TeacherAuthService {
   }> {
     try {
       const result = await firstValueFrom(
-        this.http.post<any>(
+        this.http.post<TeacherRegisterResponse>(
           this.apiConfig.getEndpoint('/teacher/register'),
           data,
           { headers: this.apiConfig.getCommonHeaders() }
@@ -66,19 +71,13 @@ export class TeacherAuthService {
         )
       );
 
-      // tolerant response parsing: token may be token|accessToken|authToken
-      const token = result?.token || result?.accessToken || result?.authToken || null;
-      const teacherObj = result?.teacher || result?.user || result?.maestro || result?.teacherData || null;
-
-      if (token && teacherObj) {
-        this.saveToStorage(teacherObj, token);
-      }
+      this.saveToStorage(result.teacher, result.token);
 
       return {
         success: true,
         message: 'Maestro registrado exitosamente',
-        teacher: teacherObj ?? undefined,
-        token: token ?? undefined
+        teacher: result.teacher,
+        token: result.token
       };
     } catch (error: any) {
       console.error('Error en registro:', error);
@@ -97,7 +96,7 @@ export class TeacherAuthService {
   }> {
     try {
       const result = await firstValueFrom(
-        this.http.post<any>(
+        this.http.post<TeacherLoginResponse>(
           this.apiConfig.getEndpoint('/teacher/login'),
           credentials,
           { headers: this.apiConfig.getCommonHeaders() }
@@ -105,19 +104,14 @@ export class TeacherAuthService {
           catchError(this.handleError)
         )
       );
-
-      const token = result?.token || result?.accessToken || result?.authToken || null;
-      const teacherObj = result?.teacher || result?.user || result?.maestro || null;
-
-      if (token && teacherObj) {
-        this.saveToStorage(teacherObj, token);
-      }
-
+     
+      this.saveToStorage(result.teacher, result.token);
+      
       return {
         success: true,
         message: 'Inicio de sesión exitoso',
-        teacher: teacherObj ?? undefined,
-        token: token ?? undefined
+        teacher: result.teacher,
+        token: result.token
       };
     } catch (error: any) {
       console.error('Error en login:', error);
