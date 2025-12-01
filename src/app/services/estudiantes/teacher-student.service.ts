@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { firstValueFrom, catchError, throwError } from 'rxjs';
 import { ApiConfigService } from '../utilidades/api-config.service';
 import { TeacherAuthService } from '../autenticacion/teacher-auth.service';
 
@@ -20,6 +22,7 @@ interface CreateStudentRequest {
 })
 export class TeacherStudentService {
   constructor(
+    private http: HttpClient,
     private apiConfig: ApiConfigService,
     private authService: TeacherAuthService
   ) {}
@@ -46,35 +49,26 @@ export class TeacherStudentService {
         apellidoM: studentData.apellidoM
       };
 
-      const response = await fetch(
-        this.apiConfig.getEndpoint(`/teacher/${teacher.id}/students`),
-        {
-          method: 'POST',
-          headers: this.apiConfig.getAuthHeaders(),
-          body: JSON.stringify(requestData)
-        }
+      const student = await firstValueFrom(
+        this.http.post<StudentResponse>(
+          this.apiConfig.getEndpoint(`/teacher/${teacher.id}/students`),
+          requestData,
+          { headers: this.apiConfig.getAuthHeaders() }
+        ).pipe(
+          catchError(this.handleError)
+        )
       );
-
-      if (!response.ok) {
-        const error = await response.json();
-        return {
-          success: false,
-          message: error.message || 'Error al crear estudiante'
-        };
-      }
-
-      const student: StudentResponse = await response.json();
       
       return {
         success: true,
         message: 'Estudiante creado exitosamente',
         student
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error al crear estudiante:', error);
       return {
         success: false,
-        message: 'Error de conexión con el servidor'
+        message: error.error?.message || 'Error de conexión con el servidor'
       };
     }
   }
@@ -91,35 +85,25 @@ export class TeacherStudentService {
     }
 
     try {
-      const response = await fetch(
-        this.apiConfig.getEndpoint(`/teacher/${teacher.id}/students`),
-        {
-          method: 'GET',
-          headers: this.apiConfig.getAuthHeaders()
-        }
+      const students = await firstValueFrom(
+        this.http.get<StudentResponse[]>(
+          this.apiConfig.getEndpoint(`/teacher/${teacher.id}/students`),
+          { headers: this.apiConfig.getAuthHeaders() }
+        ).pipe(
+          catchError(this.handleError)
+        )
       );
-
-      if (!response.ok) {
-        const error = await response.json();
-        return {
-          success: false,
-          message: error.message || 'Error al obtener estudiantes',
-          students: []
-        };
-      }
-
-      const students: StudentResponse[] = await response.json();
       
       return {
         success: true,
         message: 'Estudiantes obtenidos exitosamente',
         students
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error al obtener estudiantes:', error);
       return {
         success: false,
-        message: 'Error de conexión con el servidor',
+        message: error.error?.message || 'Error de conexión con el servidor',
         students: []
       };
     }
@@ -136,35 +120,40 @@ export class TeacherStudentService {
     }
 
     try {
-      const response = await fetch(
-        this.apiConfig.getEndpoint(`/teacher/${teacher.id}/students/${studentId}`),
-        {
-          method: 'DELETE',
-          headers: this.apiConfig.getAuthHeaders()
-        }
+      await firstValueFrom(
+        this.http.delete(
+          this.apiConfig.getEndpoint(`/teacher/${teacher.id}/students/${studentId}`),
+          { headers: this.apiConfig.getAuthHeaders() }
+        ).pipe(
+          catchError(this.handleError)
+        )
       );
-
-      if (!response.ok) {
-        const error = await response.json();
-        return {
-          success: false,
-          message: error.message || 'Error al eliminar estudiante'
-        };
-      }
 
       return {
         success: true,
         message: 'Estudiante eliminado exitosamente'
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error al eliminar estudiante:', error);
       return {
         success: false,
-        message: 'Error de conexión con el servidor'
+        message: error.error?.message || 'Error de conexión con el servidor'
       };
     }
   }
 
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Error desconocido';
+    
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      errorMessage = error.error?.message || `Error ${error.status}: ${error.message}`;
+    }
+    
+    console.error('HttpClient Error:', errorMessage);
+    return throwError(() => error);
+  }
 
   convertToLocalFormat(student: StudentResponse): any {
     const nameParts = student.fullName.split(' ');
