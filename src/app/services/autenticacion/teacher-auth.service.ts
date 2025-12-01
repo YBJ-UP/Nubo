@@ -1,13 +1,18 @@
 import { Injectable } from '@angular/core';
 import { ApiConfigService } from '../utilidades/api-config.service';
-import { Teacher } from '../../interfaces/teacher';
+import { Teacher } from '../interfaces/teacher';
 
 interface TeacherAuthResponse {
   id: string;
   fullname: string;
   email: string;
   escuela?: string;
-  token?: string; 
+}
+
+
+interface AuthApiResponse {
+  token: string;
+  teacher: TeacherAuthResponse;
 }
 
 interface LoginCredentials {
@@ -30,17 +35,28 @@ export class TeacherAuthService {
   private currentTeacher: TeacherAuthResponse | null = null;
   private authToken: string | null = null;
 
+  private readonly TEACHER_KEY = 'currentTeacher';
+  private readonly TOKEN_KEY = 'teacher_token';
+
   constructor(private apiConfig: ApiConfigService) {
     this.loadFromStorage();
   }
 
-  async register(data: RegisterData): Promise<{ success: boolean; message: string; teacher?: TeacherAuthResponse }> {
+  async register(data: RegisterData): Promise<{ 
+    success: boolean; 
+    message: string; 
+    teacher?: TeacherAuthResponse;
+    token?: string;
+  }> {
     try {
-      const response = await fetch(this.apiConfig.getEndpoint('/teacher/register'), {
-        method: 'POST',
-        headers: this.apiConfig.getCommonHeaders(),
-        body: JSON.stringify(data)
-      });
+      const response = await fetch(
+        this.apiConfig.getEndpoint('/teacher/register'), 
+        {
+          method: 'POST',
+          headers: this.apiConfig.getCommonHeaders(),
+          body: JSON.stringify(data)
+        }
+      );
 
       if (!response.ok) {
         const error = await response.json();
@@ -50,14 +66,15 @@ export class TeacherAuthService {
         };
       }
 
-      const teacher: TeacherAuthResponse = await response.json();
+      const result: AuthApiResponse = await response.json();
 
-      this.saveToStorage(teacher, teacher.token);
+      this.saveToStorage(result.teacher, result.token);
       
       return {
         success: true,
         message: 'Maestro registrado exitosamente',
-        teacher
+        teacher: result.teacher,
+        token: result.token
       };
     } catch (error) {
       console.error('Error en registro:', error);
@@ -68,13 +85,21 @@ export class TeacherAuthService {
     }
   }
 
-  async login(credentials: LoginCredentials): Promise<{ success: boolean; message: string; teacher?: TeacherAuthResponse }> {
+  async login(credentials: LoginCredentials): Promise<{ 
+    success: boolean; 
+    message: string; 
+    teacher?: TeacherAuthResponse;
+    token?: string;
+  }> {
     try {
-      const response = await fetch(this.apiConfig.getEndpoint('/teacher/login'), {
-        method: 'POST',
-        headers: this.apiConfig.getCommonHeaders(),
-        body: JSON.stringify(credentials)
-      });
+      const response = await fetch(
+        this.apiConfig.getEndpoint('/teacher/login'), 
+        {
+          method: 'POST',
+          headers: this.apiConfig.getCommonHeaders(),
+          body: JSON.stringify(credentials)
+        }
+      );
 
       if (!response.ok) {
         const error = await response.json();
@@ -84,14 +109,15 @@ export class TeacherAuthService {
         };
       }
 
-      const teacher: TeacherAuthResponse = await response.json();
+      const result: AuthApiResponse = await response.json();
      
-      this.saveToStorage(teacher, teacher.token);
+      this.saveToStorage(result.teacher, result.token);
       
       return {
         success: true,
         message: 'Inicio de sesión exitoso',
-        teacher
+        teacher: result.teacher,
+        token: result.token
       };
     } catch (error) {
       console.error('Error en login:', error);
@@ -105,8 +131,8 @@ export class TeacherAuthService {
   logout(): void {
     this.currentTeacher = null;
     this.authToken = null;
-    localStorage.removeItem('currentTeacher');
-    localStorage.removeItem('teacher_token');
+    localStorage.removeItem(this.TEACHER_KEY);
+    localStorage.removeItem(this.TOKEN_KEY);
     console.log('Sesión cerrada');
   }
 
@@ -118,28 +144,27 @@ export class TeacherAuthService {
     return this.authToken;
   }
 
+
   isAuthenticated(): boolean {
-    return this.currentTeacher !== null;
+    return this.currentTeacher !== null && this.authToken !== null;
   }
 
-  private saveToStorage(teacher: TeacherAuthResponse, token?: string): void {
+  private saveToStorage(teacher: TeacherAuthResponse, token: string): void {
     this.currentTeacher = teacher;
+    this.authToken = token;
     
-    if (token) {
-      this.authToken = token;
-      localStorage.setItem('teacher_token', token);
-    }
+    localStorage.setItem(this.TOKEN_KEY, token);
+    localStorage.setItem(this.TEACHER_KEY, JSON.stringify(teacher));
     
-    localStorage.setItem('currentTeacher', JSON.stringify(teacher));
     console.log('Maestro guardado:', teacher);
   }
 
   private loadFromStorage(): void {
     try {
-      const teacherData = localStorage.getItem('currentTeacher');
-      const token = localStorage.getItem('teacher_token');
+      const teacherData = localStorage.getItem(this.TEACHER_KEY);
+      const token = localStorage.getItem(this.TOKEN_KEY);
       
-      if (teacherData) {
+      if (teacherData && token) {
         this.currentTeacher = JSON.parse(teacherData);
         this.authToken = token;
         console.log('Maestro cargado desde localStorage');
@@ -152,6 +177,19 @@ export class TeacherAuthService {
 
   updateTeacher(teacher: TeacherAuthResponse): void {
     this.currentTeacher = teacher;
-    localStorage.setItem('currentTeacher', JSON.stringify(teacher));
+    localStorage.setItem(this.TEACHER_KEY, JSON.stringify(teacher));
+  }
+
+  isTokenExpired(): boolean {
+    if (!this.authToken) return true;
+    
+    try {
+      const payload = JSON.parse(atob(this.authToken.split('.')[1]));
+      const exp = payload.exp * 1000;
+      return Date.now() >= exp;
+    } catch (error) {
+      console.error('Error al verificar expiración del token:', error);
+      return true;
+    }
   }
 }
