@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { firstValueFrom, catchError, throwError } from 'rxjs';
 import { ApiConfigService } from '../utilidades/api-config.service';
 import { TeacherAuthService } from './teacher-auth.service';
 
@@ -7,7 +9,6 @@ interface StudentAuthResponse {
   teacherId: string;   
   fullName: string;    
 }
-
 
 interface StudentLoginCredentials {
   nombre: string;
@@ -22,6 +23,7 @@ export class StudentAuthService {
   private currentStudent: StudentAuthResponse | null = null;
 
   constructor(
+    private http: HttpClient,
     private apiConfig: ApiConfigService,
     private teacherAuth: TeacherAuthService
   ) {
@@ -42,24 +44,16 @@ export class StudentAuthService {
         };
       }
 
-      const response = await fetch(
-        this.apiConfig.getEndpoint(`/teacher/${teacher.id}/students/login`),
-        {
-          method: 'POST',
-          headers: this.apiConfig.getCommonHeaders(),
-          body: JSON.stringify(credentials)
-        }
+      const student = await firstValueFrom(
+        this.http.post<StudentAuthResponse>(
+          this.apiConfig.getEndpoint(`/teacher/${teacher.id}/students/login`),
+          credentials,
+          { headers: this.apiConfig.getCommonHeaders() }
+        ).pipe(
+          catchError(this.handleError)
+        )
       );
 
-      if (!response.ok) {
-        const error = await response.json();
-        return {
-          success: false,
-          message: error.message || 'Credenciales inválidas'
-        };
-      }
-
-      const student: StudentAuthResponse = await response.json();
       this.saveToStorage(student);
 
       return {
@@ -67,13 +61,26 @@ export class StudentAuthService {
         message: 'Inicio de sesión exitoso',
         student
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error en login de estudiante:', error);
       return {
         success: false,
-        message: 'Error de conexión con el servidor'
+        message: error.error?.message || 'Error de conexión con el servidor'
       };
     }
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Error desconocido';
+    
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      errorMessage = error.error?.message || `Error ${error.status}: ${error.message}`;
+    }
+    
+    console.error('HttpClient Error:', errorMessage);
+    return throwError(() => error);
   }
 
   logout(): void {

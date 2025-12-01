@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { firstValueFrom, catchError, throwError } from 'rxjs';
 import { ApiConfigService } from '../utilidades/api-config.service';
 import { StudentAuthService } from '../autenticacion/student-auth.service';
 
@@ -25,6 +27,7 @@ interface ActivityResponse {
 })
 export class StudentActivityService {
   constructor(
+    private http: HttpClient,
     private apiConfig: ApiConfigService,
     private studentAuth: StudentAuthService
   ) {}
@@ -35,35 +38,25 @@ export class StudentActivityService {
     activities?: ActivityResponse[];
   }> {
     try {
-      const response = await fetch(
-        this.apiConfig.getEndpoint('/activities'),
-        {
-          method: 'GET',
-          headers: this.apiConfig.getCommonHeaders()
-        }
+      const activities = await firstValueFrom(
+        this.http.get<ActivityResponse[]>(
+          this.apiConfig.getEndpoint('/activities'),
+          { headers: this.apiConfig.getCommonHeaders() }
+        ).pipe(
+          catchError(this.handleError)
+        )
       );
-
-      if (!response.ok) {
-        const error = await response.json();
-        return {
-          success: false,
-          message: error.error || 'Error al obtener actividades',
-          activities: []
-        };
-      }
-
-      const activities: ActivityResponse[] = await response.json();
 
       return {
         success: true,
         message: 'Actividades obtenidas exitosamente',
         activities
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error al obtener actividades públicas:', error);
       return {
         success: false,
-        message: 'Error de conexión con el servidor',
+        message: error.error?.error || 'Error de conexión con el servidor',
         activities: []
       };
     }
@@ -75,34 +68,25 @@ export class StudentActivityService {
     activity?: ActivityResponse;
   }> {
     try {
-      const response = await fetch(
-        this.apiConfig.getEndpoint(`/activities/${activityId}`),
-        {
-          method: 'GET',
-          headers: this.apiConfig.getCommonHeaders()
-        }
+      const activity = await firstValueFrom(
+        this.http.get<ActivityResponse>(
+          this.apiConfig.getEndpoint(`/activities/${activityId}`),
+          { headers: this.apiConfig.getCommonHeaders() }
+        ).pipe(
+          catchError(this.handleError)
+        )
       );
-
-      if (!response.ok) {
-        const error = await response.json();
-        return {
-          success: false,
-          message: error.error || 'Actividad no encontrada'
-        };
-      }
-
-      const activity: ActivityResponse = await response.json();
 
       return {
         success: true,
         message: 'Actividad obtenida exitosamente',
         activity
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error al obtener actividad:', error);
       return {
         success: false,
-        message: 'Error de conexión con el servidor'
+        message: error.error?.error || 'Actividad no encontrada'
       };
     }
   }
@@ -128,7 +112,7 @@ export class StudentActivityService {
         message: 'Actividades filtradas exitosamente',
         activities: filteredActivities
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error al filtrar actividades por módulo:', error);
       return {
         success: false,
@@ -136,6 +120,19 @@ export class StudentActivityService {
         activities: []
       };
     }
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Error desconocido';
+    
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      errorMessage = error.error?.error || `Error ${error.status}: ${error.message}`;
+    }
+    
+    console.error('HttpClient Error:', errorMessage);
+    return throwError(() => error);
   }
 
   convertToLocalFormat(activity: ActivityResponse): any {

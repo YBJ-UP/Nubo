@@ -1,0 +1,18 @@
+
+
+export interface Activity {
+  id?: string;
+  teacherId: string;
+  moduloId: string;
+  titulo: string;
+  thumbnail: string;
+  public: boolean;
+  content: ContentItem[]; 
+}
+export interface ContentItem {
+  id?: string;
+  texto: string;
+  imagenUrl: string;
+  silabas: string[]; 
+  grafemas: string[];
+}

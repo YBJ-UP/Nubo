@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiConfigService {
-  private readonly baseUrl: string = environment.apiUrl || 'http://54.226.246.30\:9000';
+  private readonly baseUrl: string = environment.apiUrl || 'http://54.226.246.30:9000';
 
-  constructor() {
+  constructor(private http: HttpClient) {
     console.log('API Base URL:', this.baseUrl);
   }
 
@@ -22,42 +24,66 @@ export class ApiConfigService {
 
   async checkApiHealth(): Promise<boolean> {
     try {
-      const response = await fetch(this.getEndpoint('/health'), {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
-      return response.ok;
+      const response = await firstValueFrom(
+        this.http.get(this.getEndpoint('/health'), {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+          responseType: 'text' 
+        })
+      );
+      return true;
     } catch (error) {
       console.warn('API no disponible:', error);
       return false;
     }
   }
 
-  getCommonHeaders(): HeadersInit {
-    return {
+  getCommonHeaders(): HttpHeaders {
+    return new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'
-    };
+    });
   }
 
-  getAuthHeaders(token?: string): HeadersInit {
-    const headers: HeadersInit = this.getCommonHeaders();
+  getAuthHeaders(token?: string): HttpHeaders {
+    let headers = this.getCommonHeaders();
     
     if (token) {
-      return {
-        ...headers,
-        'Authorization': `Bearer ${token}`
-      };
-    }
-    
-    const storedToken = localStorage.getItem('teacher_token');
-    if (storedToken) {
-      return {
-        ...headers,
-        'Authorization': `Bearer ${storedToken}`
-      };
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    } else {
+      const storedToken = localStorage.getItem('teacher_token');
+      if (storedToken) {
+        headers = headers.set('Authorization', `Bearer ${storedToken}`);
+      }
     }
     
     return headers;
+  }
+
+  get<T>(endpoint: string, options?: any): Observable<T> {
+    return this.http.get<T>(this.getEndpoint(endpoint), {
+      ...options,
+      headers: options?.headers || this.getCommonHeaders()
+    }) as Observable<T>; 
+  }
+
+  post<T>(endpoint: string, body: any, options?: any): Observable<T> {
+    return this.http.post<T>(this.getEndpoint(endpoint), body, {
+      ...options,
+      headers: options?.headers || this.getCommonHeaders()
+    }) as Observable<T>;
+  }
+
+  put<T>(endpoint: string, body: any, options?: any): Observable<T> {
+    return this.http.put<T>(this.getEndpoint(endpoint), body, {
+      ...options,
+      headers: options?.headers || this.getCommonHeaders()
+    }) as Observable<T>;
+  }
+
+  delete<T>(endpoint: string, options?: any): Observable<T> {
+    return this.http.delete<T>(this.getEndpoint(endpoint), {
+      ...options,
+      headers: options?.headers || this.getCommonHeaders()
+    }) as Observable<T>;
   }
 }

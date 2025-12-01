@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Student } from '../../interfaces/student';
-import studentData from '../../../../public/placeholderData/studentData.json';
 
 interface StudentProgress {
   modulo1: number;
@@ -15,61 +14,8 @@ interface StudentProgress {
 export class StudentService {
   private readonly STORAGE_KEY = 'students';
   private readonly PROGRESS_PREFIX = 'progreso_';
-  // Emit events when the students list changes so UI can react in real-time
-  private studentsChanged = new Subject<void>();
-
-  getAllStudents(): Student[] {
-    const stored = localStorage.getItem(this.STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [...studentData];
-  }
-
-  getStudentById(id?: string | number): Student | undefined {
-    if (id === undefined || id === null) return undefined;
-    const students = this.getAllStudents();
-    return students.find(s => s.id == id);
-  }
-
-  createStudent(studentData: Omit<Student, 'id'>): Student {
-    const students = this.getAllStudents();
-
-    const newStudent: Student = {
-      ...studentData,
-      id: Date.now()
-    };
-
-    students.push(newStudent);
-    this.saveStudents(students);
-    this.studentsChanged.next();
-
-    return newStudent;
-  }
-
-  updateStudent(id: string | number, updates: Partial<Student>): boolean {
-    const students = this.getAllStudents();
-    const index = students.findIndex(s => s.id == id);
-
-    if (index === -1) return false;
-
-    students[index] = { ...students[index], ...updates };
-    this.saveStudents(students);
-    this.studentsChanged.next();
-
-    return true;
-  }
-
-  deleteStudent(id: string | number): boolean {
-    const students = this.getAllStudents();
-    const filtered = students.filter(s => s.id != id);
-
-    if (filtered.length === students.length) return false;
-
-    this.saveStudents(filtered);
-    this.deleteProgress(id);
-    this.studentsChanged.next();
-
-    return true;
-  }
-
+  
+  
   private saveStudents(students: Student[]): void {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(students));
   }
@@ -101,10 +47,7 @@ export class StudentService {
     localStorage.setItem(key, JSON.stringify(progressWithDate));
   }
 
-  /** Observable para suscribirse cuando la lista de estudiantes cambia */
-  onStudentsChanged() {
-    return this.studentsChanged.asObservable();
-  }
+  
 
   updateProgress(studentId: string | number, module: 'modulo1' | 'modulo2', value: number): void {
     const current = this.getProgress(studentId);
