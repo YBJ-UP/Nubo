@@ -19,6 +19,7 @@ export interface PalabraCompleta {
 }
 
 export interface ActividadCompleta {
+  sincronizado: boolean;
   id: number;
   titulo: string;
   imagenPortada: string;
