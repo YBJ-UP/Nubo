@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { 
-  ActividadFormService, 
-  PalabraCompleta
-} from '../../services/actividad.service';
-import { FloatingMessage } from '../../shared/floating-message/floating-message';
-import { TeacherActivityService } from '../../services/teacher-activity.service';
+import { Subject, takeUntil } from 'rxjs';
+// Services
+import { ActividadFormService, PalabraCompleta } from '../../services/actividad.service';
+import { ActivityValidationService } from '../../services/activity-validation.service';
+import { ActivityFormStateService } from '../../services/activity-form-state.service';
+import { ActivitySyncService } from '../../services/activity-sync.service';
+import { NotificationService } from '../../services/notification.service';
 import { TeacherAuthService } from '../../services/teacher-auth.service';
+// Components
+import { FloatingMessage } from '../../shared/floating-message/floating-message';
 
 @Component({
   selector: 'app-crear-actividad',
@@ -18,16 +21,14 @@ import { TeacherAuthService } from '../../services/teacher-auth.service';
   templateUrl: './crear-actividad.html',
   styleUrls: ['./crear-actividad.css']
 })
-export class CrearActividadComponent implements OnInit {
+export class CrearActividadComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+
   titulo = '';
-  imagenPortada = 'perfil.jpg'; 
+  imagenPortada = 'perfil.jpg';
   palabrasCompletas: PalabraCompleta[] = [];
   mostrarInstrucciones = false;
   
-  // Estado de carga para el envío a la API
-  isSubmitting = false;
-
-  // Floating message state
   notice = {
     visible: false,
     title: '',
@@ -38,37 +39,80 @@ export class CrearActividadComponent implements OnInit {
   };
   private _primaryCb?: () => void;
   private _secondaryCb?: () => void;
-  
+
   constructor(
     private location: Location,
-    private actividadFormService: ActividadFormService,
     private router: Router,
-    private teacherActivityService: TeacherActivityService,
-    private teacherAuthService: TeacherAuthService
+    private actividadFormService: ActividadFormService,
+    private validationService: ActivityValidationService,
+    private stateService: ActivityFormStateService,
+    private syncService: ActivitySyncService,
+    private notificationService: NotificationService,
+    private authService: TeacherAuthService
   ) {}
 
   ngOnInit(): void {
-    if (!this.teacherAuthService.isAuthenticated()) {
-      this.showNotice(
-        'Error',
-        'Debes iniciar sesión para crear actividades',
-        'error',
-        'Ir al login',
-        undefined,
-        () => this.router.navigate(['/login'])
-      );
-      return;
-    }
-
-    this.inicializarFormulario();
+    this.checkAuthentication();
+    this.initializeForm();
+    this.subscribeToNotifications();
+    this.subscribeToState();
   }
 
-  inicializarFormulario(): void {
-    this.palabrasCompletas.push(this.actividadFormService.crearPalabraCompleta());
+  ngOnDestroy(): void {
+    this.stateService.resetState();
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private checkAuthentication(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.notificationService.error(
+        'Error',
+        'Debes iniciar sesión para crear actividades',
+        () => this.router.navigate(['/login'])
+      );
+    }
+  }
+
+  private initializeForm(): void {
+    const nuevaPalabra = this.actividadFormService.crearPalabraCompleta();
+    this.palabrasCompletas.push(nuevaPalabra);
+    this.stateService.updatePalabrasCompletas([nuevaPalabra]);
+  }
+
+  private subscribeToNotifications(): void {
+    this.notificationService.notification$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(state => {
+        if (state.visible && state.config) {
+          this.showNotice(
+            state.config.title,
+            state.config.message,
+            state.config.type,
+            state.config.primaryLabel,
+            state.config.secondaryLabel,
+            state.config.primaryAction,
+            state.config.secondaryAction
+          );
+        } else {
+          this.notice.visible = false;
+        }
+      });
+  }
+
+  private subscribeToState(): void {
+    this.stateService.state$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(state => {
+        this.titulo = state.titulo;
+        this.imagenPortada = state.imagenPortada;
+        this.palabrasCompletas = state.palabrasCompletas;
+        this.mostrarInstrucciones = state.mostrarInstrucciones;
+      });
   }
 
   toggleInstrucciones(): void {
-    this.mostrarInstrucciones = !this.mostrarInstrucciones;
+    this.stateService.toggleInstrucciones();
   }
 
   triggerPortadaInput(): void {
@@ -78,10 +122,12 @@ export class CrearActividadComponent implements OnInit {
 
   async onPortadaSeleccionada(event: Event): Promise<void> {
     const resultado = await this.actividadFormService.procesarImagenSeleccionada(event);
+    
     if (resultado.exito && resultado.url) {
       this.imagenPortada = resultado.url;
+      this.stateService.updateImagenPortada(resultado.url);
     } else {
-      this.showNotice('Error', resultado.mensaje, 'error', 'Aceptar');
+      this.notificationService.error('Error', resultado.mensaje);
     }
   }
 
@@ -92,177 +138,167 @@ export class CrearActividadComponent implements OnInit {
 
   async onImagenSeleccionada(event: Event, palabraIndex: number): Promise<void> {
     const resultado = await this.actividadFormService.procesarImagenSeleccionada(event);
+    
     if (resultado.exito && resultado.url) {
       this.palabrasCompletas[palabraIndex].imagenUrl = resultado.url;
+      this.stateService.updatePalabraAt(palabraIndex, this.palabrasCompletas[palabraIndex]);
     } else {
-      this.showNotice('Error', resultado.mensaje, 'error', 'Aceptar');
+      this.notificationService.error('Error', resultado.mensaje);
     }
   }
 
-  agregarSilaba(palabraIndex: number): void {
+    agregarSilaba(palabraIndex: number): void {
     this.palabrasCompletas[palabraIndex].silabas.push(
       this.actividadFormService.crearPalabraVacia()
     );
+    this.stateService.updatePalabraAt(palabraIndex, this.palabrasCompletas[palabraIndex]);
   }
 
   eliminarSilaba(palabraIndex: number, silabaId: number): void {
     const silabas = this.palabrasCompletas[palabraIndex].silabas;
+    
     if (!this.actividadFormService.puedeEliminarItem(silabas.length)) {
-      this.showNotice('Error', 'Debe haber al menos una sílaba.', 'error', 'Aceptar');
+      this.notificationService.error('Error', 'Debe haber al menos una sílaba.');
       return;
     }
+
     this.palabrasCompletas[palabraIndex].silabas = silabas.filter(s => s.id !== silabaId);
+    this.stateService.updatePalabraAt(palabraIndex, this.palabrasCompletas[palabraIndex]);
   }
 
   agregarFonema(palabraIndex: number): void {
     this.palabrasCompletas[palabraIndex].fonemas.push(
       this.actividadFormService.crearFonemaVacio()
     );
+    this.stateService.updatePalabraAt(palabraIndex, this.palabrasCompletas[palabraIndex]);
   }
 
   eliminarFonema(palabraIndex: number, fonemaId: number): void {
     const fonemas = this.palabrasCompletas[palabraIndex].fonemas;
+    
     if (!this.actividadFormService.puedeEliminarItem(fonemas.length)) {
-      this.showNotice('Error', 'Debe haber al menos un fonema.', 'error', 'Aceptar');
+      this.notificationService.error('Error', 'Debe haber al menos un fonema.');
       return;
     }
+
     this.palabrasCompletas[palabraIndex].fonemas = fonemas.filter(f => f.id !== fonemaId);
+    this.stateService.updatePalabraAt(palabraIndex, this.palabrasCompletas[palabraIndex]);
   }
 
   agregarNuevaPalabra(): void {
-    this.palabrasCompletas.push(this.actividadFormService.crearPalabraCompleta());
+    const nuevaPalabra = this.actividadFormService.crearPalabraCompleta();
+    this.palabrasCompletas.push(nuevaPalabra);
+    this.stateService.addPalabraCompleta(nuevaPalabra);
     
-    setTimeout(() => {
-      const container = document.querySelector('.main-container');
-      if (container) {
-        container.scrollTo({
-          top: container.scrollHeight,
-          behavior: 'smooth'
-        });
-      }
-    }, 100);
+    setTimeout(() => this.scrollToBottom(), 100);
   }
 
   eliminarPalabraCompleta(index: number): void {
     if (this.palabrasCompletas.length === 1) {
-      this.showNotice('Error', 'Debe haber al menos una palabra en la actividad.', 'error', 'Aceptar');
+      this.notificationService.error(
+        'Error',
+        'Debe haber al menos una palabra en la actividad.'
+      );
       return;
     }
-    this.showNotice('Confirmar', '¿Estás seguro de que deseas eliminar esta palabra?', 'info', 'Eliminar', 'Cancelar', () => {
+
+    this.notificationService.confirmDeleteWord(index + 1, () => {
       this.palabrasCompletas.splice(index, 1);
+      this.stateService.removePalabraCompleta(index);
     });
   }
 
   async guardarActividad(): Promise<void> {
-    const validacionLocal = await this.actividadFormService.guardarActividadCompleta(
+    const validation = this.validationService.validateActivityForm(
       this.titulo,
       this.imagenPortada,
       this.palabrasCompletas
     );
 
-    if (!validacionLocal.exito) {
-      this.showNotice('Error', validacionLocal.mensaje, 'error', 'Aceptar');
+    if (!validation.isValid) {
+      this.notificationService.showValidationErrors(validation.errors);
       return;
     }
 
-    this.isSubmitting = true;
+    this.stateService.setSubmitting(true);
 
     try {
-      const contentForApi = this.teacherActivityService.convertContentToApiFormat(
+      const result = await this.syncService.saveActivity(
+        this.titulo,
+        this.imagenPortada,
         this.palabrasCompletas
       );
 
-      const result = await this.teacherActivityService.createCognitiveActivity({
-        title: this.titulo,
-        thumbnail: this.imagenPortada,
-        isPublic: true,
-        content: contentForApi
-      });
+      this.handleSaveResult(result);
 
-      if (result.success && result.activity) {
-        console.log('Actividad guardada en API:', result.activity);
-        
-        const actividadLocal = this.teacherActivityService.convertToLocalFormat(result.activity);
-        const actividades = this.actividadFormService.getAllActividades();
-        actividades.push(actividadLocal);
-        localStorage.setItem('actividades_cognitivas', JSON.stringify(actividades));
-
-        this.showNotice(
-          'Éxito',
-          '¡Actividad creada exitosamente!\n\nLa actividad está disponible para tus estudiantes.',
-          'success',
-          'Ver actividades',
-          undefined,
-          () => this.router.navigate(['teacher', 'cognitive-abilities'])
-        );
-      } else {
-        this.showNotice(
-          'Advertencia',
-          `No se pudo conectar con el servidor:\n\n${result.message}\n\n¿Deseas guardar la actividad solo localmente?`,
-          'info',
-          'Sí, guardar local',
-          'Cancelar',
-          () => {
-            this.guardarSoloLocal();
-          }
-        );
-      }
     } catch (error) {
       console.error('Error al guardar actividad:', error);
-      
-      this.showNotice(
-        'Error de Conexión',
-        'No se pudo conectar con el servidor.\n\n¿Deseas guardar la actividad solo localmente? Podrás sincronizarla más tarde.',
-        'error',
-        'Sí, guardar local',
-        'Cancelar',
-        () => {
-          this.guardarSoloLocal();
-        }
-      );
+      this.handleSaveError();
     } finally {
-      this.isSubmitting = false;
+      this.stateService.setSubmitting(false);
     }
   }
 
-  private guardarSoloLocal(): void {
-    const actividades = this.actividadFormService.getAllActividades();
-    
-    const nuevaActividad = {
-      id: Date.now(), 
-      titulo: this.titulo,
-      imagenPortada: this.imagenPortada,
-      palabrasCompletas: this.palabrasCompletas.map(p => ({
-        ...p,
-        silabas: p.silabas.filter(s => s.texto.trim()),
-        fonemas: p.fonemas.filter(f => f.texto.trim())
-      })),
-      fechaCreacion: new Date(),
-      sincronizado: false 
-    };
-    
-    actividades.push(nuevaActividad);
-    localStorage.setItem('actividades_cognitivas', JSON.stringify(actividades));
-    
-    this.showNotice(
-      'Guardado Local',
-      'La actividad se guardó localmente. Se sincronizará cuando el servidor esté disponible.',
-      'success',
-      'Aceptar',
-      undefined,
-      () => this.router.navigate(['teacher', 'cognitive-abilities'])
+  private handleSaveResult(result: any): void {
+    if (result.success && result.syncedToApi) {
+      this.notificationService.activityCreatedSuccess(
+        this.titulo,
+        () => this.navigateToActivities()
+      );
+    } else if (result.success && result.savedLocally) {
+      this.notificationService.activitySavedLocallyWarning(
+        () => this.navigateToActivities()
+      );
+    } else {
+      this.notificationService.error('Error', result.message);
+    }
+  }
+
+  private handleSaveError(): void {
+    this.notificationService.confirmSaveLocalOnly(
+      async () => {
+        const result = await this.syncService.saveLocalOnly(
+          this.titulo,
+          this.imagenPortada,
+          this.palabrasCompletas
+        );
+
+        if (result.success) {
+          this.notificationService.activitySavedLocallyWarning(
+            () => this.navigateToActivities()
+          );
+        } else {
+          this.notificationService.error('Error', result.message);
+        }
+      }
     );
   }
 
   regresar(): void {
-    if (this.actividadFormService.hayaCambiosSinGuardar(
+    const hasChanges = this.validationService.hasUnsavedChanges(
       this.titulo,
-      this.imagenPortada, 
+      this.imagenPortada,
       this.palabrasCompletas
-    )) {
-      this.showNotice('Confirmar', '¿Estás seguro de que deseas salir? Los cambios no guardados se perderán.', 'info', 'Sí', 'No', () => this.location.back());
+    );
+
+    if (hasChanges) {
+      this.notificationService.confirmDiscardChanges(() => this.location.back());
     } else {
       this.location.back();
+    }
+  }
+
+  private navigateToActivities(): void {
+    this.router.navigate(['teacher', 'cognitive-abilities']);
+  }
+  
+  private scrollToBottom(): void {
+    const container = document.querySelector('.main-container');
+    if (container) {
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: 'smooth'
+      });
     }
   }
 
@@ -274,7 +310,7 @@ export class CrearActividadComponent implements OnInit {
     secondaryLabel?: string,
     primaryCb?: () => void,
     secondaryCb?: () => void
-  ) {
+  ): void {
     this.notice.title = title;
     this.notice.message = message;
     this.notice.type = type;
