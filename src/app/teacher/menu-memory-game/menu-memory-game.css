@@ -1,0 +1,295 @@
+.container {
+    padding: 20px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    flex-shrink: 0;
+    gap: 900px;
+}
+
+.btn-back {
+    background: none;
+    border: none;
+    font-size: 3rem;
+    cursor: pointer;
+    color: #333;
+    padding: 0;
+    transition: transform 0.2s;
+}
+.btn-back-icon { display: block; width: 36px; height: 36px; }
+
+.btn-back:hover {
+    transform: scale(1.08);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.btn-create {
+    background: #90CAF9;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 24px;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-create:hover {
+    transform: scale(1.05);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+.btn-delete {
+    background: #EF5350;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 24px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-delete:hover {
+    transform: scale(1.05);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+.btn-delete:disabled {
+    background: #ffcdd2;
+    color: white;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.btn-back {
+    background: transparent;
+    border: none;
+    width: 56px;
+    height: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #111;
+    padding: 0;
+    transition: transform 0.16s ease, box-shadow 0.12s ease;
+    border-radius: 12px;
+}
+.btn-back:hover {
+    transform: scale(1.06);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+}
+ 
+
+.btn-cancel:hover {
+    transform: scale(1.05);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+.games-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 30px;
+    padding: 20px 20px 124px 20px; /* extra bottom padding so last row can fully appear (nudged +4px) */
+    align-items: flex-start;
+    overflow-y: auto;
+    flex: 1;
+    max-height: calc(100vh - 120px);
+    scroll-behavior: smooth;
+    scroll-padding-bottom: 84px; /* helpful when using programmatic scrollIntoView (nudged +4px) */
+}
+
+.game-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+}
+
+.game-card {
+    width: 220px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.game-card.selected .card-stack {
+    outline: 3px solid #90CAF9;
+    border-radius: 10px;
+}
+
+.selection-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 5;
+}
+
+.game-title {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #333;
+    text-align: center;
+    font-weight: 600;
+    min-height: 2.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-title {
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    background: rgba(255,255,255,0.7);
+    padding: 6px 8px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    margin-bottom: 6px;
+    z-index: 4;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.modal-content p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.btn-cancel, .btn-delete {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.btn-delete {
+    background-color: #EF5350;
+    color: white;
+}
+
+.btn-delete:disabled {
+    background-color: #ffcdd2;
+    cursor: not-allowed;
+}
+
+.card-stack {
+    position: relative;
+    width: 180px;
+    height: 250px;
+}
+
+.card {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    overflow: hidden;
+}
+
+.card.front {
+    z-index: 3;
+    transform: rotate(-5deg);
+}
+
+.card.middle {
+    z-index: 2;
+    transform: rotate(0deg);
+    right: -10px;
+    filter: brightness(85%);
+}
+
+.card.back {
+    z-index: 1;
+    transform: rotate(5deg);
+    right: -20px;
+    filter: brightness(70%);
+}
+
+.card-preview {
+    width: 80%;
+    height: auto;
+    max-height: 70%;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.btn-start {
+    background: white;
+    border: none;
+    border-radius: 15px;
+    padding: 5px 15px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    z-index: 4;
+}

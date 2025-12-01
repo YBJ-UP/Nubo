@@ -1,1 +1,64 @@
-<p>view-student works!</p>
+<div class="view-student-container" *ngIf="student">
+    <div class="header-section">
+        <button (click)="regresar()" class="back-button">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <h2>Perfil del alumno</h2>
+    </div>
+
+    <div class="student-profile-card">
+        <div class="profile-header">
+            <img [src]="student.pfp" [alt]="student.name" class="profile-avatar">
+            <div class="profile-info">
+                <h3 class="profile-name">{{student.name}}</h3>
+                <p class="profile-fullname">{{student.firstName}} {{student.lastName}}</p>
+            </div>
+        </div>
+
+        <div class="modules-section">
+            <!-- Se eliminó el título y las barras de progreso; solo se muestran las cantidades de actividades completadas -->
+            <div class="progress-summary">
+                <div class="progress-item mod-1">
+                    <span class="module-name">Área cognitica</span>
+                    <span class="progress-count">{{calcularActividadesCompletadas(progresoModulo1)}}</span>
+                    <span class="progress-sub">actividades completadas</span>
+                </div>
+                <div class="progress-item mod-2">
+                    <span class="module-name">Área Lúdica</span>
+                    <span class="progress-count">{{calcularActividadesCompletadas(progresoModulo2)}}</span>
+                    <span class="progress-sub">actividades completadas</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-delete" (click)="eliminarAlumno()">
+                    <i class="fa-solid fa-trash-can"></i>
+                    Eliminar alumno
+                </button>
+                <button class="btn-login" (click)="ingresarComoAlumno()">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    Ingresar como alumno
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="not-found" *ngIf="!student">
+    <i class="fa-solid fa-user-slash"></i>
+    <h3>Estudiante no encontrado</h3>
+    <button (click)="regresar()" class="btn-back">Volver a la lista</button>
+</div>
+
+<!-- Floating message reused for confirmaciones y avisos -->
+<app-floating-message
+    [visible]="fmVisible"
+    [title]="fmTitle"
+    [message]="fmMessage"
+    [type]="fmType"
+    [primaryLabel]="fmPrimaryLabel"
+    [secondaryLabel]="fmSecondaryLabel"
+    (primary)="onFloatingPrimary()"
+    (secondary)="onFloatingSecondary()"
+    (closed)="onFloatingClosed()"
+></app-floating-message>

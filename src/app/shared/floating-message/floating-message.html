@@ -1,0 +1,13 @@
+<div class="fm-overlay" *ngIf="visible">
+  <div class="fm-card" [ngClass]="type">
+    <button class="fm-close" (click)="onClose()">×</button>
+    <div class="fm-content">
+      <h2 class="fm-title">{{title}}</h2>
+      <p class="fm-message">{{message}}</p>
+      <div class="fm-actions" [class.stack]="stackButtons">
+        <button class="fm-primary" (click)="onPrimary()">{{primaryLabel}}</button>
+        <button *ngIf="secondaryLabel" class="fm-secondary" (click)="onSecondary()">{{secondaryLabel}}</button>
+      </div>
+    </div>
+  </div>
+</div>

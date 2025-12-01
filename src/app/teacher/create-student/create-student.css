@@ -1,102 +1,174 @@
 :host {
-    margin-block: 5vh;
-    width: 90%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    min-height: 80vh;
+    display: block;
+    padding: 20px;
 }
 
-.back-link-container {
-    width: 90%; 
+.students-main-container {
+    width: 100%;
     max-width: 1200px;
-    padding: 0 5%;
-}
-
-.back-link-container a {
-    text-decoration: none;
-    color: var(--color-font); 
-    font-size: 1.5rem;
-    padding: 10px;
-    display: inline-flex; 
-    align-items: center;
-    cursor: pointer;
-}
-
-section {
-    display: flex;
-    flex-direction: column;
-    justify-self: center;
-    align-items: center;
-    margin-inline: 20px;
-    width: 90%;
-    max-height: 90%;
-    padding-block: 30px;
-    border-radius: 20px;
-    height: fit-content;
-}
-
-.creation-panel {
-    background-color: #ffffff;
+    margin: 0 auto;
+    font-family: 'Fredoka', sans-serif;
 }
 
 .management-panel {
     background-color: #E7D7F0;
-
-    hr {
-        width: 90%;
-        align-self: center;
-        border: 1px solid black;
-        margin-block: 10px;
-    }
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-button {
-    padding-inline: 30px;
-    padding-block: 15px;
-    border: 0;
-    border-radius: 10px;
-    font-size: large;
-}
-
-.cancel {
-    background-color: #D96073;
-}
-.cancel:hover {
-    background-color: #b44858;
-}
-
-.add {
-    background-color: #D6DC82;
-}
-.add:hover {
-    background-color: #b3b95f;
+/* make the panel a column so the grid can scroll inside it */
+.management-panel {
+    display: flex;
+    flex-direction: column;
+    /* limit height to viewport so scrolling stays inside the card */
+    max-height: calc(100vh - 180px);
 }
 
 .title {
-    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.title h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-font);
+}
+
+.add {
+    padding: 12px 30px;
+    background-color: #D6DC82;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #3E3300;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
-    margin-block: 10px;
+    gap: 10px;
+    transition: all 0.3s ease;
 }
 
-.student-container{
-    width: 90%;
-    height: 50px;
-    padding-inline: 20px;
-    padding-block: 10px;
-    margin: 5px;
+.add:hover {
+    background-color: #C8D26D;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(214, 220, 130, 0.4);
+}
+
+.add i {
+    font-size: 1.2rem;
+}
+
+.hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, #8B5A3C, transparent);
+    margin-bottom: 30px;
+}
+
+.students-grid {
     display: grid;
-    grid-template-columns: 0.15fr 0.1fr 1fr;
-    align-items: center;
-    border-radius: 20px;
-
-    span {
-        margin-inline: 20px;
-        font-size: large;
-    }
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    /* allow vertical scrolling when there are many students */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    /* let the grid take remaining space in the panel */
+    flex: 1 1 auto;
+    padding-right: 8px; /* avoid cards under scrollbar */
+    scrollbar-gutter: stable;
 }
 
-.data-img {
-    width: 50px;
+/* Scrollbar styling for WebKit browsers */
+.students-grid::-webkit-scrollbar{ width:10px; }
+.students-grid::-webkit-scrollbar-thumb{ background: rgba(0,0,0,0.08); border-radius:8px; }
+.students-grid::-webkit-scrollbar-track{ background: transparent; }
+.students-grid{ -ms-overflow-style: auto; }
+
+.student-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.student-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    background-color: #FFF9F2;
+}
+
+.student-avatar {
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #FFD0A7;
+    flex-shrink: 0;
+}
+
+.student-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.student-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-font);
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.student-fullname {
+    font-size: 0.9rem;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.student-card i {
+    color: #C9C7E9;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.student-card:hover i {
+    transform: translateX(5px);
+    color: #A2D8F2;
+}
+
+@media (max-width: 768px) {
+    .management-panel {
+        padding: 25px 20px;
+    }
+
+    .title {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .add {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .students-grid {
+        grid-template-columns: 1fr;
+    }
 }

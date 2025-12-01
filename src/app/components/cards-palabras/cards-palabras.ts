@@ -14,10 +14,15 @@ export class CardsPalabras implements OnInit{
   @Input() palabraData!: PalabraData;
   constructor(private router: Router) { }
   ngOnInit(): void { }
+  
   navegar(): void {
-    const rutaEjercicio = `/student/cognitive-abilities/actividad/${this.palabraData.id}`;
-    console.log(`Navegando al ejercicio: ${rutaEjercicio}`);
-    this.router.navigate([rutaEjercicio]);
+    const rutaActual = this.router.url;
+    const esProfesor = rutaActual.includes('/teacher');
+    
+    const baseRuta = esProfesor ? '/teacher' : '/student';
+    const rutaCompleta = `${baseRuta}/cognitive-abilities/actividad/${this.palabraData.id}`;
+    
+    console.log(`Navegando a: ${rutaCompleta}`);
+    this.router.navigate([rutaCompleta]);
   }
-
 }
