@@ -1,7 +1,8 @@
 export interface Teacher {
-    firstName: string,
-    lastName: string,
-    email: string,
-    school: string,
-    password: string
+  teacher_id?: string; 
+  nombre: string;
+  apellidos: string;
+  email: string;
+  contrasena: string; 
+  escuela?: string;
 }
