@@ -8,6 +8,8 @@ import {
   PalabraCompleta
 } from '../../services/actividad.service';
 import { FloatingMessage } from '../../shared/floating-message/floating-message';
+import { TeacherActivityService } from '../../services/teacher-activity.service';
+import { TeacherAuthService } from '../../services/teacher-auth.service';
 
 @Component({
   selector: 'app-crear-actividad',
@@ -21,6 +23,10 @@ export class CrearActividadComponent implements OnInit {
   imagenPortada = 'perfil.jpg'; 
   palabrasCompletas: PalabraCompleta[] = [];
   mostrarInstrucciones = false;
+  
+  // Estado de carga para el envío a la API
+  isSubmitting = false;
+
   // Floating message state
   notice = {
     visible: false,
@@ -36,10 +42,24 @@ export class CrearActividadComponent implements OnInit {
   constructor(
     private location: Location,
     private actividadFormService: ActividadFormService,
-    private router: Router
+    private router: Router,
+    private teacherActivityService: TeacherActivityService,
+    private teacherAuthService: TeacherAuthService
   ) {}
 
   ngOnInit(): void {
+    if (!this.teacherAuthService.isAuthenticated()) {
+      this.showNotice(
+        'Error',
+        'Debes iniciar sesión para crear actividades',
+        'error',
+        'Ir al login',
+        undefined,
+        () => this.router.navigate(['/login'])
+      );
+      return;
+    }
+
     this.inicializarFormulario();
   }
 
@@ -134,19 +154,104 @@ export class CrearActividadComponent implements OnInit {
   }
 
   async guardarActividad(): Promise<void> {
-    const resultado = await this.actividadFormService.guardarActividadCompleta(
+    const validacionLocal = await this.actividadFormService.guardarActividadCompleta(
       this.titulo,
-      this.imagenPortada, 
+      this.imagenPortada,
       this.palabrasCompletas
     );
 
-    if (resultado.exito) {
-      this.showNotice('Éxito', resultado.mensaje, 'success', 'Aceptar', undefined, () => {
-        this.router.navigate(['teacher', 'cognitive-abilities']);
-      });
-    } else {
-      this.showNotice('Error', resultado.mensaje, 'error', 'Aceptar');
+    if (!validacionLocal.exito) {
+      this.showNotice('Error', validacionLocal.mensaje, 'error', 'Aceptar');
+      return;
     }
+
+    this.isSubmitting = true;
+
+    try {
+      const contentForApi = this.teacherActivityService.convertContentToApiFormat(
+        this.palabrasCompletas
+      );
+
+      const result = await this.teacherActivityService.createCognitiveActivity({
+        title: this.titulo,
+        thumbnail: this.imagenPortada,
+        isPublic: true,
+        content: contentForApi
+      });
+
+      if (result.success && result.activity) {
+        console.log('Actividad guardada en API:', result.activity);
+        
+        const actividadLocal = this.teacherActivityService.convertToLocalFormat(result.activity);
+        const actividades = this.actividadFormService.getAllActividades();
+        actividades.push(actividadLocal);
+        localStorage.setItem('actividades_cognitivas', JSON.stringify(actividades));
+
+        this.showNotice(
+          'Éxito',
+          '¡Actividad creada exitosamente!\n\nLa actividad está disponible para tus estudiantes.',
+          'success',
+          'Ver actividades',
+          undefined,
+          () => this.router.navigate(['teacher', 'cognitive-abilities'])
+        );
+      } else {
+        this.showNotice(
+          'Advertencia',
+          `No se pudo conectar con el servidor:\n\n${result.message}\n\n¿Deseas guardar la actividad solo localmente?`,
+          'info',
+          'Sí, guardar local',
+          'Cancelar',
+          () => {
+            this.guardarSoloLocal();
+          }
+        );
+      }
+    } catch (error) {
+      console.error('Error al guardar actividad:', error);
+      
+      this.showNotice(
+        'Error de Conexión',
+        'No se pudo conectar con el servidor.\n\n¿Deseas guardar la actividad solo localmente? Podrás sincronizarla más tarde.',
+        'error',
+        'Sí, guardar local',
+        'Cancelar',
+        () => {
+          this.guardarSoloLocal();
+        }
+      );
+    } finally {
+      this.isSubmitting = false;
+    }
+  }
+
+  private guardarSoloLocal(): void {
+    const actividades = this.actividadFormService.getAllActividades();
+    
+    const nuevaActividad = {
+      id: Date.now(), 
+      titulo: this.titulo,
+      imagenPortada: this.imagenPortada,
+      palabrasCompletas: this.palabrasCompletas.map(p => ({
+        ...p,
+        silabas: p.silabas.filter(s => s.texto.trim()),
+        fonemas: p.fonemas.filter(f => f.texto.trim())
+      })),
+      fechaCreacion: new Date(),
+      sincronizado: false 
+    };
+    
+    actividades.push(nuevaActividad);
+    localStorage.setItem('actividades_cognitivas', JSON.stringify(actividades));
+    
+    this.showNotice(
+      'Guardado Local',
+      'La actividad se guardó localmente. Se sincronizará cuando el servidor esté disponible.',
+      'success',
+      'Aceptar',
+      undefined,
+      () => this.router.navigate(['teacher', 'cognitive-abilities'])
+    );
   }
 
   regresar(): void {
@@ -161,7 +266,6 @@ export class CrearActividadComponent implements OnInit {
     }
   }
 
-  // Helpers for floating notice
   private showNotice(
     title: string,
     message: string,
