@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiConfigService } from '../utilidades/api-config.service';
+import { TeacherAuthService } from './teacher-auth.service';
 
 interface StudentAuthResponse {
   id: string;           
@@ -20,7 +21,10 @@ interface StudentLoginCredentials {
 export class StudentAuthService {
   private currentStudent: StudentAuthResponse | null = null;
 
-  constructor(private apiConfig: ApiConfigService) {
+  constructor(
+    private apiConfig: ApiConfigService,
+    private teacherAuth: TeacherAuthService
+  ) {
     this.loadFromStorage();
   }
 
@@ -30,8 +34,16 @@ export class StudentAuthService {
     student?: StudentAuthResponse;
   }> {
     try {
+      const teacher = this.teacherAuth.getCurrentTeacher();
+      if (!teacher) {
+        return {
+          success: false,
+          message: 'No hay un maestro autenticado'
+        };
+      }
+
       const response = await fetch(
-        this.apiConfig.getEndpoint('/teacher/{teacherId}/students/login'),
+        this.apiConfig.getEndpoint(`/teacher/${teacher.id}/students/login`),
         {
           method: 'POST',
           headers: this.apiConfig.getCommonHeaders(),
