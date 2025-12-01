@@ -200,7 +200,8 @@ export class ActividadFormService {
       titulo: titulo.trim(),
       imagenPortada: imagenPortada, 
       palabrasCompletas: palabrasCompletas.map(p => this.limpiarPalabraCompleta(p)),
-      fechaCreacion: new Date()
+      fechaCreacion: new Date(),
+      sincronizado: false // <--- CORRECCIÓN AQUÍ: Faltaba esta propiedad
     };
   }
 
