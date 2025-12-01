@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MemoryGameService, MemoryGame } from '../../services/memory-game.service';
+import { MemoryGameService, MemoryGame } from '../../services/utilidades/memory-game.service';
 
 interface MemoryCard {
   imageUrl: string;

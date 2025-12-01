@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, HostListener }
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Header } from '../../components/header/header';
-import { MemoryGameService } from '../../services/memory-game.service';
+import { MemoryGameService } from '../../services/utilidades/memory-game.service';
 
 interface Card {
   id: number;

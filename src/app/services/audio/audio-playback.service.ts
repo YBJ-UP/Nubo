@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { SpeechService } from './service.spech';
-import { PalabraCompleta } from './actividad.service';
-
+import { SpeechService } from '../audio/service.spech';
+import { PalabraCompleta } from '../actividades/actividad.service';
 export interface AudioState {
   isPlaying: boolean;
   error: string | null;

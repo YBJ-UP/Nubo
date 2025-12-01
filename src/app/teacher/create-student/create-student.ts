@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from "@angular/router";
-import { StudentService } from '../../services/sstudent.service';
+import { StudentService } from '../../services/estudiantes/sstudent.service';
 import { Student } from '../../interfaces/student';
 import studentData from '../../../../public/placeholderData/studentData.json';
 
@@ -9,11 +9,16 @@ import studentData from '../../../../public/placeholderData/studentData.json';
   selector: 'app-create-student',
   imports: [CommonModule, RouterModule],
   templateUrl: './create-student.html',
-  styleUrl: './create-student.css'
+  styleUrls: ['./create-student.css']
 })
 export class CreateStudent implements OnInit {
   data: Student[] = [];
   mostrarVistaHija: boolean = false;
+
+  public getStudentName(s: Student): string {
+    if (!s) return 'Alumno';
+    return (s.name || s.nombre || (s.firstName && s.lastName ? `${s.firstName} ${s.lastName}` : undefined) || 'Alumno');
+  }
 
   constructor(private router: Router, private studentService: StudentService) {
     this.router.events.subscribe((event) => {
@@ -71,7 +76,8 @@ export class CreateStudent implements OnInit {
     this.router.navigate(['/teacher/students/new']);
   }
 
-  verDetalleAlumno(id: number): void {
-    this.router.navigate(['/teacher/students/view', id]);
+  verDetalleAlumno(id?: string | number): void {
+    if (id === undefined || id === null) return;
+    this.router.navigate(['/teacher/students/view', String(id)]);
   }
 }

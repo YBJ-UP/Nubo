@@ -10,8 +10,8 @@
         <div class="profile-header">
             <img [src]="student.pfp" [alt]="student.name" class="profile-avatar">
             <div class="profile-info">
-                <h3 class="profile-name">{{student.name}}</h3>
-                <p class="profile-fullname">{{student.firstName}} {{student.lastName}}</p>
+                <h3 class="profile-name">{{ getStudentName(student) }}</h3>
+                <p class="profile-fullname"></p>
             </div>
         </div>
 
