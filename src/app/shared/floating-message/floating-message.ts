@@ -12,7 +12,7 @@ export class FloatingMessage {
   @Input() visible = false;
   @Input() title = '';
   @Input() message = '';
-  @Input() type: 'success' | 'error' | 'info' = 'info';
+  @Input() type: string = 'info';
   @Input() primaryLabel = 'Aceptar';
   @Input() secondaryLabel?: string;
   @Input() stackButtons = false;

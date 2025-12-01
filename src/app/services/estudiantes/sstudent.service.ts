@@ -23,14 +23,15 @@ export class StudentService {
     return stored ? JSON.parse(stored) : [...studentData];
   }
 
-  getStudentById(id: number): Student | undefined {
+  getStudentById(id?: string | number): Student | undefined {
+    if (id === undefined || id === null) return undefined;
     const students = this.getAllStudents();
-    return students.find(s => s.id === id);
+    return students.find(s => s.id == id);
   }
 
   createStudent(studentData: Omit<Student, 'id'>): Student {
     const students = this.getAllStudents();
-    
+
     const newStudent: Student = {
       ...studentData,
       id: Date.now()
@@ -39,33 +40,33 @@ export class StudentService {
     students.push(newStudent);
     this.saveStudents(students);
     this.studentsChanged.next();
-    
+
     return newStudent;
   }
 
-  updateStudent(id: number, updates: Partial<Student>): boolean {
+  updateStudent(id: string | number, updates: Partial<Student>): boolean {
     const students = this.getAllStudents();
-    const index = students.findIndex(s => s.id === id);
-    
+    const index = students.findIndex(s => s.id == id);
+
     if (index === -1) return false;
-    
+
     students[index] = { ...students[index], ...updates };
     this.saveStudents(students);
     this.studentsChanged.next();
-    
+
     return true;
   }
 
-  deleteStudent(id: number): boolean {
+  deleteStudent(id: string | number): boolean {
     const students = this.getAllStudents();
-    const filtered = students.filter(s => s.id !== id);
-    
+    const filtered = students.filter(s => s.id != id);
+
     if (filtered.length === students.length) return false;
-    
+
     this.saveStudents(filtered);
     this.deleteProgress(id);
     this.studentsChanged.next();
-    
+
     return true;
   }
 
@@ -73,8 +74,8 @@ export class StudentService {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(students));
   }
 
-  getProgress(studentId: number): StudentProgress {
-    const key = `${this.PROGRESS_PREFIX}${studentId}`;
+  getProgress(studentId: string | number): StudentProgress {
+    const key = `${this.PROGRESS_PREFIX}${String(studentId)}`;
     const stored = localStorage.getItem(key);
     
     if (stored) {
@@ -91,8 +92,8 @@ export class StudentService {
     return defaultProgress;
   }
 
-  saveProgress(studentId: number, progress: StudentProgress): void {
-    const key = `${this.PROGRESS_PREFIX}${studentId}`;
+  saveProgress(studentId: string | number, progress: StudentProgress): void {
+    const key = `${this.PROGRESS_PREFIX}${String(studentId)}`;
     const progressWithDate = {
       ...progress,
       lastUpdated: new Date()
@@ -105,14 +106,14 @@ export class StudentService {
     return this.studentsChanged.asObservable();
   }
 
-  updateProgress(studentId: number, module: 'modulo1' | 'modulo2', value: number): void {
+  updateProgress(studentId: string | number, module: 'modulo1' | 'modulo2', value: number): void {
     const current = this.getProgress(studentId);
     current[module] = Math.max(0, Math.min(100, value));
     this.saveProgress(studentId, current);
   }
 
-  private deleteProgress(studentId: number): void {
-    const key = `${this.PROGRESS_PREFIX}${studentId}`;
+  private deleteProgress(studentId: string | number): void {
+    const key = `${this.PROGRESS_PREFIX}${String(studentId)}`;
     localStorage.removeItem(key);
   }
 

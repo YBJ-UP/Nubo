@@ -10,7 +10,7 @@ import { StudentService } from '../../services/estudiantes/sstudent.service';
   selector: 'app-view-student',
   imports: [CommonModule, FloatingMessage],
   templateUrl: './view-student.html',
-  styleUrl: './view-student.css'
+  styleUrls: ['./view-student.css']
 })
 export class ViewStudent implements OnInit {
   student: Student | undefined;
@@ -72,7 +72,7 @@ export class ViewStudent implements OnInit {
     if (!this.student) return;
 
     const title = `Eliminar alumno`;
-    const message = `¿Estás seguro de que deseas eliminar a ${this.student.name}?\n\nEsta acción eliminará:\n• El perfil del estudiante\n• Todo su progreso\n• Sus datos de acceso\n\nEsta acción no se puede deshacer.`;
+    const message = `¿Estás seguro de que deseas eliminar a ${this.getStudentName(this.student)}?\n\nEsta acción eliminará:\n• El perfil del estudiante\n• Todo su progreso\n• Sus datos de acceso\n\nEsta acción no se puede deshacer.`;
 
     this.showFloating(
       title,
@@ -82,10 +82,10 @@ export class ViewStudent implements OnInit {
       'Cancelar',
       () => {
         // primary: proceed to delete
-        if (!this.student) return;
+        if (!this.student || this.student.id === undefined || this.student.id === null) return;
         const eliminado = this.studentService.deleteStudent(this.student.id);
         if (eliminado) {
-          this.showFloating('Eliminado', `${this.student!.name} ha sido eliminado exitosamente.`, 'success');
+          this.showFloating('Eliminado', `${this.getStudentName(this.student)} ha sido eliminado exitosamente.`, 'success');
           this.router.navigate(['/teacher/students']);
         } else {
           this.showFloating('Error', 'Error al eliminar el estudiante. Intenta de nuevo.', 'error');
@@ -99,7 +99,7 @@ export class ViewStudent implements OnInit {
     if (!this.student) return;
 
     const title = `Ingresar como alumno`;
-    const message = `¿Deseas ingresar como ${this.student.name}?\n\nEsto te permitirá ver la plataforma desde su perspectiva.`;
+    const message = `¿Deseas ingresar como ${this.getStudentName(this.student)}?\n\nEsto te permitirá ver la plataforma desde su perspectiva.`;
 
     this.showFloating(
       title,
@@ -146,5 +146,10 @@ export class ViewStudent implements OnInit {
 
   onFloatingClosed(): void {
     this.fmVisible = false;
+  }
+  
+  public getStudentName(s: Student | undefined): string {
+    if (!s) return 'el alumno';
+    return (s.name || s.nombre || (s.firstName && s.lastName ? `${s.firstName} ${s.lastName}` : undefined) || 'Alumno');
   }
 }

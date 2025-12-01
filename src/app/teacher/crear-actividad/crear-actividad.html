@@ -204,7 +204,7 @@
   [visible]="notice.visible"
   [title]="notice.title"
   [message]="notice.message"
-  [type]="notice.type"
+  [type]="$any(notice.type)"
   [primaryLabel]="notice.primaryLabel"
   [secondaryLabel]="notice.secondaryLabel"
   (primary)="onNoticePrimary()"
