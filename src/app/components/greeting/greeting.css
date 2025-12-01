@@ -7,9 +7,19 @@ section {
     padding-inline: 50px;
     border-radius: 10px;
     height: 150px;
+    box-sizing: border-box; 
 }
 
 h1 {
     color: #2E5299;
     margin-block: 5px;
+}
+
+.banner-image {
+    height: 125%;
+}
+
+.banner-image img {
+    height: 100%;
+    width: auto;
 }
