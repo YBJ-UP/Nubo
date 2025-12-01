@@ -1,10 +1,11 @@
+// src/app/auth/login/login.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { RouterLink, Router } from "@angular/router";
 import { Cloud } from "../../components/cloud/cloud";
 import { Nube } from "../../components/nube/nube";
-import { TeacherAuthService } from '../../services/autenticacion/teacher-auth.service';
+import { TeacherAuthService } from '../../services/autenticacion/teacher-auth.service'
 import { StudentAuthService } from '../../services/autenticacion/student-auth.service';
 
 @Component({
@@ -17,7 +18,7 @@ import { StudentAuthService } from '../../services/autenticacion/student-auth.se
 export class Login {
   role = "Maestro";
   isLoading = false;
-  errorMessage = ''
+  errorMessage = '';
 
   constructor(
     private router: Router,
@@ -70,8 +71,10 @@ export class Login {
       contraseña: psw
     });
 
-    if (result.success && result.teacher) {
+    if (result.success && result.teacher && result.token) {
       console.log('Login exitoso:', result.teacher);
+      console.log('Token recibido:', result.token);
+      
       this.router.navigate(['teacher']);
     } else {
       this.errorMessage = result.message;
