@@ -14,10 +14,60 @@ interface StudentProgress {
 export class StudentService {
   private readonly STORAGE_KEY = 'students';
   private readonly PROGRESS_PREFIX = 'progreso_';
+  private studentsChanged = new Subject<Student[]>();
+  public studentsChanged$ = this.studentsChanged.asObservable();
   
   
   private saveStudents(students: Student[]): void {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(students));
+    // Emit a copy to observers
+    try {
+      this.studentsChanged.next([...students]);
+    } catch (err) {
+      // ignore if no subscribers
+    }
+  }
+
+  getAllStudents(): Student[] {
+    const stored = localStorage.getItem(this.STORAGE_KEY);
+    try {
+      return stored ? JSON.parse(stored) : [];
+    } catch (err) {
+      console.error('Error parsing students from storage', err);
+      return [];
+    }
+  }
+
+  createStudent(payload: Partial<Student>): Student {
+    const students = this.getAllStudents();
+    const id = Date.now();
+    const student: Student = {
+      id,
+      teacher_id: payload.teacher_id ?? payload.teacherId ?? undefined,
+      pfp: payload.pfp ?? 'perfil.jpg',
+      name: payload.name ?? payload.nombre ?? '',
+      firstName: payload.firstName ?? payload.apellidoP ?? '',
+      lastName: payload.lastName ?? payload.apellidoM ?? '',
+      password: payload.password ?? payload.contraseña ?? undefined
+    };
+
+    students.push(student);
+    this.saveStudents(students);
+    return student;
+  }
+
+  getStudentById(id: string | number): Student | undefined {
+    const students = this.getAllStudents();
+    return students.find(s => String(s.id) === String(id));
+  }
+
+  deleteStudent(id: string | number): boolean {
+    const students = this.getAllStudents();
+    const filtered = students.filter(s => String(s.id) !== String(id));
+    if (filtered.length === students.length) return false;
+    this.saveStudents(filtered);
+    this.deleteProgress(id);
+    return true;
   }
 
   getProgress(studentId: string | number): StudentProgress {

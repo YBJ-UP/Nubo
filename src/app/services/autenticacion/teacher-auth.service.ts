@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom, catchError, throwError } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ApiConfigService } from '../utilidades/api-config.service';
 import { Teacher } from '../../interfaces/teacher';
 
@@ -38,6 +39,8 @@ export class TeacherAuthService {
 
   private readonly TEACHER_KEY = 'currentTeacher';
   private readonly TOKEN_KEY = 'teacher_token';
+  private teacherChanged = new Subject<TeacherAuthResponse | null>();
+  public teacherChanged$ = this.teacherChanged.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -54,7 +57,7 @@ export class TeacherAuthService {
   }> {
     try {
       const result = await firstValueFrom(
-        this.http.post<AuthApiResponse>(
+        this.http.post<any>(
           this.apiConfig.getEndpoint('/teacher/register'),
           data,
           { headers: this.apiConfig.getCommonHeaders() }
@@ -63,13 +66,19 @@ export class TeacherAuthService {
         )
       );
 
-      this.saveToStorage(result.teacher, result.token);
-      
+      // tolerant response parsing: token may be token|accessToken|authToken
+      const token = result?.token || result?.accessToken || result?.authToken || null;
+      const teacherObj = result?.teacher || result?.user || result?.maestro || result?.teacherData || null;
+
+      if (token && teacherObj) {
+        this.saveToStorage(teacherObj, token);
+      }
+
       return {
         success: true,
         message: 'Maestro registrado exitosamente',
-        teacher: result.teacher,
-        token: result.token
+        teacher: teacherObj ?? undefined,
+        token: token ?? undefined
       };
     } catch (error: any) {
       console.error('Error en registro:', error);
@@ -88,7 +97,7 @@ export class TeacherAuthService {
   }> {
     try {
       const result = await firstValueFrom(
-        this.http.post<AuthApiResponse>(
+        this.http.post<any>(
           this.apiConfig.getEndpoint('/teacher/login'),
           credentials,
           { headers: this.apiConfig.getCommonHeaders() }
@@ -96,14 +105,19 @@ export class TeacherAuthService {
           catchError(this.handleError)
         )
       );
-     
-      this.saveToStorage(result.teacher, result.token);
-      
+
+      const token = result?.token || result?.accessToken || result?.authToken || null;
+      const teacherObj = result?.teacher || result?.user || result?.maestro || null;
+
+      if (token && teacherObj) {
+        this.saveToStorage(teacherObj, token);
+      }
+
       return {
         success: true,
         message: 'Inicio de sesión exitoso',
-        teacher: result.teacher,
-        token: result.token
+        teacher: teacherObj ?? undefined,
+        token: token ?? undefined
       };
     } catch (error: any) {
       console.error('Error en login:', error);
@@ -153,7 +167,7 @@ export class TeacherAuthService {
     
     localStorage.setItem(this.TOKEN_KEY, token);
     localStorage.setItem(this.TEACHER_KEY, JSON.stringify(teacher));
-    
+    try { this.teacherChanged.next(teacher); } catch (err) {}
     console.log('Maestro guardado:', teacher);
   }
 
@@ -165,6 +179,7 @@ export class TeacherAuthService {
       if (teacherData && token) {
         this.currentTeacher = JSON.parse(teacherData);
         this.authToken = token;
+        try { this.teacherChanged.next(this.currentTeacher); } catch (err) {}
         console.log('Maestro cargado desde localStorage');
       }
     } catch (error) {
@@ -176,6 +191,7 @@ export class TeacherAuthService {
   updateTeacher(teacher: TeacherAuthResponse): void {
     this.currentTeacher = teacher;
     localStorage.setItem(this.TEACHER_KEY, JSON.stringify(teacher));
+    try { this.teacherChanged.next(teacher); } catch (err) {}
   }
 
   isTokenExpired(): boolean {
