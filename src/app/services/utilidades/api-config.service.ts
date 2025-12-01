@@ -26,7 +26,8 @@ export class ApiConfigService {
     try {
       const response = await firstValueFrom(
         this.http.get(this.getEndpoint('/health'), {
-          headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+          responseType: 'text' 
         })
       );
       return true;
@@ -62,27 +63,27 @@ export class ApiConfigService {
     return this.http.get<T>(this.getEndpoint(endpoint), {
       ...options,
       headers: options?.headers || this.getCommonHeaders()
-    });
+    }) as Observable<T>; 
   }
 
   post<T>(endpoint: string, body: any, options?: any): Observable<T> {
     return this.http.post<T>(this.getEndpoint(endpoint), body, {
       ...options,
       headers: options?.headers || this.getCommonHeaders()
-    });
+    }) as Observable<T>;
   }
 
   put<T>(endpoint: string, body: any, options?: any): Observable<T> {
     return this.http.put<T>(this.getEndpoint(endpoint), body, {
       ...options,
       headers: options?.headers || this.getCommonHeaders()
-    });
+    }) as Observable<T>;
   }
 
   delete<T>(endpoint: string, options?: any): Observable<T> {
     return this.http.delete<T>(this.getEndpoint(endpoint), {
       ...options,
       headers: options?.headers || this.getCommonHeaders()
-    });
+    }) as Observable<T>;
   }
 }
