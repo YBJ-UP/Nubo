@@ -1,2 +1,4 @@
-import { environment} from "./environment";
-const url = environment.apiUrl;
+export const environment = {
+    production: false,
+    apiUrl: 'http://localhost:9000'
+};
