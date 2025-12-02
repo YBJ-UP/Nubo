@@ -34,6 +34,7 @@
                     <i class="fa-solid fa-lock"></i>
                     <input type="password" name="cPsw" id="loginConf" placeholder="Confirmar contraseña" ngModel>
                 </p>
+
             }@else if (role == "Estudiante") {
                 <p>
                     <i class="fa-solid fa-user"></i>
@@ -46,6 +47,10 @@
                 </p>
             }
 
+            @if (errorMessage != '') {
+                <p class="errorMessage">{{errorMessage}}</p>
+            }
+
             <button type="submit">Inicia sesión</button>
         </form>
 
@@ -56,3 +61,7 @@
 </section>
 
 <app-nube />
+
+@if (isLoading) {
+    <app-loading-screen-overlay />
+}

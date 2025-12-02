@@ -7,11 +7,12 @@ import { Cloud } from "../../components/cloud/cloud";
 import { Nube } from "../../components/nube/nube";
 import { TeacherAuthService } from '../../services/autenticacion/teacher-auth.service'
 import { StudentAuthService } from '../../services/autenticacion/student-auth.service';
+import { LoadingScreenOverlay } from '../../shared/loading-screen-overlay/loading-screen-overlay';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [Cloud, RouterLink, FormsModule, Nube, CommonModule],
+  imports: [Cloud, RouterLink, FormsModule, Nube, CommonModule, LoadingScreenOverlay],
   templateUrl: './login.html',
   styleUrl: '../register/register.css'
 })
@@ -36,8 +37,8 @@ export class Login {
   }
   
   async submit(form: NgForm) {
-    if (form.invalid) {
-      this.errorMessage = 'Por favor completa todos los campos';
+    if (form.pristine) {
+      this.errorMessage = 'Por favor completa todos los campos.';
       return;
     }
 
@@ -59,10 +60,30 @@ export class Login {
   }
 
   private async loginTeacher(form: NgForm) {
-    const { email, psw } = form.value;
+    const { email, psw, cPsw } = form.value;
 
-    if (!email || !psw) {
-      this.errorMessage = 'Por favor ingresa tu correo y contraseña';
+    if (!email && !psw) {
+      this.errorMessage = 'Por favor ingresa tu correo y contraseña.';
+      return;
+    }
+
+    if (!email) {
+      this.errorMessage = 'Ingrese su correo.';
+      return;
+    }
+
+    if (!psw) {
+      this.errorMessage = 'Ingrese su contraseña.';
+      return;
+    }
+
+    if (!cPsw) {
+      this.errorMessage = 'Confirme su contraseña.';
+      return;
+    }
+
+    if (psw != cPsw) {
+      this.errorMessage = 'Las contraseñas no coinciden.';
       return;
     }
 
@@ -85,7 +106,7 @@ export class Login {
     const { firstName, psw } = form.value;
 
     if (!firstName || !psw) {
-      this.errorMessage = 'Por favor ingresa tu nombre y apellidos';
+      this.errorMessage = 'Por favor ingresa tu nombre y apellidos.';
       return;
     }
 
