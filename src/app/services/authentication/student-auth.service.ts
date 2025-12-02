@@ -1,29 +1,19 @@
 import { Injectable } from '@angular/core';
 import { ApiConfigService } from '../utilidades/api-config.service';
-
-interface StudentAuthResponse {
-  id: string;           
-  teacherId: string;   
-  fullName: string;    
-}
-
-interface StudentLoginCredentials {
-  nombre: string;
-  apellidoP: string;
-  apellidoM: string;
-}
+import { StudentAuthResponse } from '../../interfaces/students/auth/student-auth-response';
+import { StudentLoginRequest } from '../../interfaces/students/auth/student-login-request';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudentAuthService {
-  private currentStudent: StudentAuthResponse | null = null;
+  currentStudent: StudentAuthResponse | null = null;
 
   constructor(private apiConfig: ApiConfigService) {
     this.loadFromStorage();
   }
 
-  async login(credentials: StudentLoginCredentials): Promise<{
+  async login(credentials: StudentLoginRequest): Promise<{
     success: boolean;
     message: string;
     student?: StudentAuthResponse;
