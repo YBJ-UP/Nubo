@@ -9,10 +9,11 @@ import { ImageService } from '../../services/utilidades/image.service';
 import { StudentService } from '../../services/estudiantes/student.service';
 import { TeacherStudentService } from '../../services/estudiantes/teacher-student.service';
 import { FloatingMessage } from '../../shared/floating-message/floating-message';
+import { LoadingScreenOverlay } from '../../shared/loading-screen-overlay/loading-screen-overlay';
 
 @Component({
   selector: 'app-new-student',
-  imports: [CommonModule, FormsModule, RouterModule, FloatingMessage],
+  imports: [CommonModule, FormsModule, RouterModule, FloatingMessage, LoadingScreenOverlay],
   templateUrl: './new-student.html',
   styleUrls: ['./new-student.css']
 })
@@ -98,8 +99,9 @@ export class NewStudent implements OnInit, AfterViewInit {
     }
   }
 
-  submit(form: NgForm): void {
+  async submit(form: NgForm) {
     const { newName, newFirstName, newLastName } = form.value;
+    this.isUploading = true
 
     const validationError = this.studentService.validateStudentData(
       newName,
@@ -109,12 +111,13 @@ export class NewStudent implements OnInit, AfterViewInit {
 
     if (validationError) {
       this.showFloating('Error', validationError, 'error');
+      this.isUploading = false;
       return;
     }
 
     let nuevoEstudiante
     if (this.teacher.currentTeacher?.id) {
-      nuevoEstudiante = this.teacherStudentService.createStudent({
+      nuevoEstudiante = await this.teacherStudentService.createStudent({
         teacherId: this.teacher.currentTeacher.id,
         nombre: newName.trim(),
         apellidoP: newFirstName.trim(),
@@ -123,15 +126,17 @@ export class NewStudent implements OnInit, AfterViewInit {
     }
 
     const message = `Alumno ${nuevoEstudiante} creado exitosamente.`;
+    console.log(message)
+    console.log(nuevoEstudiante)
 
     this.showFloating(
       'Alumno creado',
       message,
       'success',
       'Ir a la lista',
-      'Copiar contraseña',
+      undefined,
       () => this.router.navigate(['/teacher/students'], { queryParams: { scroll: 'bottom' } }),
-      () => this.copyPasswordAndGo(''),
+      undefined,
       false
     );
   }

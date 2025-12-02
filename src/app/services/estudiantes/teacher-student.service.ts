@@ -14,7 +14,7 @@ export class TeacherStudentService {
   ) {}
 
   async createStudent(studentData: CreateStudentRequest): Promise<{ success: boolean; message: string; student?: StudentResponse }> {
-    const teacher = this.authService.getCurrentTeacher();
+    const teacher = this.authService.currentTeacher;
     
     if (!teacher) {
       return {
@@ -44,7 +44,7 @@ export class TeacherStudentService {
         const error = await response.json();
         return {
           success: false,
-          message: error.message || 'Error al crear estudiante'
+          message: error.message + 'Error al crear estudiante'
         };
       }
 

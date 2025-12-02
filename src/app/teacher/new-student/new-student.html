@@ -105,3 +105,7 @@
   (secondary)="onFloatingSecondary()"
   (closed)="onFloatingClosed()"
 ></app-floating-message>
+
+@if (isUploading) {
+    <app-loading-screen-overlay />
+}
