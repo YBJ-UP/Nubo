@@ -44,7 +44,7 @@ export class TeacherStudentService {
         const error = await response.json();
         return {
           success: false,
-          message: error.message + 'Error al crear estudiante'
+          message: `Error al crear el estudiante:\n${error.message}`
         };
       }
 

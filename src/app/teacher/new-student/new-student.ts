@@ -127,18 +127,32 @@ export class NewStudent implements OnInit, AfterViewInit {
 
     const message = `Alumno ${nuevoEstudiante} creado exitosamente.`;
     console.log(message)
-    console.log(nuevoEstudiante)
+    console.log(nuevoEstudiante?.success)
 
-    this.showFloating(
-      'Alumno creado',
-      message,
-      'success',
-      'Ir a la lista',
-      undefined,
-      () => this.router.navigate(['/teacher/students'], { queryParams: { scroll: 'bottom' } }),
-      undefined,
-      false
-    );
+    if (nuevoEstudiante?.success){
+      this.showFloating(
+        'Alumno creado',
+        nuevoEstudiante.message,
+        'success',
+        'Ir a la lista',
+        undefined,
+        () => this.router.navigate(['/teacher/students'], { queryParams: { scroll: 'bottom' } }),
+        undefined,
+        false
+      );
+    }else if (nuevoEstudiante?.success == false){
+      this.showFloating(
+        'Error',
+        nuevoEstudiante.message,
+        'error',
+        'Ir a la lista',
+        undefined,
+        () => this.router.navigate(['/teacher/students'], { queryParams: { scroll: 'bottom' } }),
+        undefined,
+        false
+      );
+    }
+    this.isUploading = false
   }
 
   private fallbackCopy(text: string): void {
