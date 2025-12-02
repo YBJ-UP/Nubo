@@ -1,6 +1,5 @@
-import { Component, input } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, RouterLink } from "@angular/router";
-import { NgClass } from "@angular/common";
 
 @Component({
   selector: 'app-sidebar',
