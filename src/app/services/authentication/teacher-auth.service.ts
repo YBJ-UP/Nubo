@@ -10,7 +10,7 @@ import { Teacher } from '../../interfaces/teacher/teacher';
   providedIn: 'root'
 })
 export class TeacherAuthService {
-  private currentTeacher: TeacherAuthResponse | null = null;
+  currentTeacher: TeacherAuthResponse | null = null;
   private authToken: string | null = null;
 
   private readonly TEACHER_KEY = 'currentTeacher';
