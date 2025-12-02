@@ -4,8 +4,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Location } from '@angular/common';
+import { TeacherAuthService } from '../../services/authentication/teacher-auth.service';
 import { ImageService } from '../../services/utilidades/image.service';
 import { StudentService } from '../../services/estudiantes/student.service';
+import { TeacherStudentService } from '../../services/estudiantes/teacher-student.service';
 import { FloatingMessage } from '../../shared/floating-message/floating-message';
 
 @Component({
@@ -38,7 +40,9 @@ export class NewStudent implements OnInit, AfterViewInit {
     private router: Router,
     private location: Location,
     private imageService: ImageService,
-    private studentService: StudentService
+    private studentService: StudentService,
+    private teacherStudentService: TeacherStudentService,
+    private teacher: TeacherAuthService
   ) {
     this.imagenPreview = this.imageService.getDefaultAvatar();
   }
@@ -108,17 +112,17 @@ export class NewStudent implements OnInit, AfterViewInit {
       return;
     }
 
-    const password = this.studentService.generatePassword(newName.trim());
+    let nuevoEstudiante
+    if (this.teacher.currentTeacher?.id) {
+      nuevoEstudiante = this.teacherStudentService.createStudent({
+        teacherId: this.teacher.currentTeacher.id,
+        nombre: newName.trim(),
+        apellidoP: newFirstName.trim(),
+        apellidoM: newLastName.trim()
+      });
+    }
 
-    const nuevoEstudiante = this.studentService.createStudent({
-      teacherId: "",
-      name: newName.trim(),
-      apellidoP: newFirstName.trim(),
-      apellidoM: newLastName.trim(),
-      password: password
-    });
-
-    const message = `Alumno ${nuevoEstudiante.name} creado exitosamente\n\nContraseña generada: ${password}\n\nGuarda esta contraseña para que el alumno pueda ingresar.`;
+    const message = `Alumno ${nuevoEstudiante} creado exitosamente.`;
 
     this.showFloating(
       'Alumno creado',
@@ -127,7 +131,7 @@ export class NewStudent implements OnInit, AfterViewInit {
       'Ir a la lista',
       'Copiar contraseña',
       () => this.router.navigate(['/teacher/students'], { queryParams: { scroll: 'bottom' } }),
-      () => this.copyPasswordAndGo(password),
+      () => this.copyPasswordAndGo(''),
       false
     );
   }

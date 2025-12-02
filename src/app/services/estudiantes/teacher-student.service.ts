@@ -13,11 +13,7 @@ export class TeacherStudentService {
     private authService: TeacherAuthService
   ) {}
 
-  async createStudent(studentData: {
-    nombre: string;
-    apellidoP: string;
-    apellidoM: string;
-  }): Promise<{ success: boolean; message: string; student?: StudentResponse }> {
+  async createStudent(studentData: CreateStudentRequest): Promise<{ success: boolean; message: string; student?: StudentResponse }> {
     const teacher = this.authService.getCurrentTeacher();
     
     if (!teacher) {
