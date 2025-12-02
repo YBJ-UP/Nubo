@@ -32,11 +32,16 @@ export class StudentAuthService {
         const error = await response.json();
         return {
           success: false,
-          message: error.message || 'Credenciales inválidas'
+          message: error.message || 'Credenciales inválidas',
         };
       }
 
-      const student: StudentAuthResponse = await response.json();
+      const studentJSON = await response.json()
+      const student: StudentAuthResponse = {
+        id: studentJSON.id,
+        teacherId: studentJSON.teacherId,
+        fullName: `${studentJSON.nombre} ${studentJSON.apellidoP} ${studentJSON.apellidoM}`
+      }
       this.saveToStorage(student);
 
       return {
