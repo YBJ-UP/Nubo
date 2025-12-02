@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from "@angular/router";
+import { NavigationService } from '../../services/navigation/navigation-service';
 import { StudentService } from '../../services/estudiantes/student.service';
 import { Student } from '../../interfaces/student';
 
@@ -14,7 +15,8 @@ export class CreateStudent implements OnInit {
   data: Student[] = [];
   mostrarVistaHija: boolean = false;
 
-  constructor(private router: Router, private studentService: StudentService) {
+  constructor(private router: Router, private studentService: StudentService, private nav: NavigationService) {
+    this.nav.currentView.set("Alumnos")
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.actualizarVistaHija();

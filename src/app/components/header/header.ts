@@ -1,7 +1,8 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TeacherAuthService } from '../../services/authentication/teacher-auth.service';
 import { StudentAuthService } from '../../services/authentication/student-auth.service';
+import { NavigationService } from '../../services/navigation/navigation-service';
 
 @Component({
   selector: 'app-header',
@@ -10,13 +11,14 @@ import { StudentAuthService } from '../../services/authentication/student-auth.s
   styleUrl: './header.css',
 })
 export class Header {
-  view = 'Hogar';
+  view = inject(NavigationService).currentView;
   name = 'Usuario';
   role = input('Educador');
   school = 'Escuela';
 
-  constructor(private teacher: TeacherAuthService, private student: StudentAuthService) {}
-
+  constructor(private teacher: TeacherAuthService, private student: StudentAuthService) {
+  }
+  
   ngOnInit(): void {
     console.log(this.role())
     if (this.role() == 'Educador') {
