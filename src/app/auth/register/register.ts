@@ -4,11 +4,12 @@ import { NgForm, FormsModule } from '@angular/forms';
 import { Router, RouterLink } from "@angular/router";
 import { Nube } from '../../components/nube/nube';
 import { TeacherAuthService } from '../../services/autenticacion/teacher-auth.service';
+import { LoadingScreenOverlay } from '../../shared/loading-screen-overlay/loading-screen-overlay';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
-  imports: [Cloud, RouterLink, FormsModule, Nube, CommonModule],
+  imports: [Cloud, RouterLink, FormsModule, Nube, CommonModule, LoadingScreenOverlay],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
