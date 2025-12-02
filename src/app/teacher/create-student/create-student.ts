@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from "@angular/router";
-import { StudentService } from '../../services/estudiantes/sstudent.service';
+import { StudentService } from '../../services/estudiantes/student.service';
 import { Student } from '../../interfaces/student';
-import studentData from '../../../../public/placeholderData/studentData.json';
 
 @Component({
   selector: 'app-create-student',
@@ -56,7 +55,7 @@ export class CreateStudent implements OnInit {
     if (estudiantesGuardados) {
       this.data = JSON.parse(estudiantesGuardados);
     } else {
-      this.data = [...studentData];
+      this.data = [];
       localStorage.setItem('students', JSON.stringify(this.data));
     }
   }
@@ -71,7 +70,7 @@ export class CreateStudent implements OnInit {
     this.router.navigate(['/teacher/students/new']);
   }
 
-  verDetalleAlumno(id: number): void {
+  verDetalleAlumno(id: string): void {
     this.router.navigate(['/teacher/students/view', id]);
   }
 }

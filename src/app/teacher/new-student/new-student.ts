@@ -5,7 +5,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Location } from '@angular/common';
 import { ImageService } from '../../services/utilidades/image.service';
-import { StudentService } from '../../services/estudiantes/sstudent.service';
+import { StudentService } from '../../services/estudiantes/student.service';
 import { FloatingMessage } from '../../shared/floating-message/floating-message';
 
 @Component({
@@ -111,12 +111,11 @@ export class NewStudent implements OnInit, AfterViewInit {
     const password = this.studentService.generatePassword(newName.trim());
 
     const nuevoEstudiante = this.studentService.createStudent({
-      teacher_id: 1,
-      pfp: this.imagenPreview,
+      teacherId: "",
       name: newName.trim(),
-      firstName: newFirstName.trim(),
-      lastName: newLastName.trim(),
-      password
+      apellidoP: newFirstName.trim(),
+      apellidoM: newLastName.trim(),
+      password: password
     });
 
     const message = `Alumno ${nuevoEstudiante.name} creado exitosamente\n\nContraseña generada: ${password}\n\nGuarda esta contraseña para que el alumno pueda ingresar.`;

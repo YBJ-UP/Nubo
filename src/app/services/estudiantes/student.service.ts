@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Student } from '../../interfaces/student';
-import studentData from '../../../../public/placeholderData/studentData.json';
 
 interface StudentProgress {
   modulo1: number;
@@ -20,10 +19,10 @@ export class StudentService {
 
   getAllStudents(): Student[] {
     const stored = localStorage.getItem(this.STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [...studentData];
+    return stored ? JSON.parse(stored) : [];
   }
 
-  getStudentById(id: number): Student | undefined {
+  getStudentById(id: string): Student | undefined {
     const students = this.getAllStudents();
     return students.find(s => s.id === id);
   }
@@ -33,7 +32,7 @@ export class StudentService {
     
     const newStudent: Student = {
       ...studentData,
-      id: Date.now()
+      id: Date.now().toString()
     };
 
     students.push(newStudent);
@@ -43,7 +42,7 @@ export class StudentService {
     return newStudent;
   }
 
-  updateStudent(id: number, updates: Partial<Student>): boolean {
+  updateStudent(id: string, updates: Partial<Student>): boolean {
     const students = this.getAllStudents();
     const index = students.findIndex(s => s.id === id);
     
@@ -56,7 +55,7 @@ export class StudentService {
     return true;
   }
 
-  deleteStudent(id: number): boolean {
+  deleteStudent(id: string): boolean {
     const students = this.getAllStudents();
     const filtered = students.filter(s => s.id !== id);
     
@@ -73,7 +72,7 @@ export class StudentService {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(students));
   }
 
-  getProgress(studentId: number): StudentProgress {
+  getProgress(studentId: string): StudentProgress {
     const key = `${this.PROGRESS_PREFIX}${studentId}`;
     const stored = localStorage.getItem(key);
     
@@ -91,7 +90,7 @@ export class StudentService {
     return defaultProgress;
   }
 
-  saveProgress(studentId: number, progress: StudentProgress): void {
+  saveProgress(studentId: string, progress: StudentProgress): void {
     const key = `${this.PROGRESS_PREFIX}${studentId}`;
     const progressWithDate = {
       ...progress,
@@ -105,13 +104,13 @@ export class StudentService {
     return this.studentsChanged.asObservable();
   }
 
-  updateProgress(studentId: number, module: 'modulo1' | 'modulo2', value: number): void {
+  updateProgress(studentId: string, module: 'modulo1' | 'modulo2', value: number): void {
     const current = this.getProgress(studentId);
     current[module] = Math.max(0, Math.min(100, value));
     this.saveProgress(studentId, current);
   }
 
-  private deleteProgress(studentId: number): void {
+  private deleteProgress(studentId: string): void {
     const key = `${this.PROGRESS_PREFIX}${studentId}`;
     localStorage.removeItem(key);
   }

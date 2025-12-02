@@ -4,7 +4,7 @@ import { FloatingMessage } from '../../shared/floating-message/floating-message'
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Student } from '../../interfaces/student';
-import { StudentService } from '../../services/estudiantes/sstudent.service';
+import { StudentService } from '../../services/estudiantes/student.service';
 
 @Component({
   selector: 'app-view-student',
@@ -39,11 +39,11 @@ export class ViewStudent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.cargarEstudiante(parseInt(id));
+      this.cargarEstudiante(id);
     }
   }
 
-  cargarEstudiante(id: number): void {
+  cargarEstudiante(id: string): void {
     this.student = this.studentService.getStudentById(id);
     
     if (!this.student) {
