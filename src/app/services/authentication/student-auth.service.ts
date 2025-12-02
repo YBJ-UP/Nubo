@@ -7,7 +7,6 @@ interface StudentAuthResponse {
   fullName: string;    
 }
 
-
 interface StudentLoginCredentials {
   nombre: string;
   apellidoP: string;

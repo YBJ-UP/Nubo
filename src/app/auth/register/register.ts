@@ -3,7 +3,7 @@ import { Cloud } from '../../components/cloud/cloud';
 import { NgForm, FormsModule } from '@angular/forms';
 import { Router, RouterLink } from "@angular/router";
 import { Nube } from '../../components/nube/nube';
-import { TeacherAuthService } from '../../services/autenticacion/teacher-auth.service';
+import { TeacherAuthService } from '../../services/authentication/teacher-auth.service';
 import { LoadingScreenOverlay } from '../../shared/loading-screen-overlay/loading-screen-overlay';
 import { CommonModule } from '@angular/common';
 

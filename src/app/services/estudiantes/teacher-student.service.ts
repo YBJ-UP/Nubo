@@ -1,19 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ApiConfigService } from '../utilidades/api-config.service';
-import { TeacherAuthService } from '../autenticacion/teacher-auth.service';
-
-interface StudentResponse {
-  studentId: string;
-  teacherId: string;
-  fullName: string;
-}
-
-interface CreateStudentRequest {
-  teacherId: string;
-  nombre: string;
-  apellidoP: string;
-  apellidoM: string;
-}
+import { TeacherAuthService } from '../authentication/teacher-auth.service';
+import { CreateStudentRequest } from '../../interfaces/teacher/students/create-student-request';
+import { StudentResponse } from '../../interfaces/teacher/students/student-response';
 
 @Injectable({
   providedIn: 'root'

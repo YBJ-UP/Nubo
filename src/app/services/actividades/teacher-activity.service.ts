@@ -1,7 +1,7 @@
 // src/app/services/teacher-activity.service.ts
 import { Injectable } from '@angular/core';
 import { ApiConfigService } from '../utilidades/api-config.service';
-import { TeacherAuthService } from '../autenticacion/teacher-auth.service';
+import { TeacherAuthService } from '../authentication/teacher-auth.service';
 import { ActivityMapperService } from '../mappers/activity-mapper.service';
 
 /**

@@ -5,8 +5,8 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { RouterLink, Router } from "@angular/router";
 import { Cloud } from "../../components/cloud/cloud";
 import { Nube } from "../../components/nube/nube";
-import { TeacherAuthService } from '../../services/autenticacion/teacher-auth.service'
-import { StudentAuthService } from '../../services/autenticacion/student-auth.service';
+import { TeacherAuthService } from '../../services/authentication/teacher-auth.service'
+import { StudentAuthService } from '../../services/authentication/student-auth.service';
 import { LoadingScreenOverlay } from '../../shared/loading-screen-overlay/loading-screen-overlay';
 
 @Component({
