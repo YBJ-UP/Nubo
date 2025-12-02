@@ -5,13 +5,13 @@
     <div class="details">
         <div class="text-details">
             <p class="tag">
-                <span class="etiqueta">{{role}}</span>
+                <span class="etiqueta">{{role()}}</span>
                 <span class="user-name">{{name}}</span>
             </p>
-           <p>{{school}}</p>
+            <p>{{school}}</p>
         </div>
         <div class="user"> <img src="perfil.jpg" alt=""></div>
-        <span class="logout" routerLink=""><i class="fa-solid fa-right-from-bracket"></i></span>
+        <span class="logout" routerLink="" (click)="logout()"><i class="fa-solid fa-right-from-bracket"></i></span>
     </div>
 </section>
 <hr>

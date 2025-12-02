@@ -60,9 +60,9 @@ export class Login {
   }
 
   private async loginTeacher(form: NgForm) {
-    const { email, apellidoP, capellidoP } = form.value;
+    const { email, psw, cPsw } = form.value;
 
-    if (!email && !apellidoP) {
+    if (!email && !psw) {
       this.errorMessage = 'Por favor ingresa tu correo y contraseña.';
       return;
     }
@@ -72,24 +72,24 @@ export class Login {
       return;
     }
 
-    if (!apellidoP) {
+    if (!psw) {
       this.errorMessage = 'Ingrese su contraseña.';
       return;
     }
 
-    if (!capellidoP) {
+    if (!cPsw) {
       this.errorMessage = 'Confirme su contraseña.';
       return;
     }
 
-    if (apellidoP != capellidoP) {
+    if (psw != cPsw) {
       this.errorMessage = 'Las contraseñas no coinciden.';
       return;
     }
 
     const result = await this.authService.login({
       email: email.trim().toLowerCase(),
-      contraseña: apellidoP
+      contraseña: psw
     });
 
     if (result.success && result.teacher && result.token) {

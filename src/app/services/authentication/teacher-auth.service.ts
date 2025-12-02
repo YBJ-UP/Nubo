@@ -88,7 +88,6 @@ export class TeacherAuthService {
       }
 
       const result: ApiAuthResponse = await response.json();
-     
       this.saveToStorage(result.teacher, result.token);
       
       return {
@@ -111,6 +110,7 @@ export class TeacherAuthService {
     this.authToken = null;
     localStorage.removeItem(this.TEACHER_KEY);
     localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem("currentTeacher")
     console.log('Sesión cerrada');
   }
 

@@ -20,7 +20,7 @@ export class StudentAuthService {
   }> {
     try {
       const response = await fetch(
-        this.apiConfig.getEndpoint('/teacher/{teacherId}/students/login'),
+        this.apiConfig.getEndpoint('students/login'),
         {
           method: 'POST',
           headers: this.apiConfig.getCommonHeaders(),
