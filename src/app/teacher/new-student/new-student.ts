@@ -155,53 +155,6 @@ export class NewStudent implements OnInit, AfterViewInit {
     this.isUploading = false
   }
 
-  private fallbackCopy(text: string): void {
-    try {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      // Instead of navigating immediately, show the floating message and let user choose
-      this.showFloating(
-        'Copiado',
-        'Contraseña copiada al portapapeles',
-        'success',
-        'Volver a la lista',
-        undefined,
-        () => this.goToList(),
-        undefined,
-        false
-      );
-    } catch (err) {
-      console.error('Copy failed', err);
-      this.showFloating('Error', 'No se pudo copiar la contraseña automáticamente. Selecciona y copia manualmente.', 'error');
-    }
-  }
-
-  private copyPasswordAndGo(text: string): void {
-    if (navigator && (navigator as any).clipboard && (navigator as any).clipboard.writeText) {
-      (navigator as any).clipboard.writeText(text).then(() => {
-        // Show dialog offering to go back to list (less abrupt)
-        this.showFloating(
-          'Copiado',
-          'Contraseña copiada al portapapeles',
-          'success',
-          'Volver a la lista',
-          undefined,
-          () => this.goToList(),
-          undefined,
-          false
-        );
-      }).catch(() => {
-        this.fallbackCopy(text);
-      });
-    } else {
-      this.fallbackCopy(text);
-    }
-  }
-
   goToList(): void {
     this.router.navigate(['/teacher/students'], { queryParams: { scroll: 'bottom' } });
   }
