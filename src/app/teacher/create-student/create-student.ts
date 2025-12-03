@@ -40,11 +40,6 @@ export class CreateStudent implements OnInit {
         }
       }
     });
-
-    // Suscribirse a cambios en la lista para actualizar en tiempo real
-    this.studentService.onStudentsChanged().subscribe(() => {
-      this.cargarEstudiantes();
-    });
   }
 
   ngOnInit(): void {
@@ -52,13 +47,10 @@ export class CreateStudent implements OnInit {
     this.actualizarVistaHija();
   }
 
-  cargarEstudiantes(): void {
-    const estudiantesGuardados = localStorage.getItem('students');
-    if (estudiantesGuardados) {
-      this.data = JSON.parse(estudiantesGuardados);
-    } else {
-      this.data = [];
-      localStorage.setItem('students', JSON.stringify(this.data));
+  async cargarEstudiantes() {
+    const estudiantesGuardados = (await this.studentService.getAllStudents()).body;
+    if (estudiantesGuardados){
+      this.data = estudiantesGuardados
     }
   }
 

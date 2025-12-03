@@ -10,13 +10,13 @@ import { StudentService } from '../../services/estudiantes/student.service';
   selector: 'app-view-student',
   imports: [CommonModule, FloatingMessage],
   templateUrl: './view-student.html',
-  styleUrl: './view-student.css'
+  styleUrl: './view-student.css',
 })
 export class ViewStudent implements OnInit {
   student: Student | undefined;
   progresoModulo1: number = 0;
   progresoModulo2: number = 0;
-  
+
   private readonly TOTAL_ACTIVIDADES = 10;
 
   // FloatingMessage state
@@ -45,7 +45,7 @@ export class ViewStudent implements OnInit {
 
   cargarEstudiante(id: string): void {
     this.student = this.studentService.getStudentById(id);
-    
+
     if (!this.student) {
       console.error('Estudiante no encontrado');
       return;
@@ -68,7 +68,7 @@ export class ViewStudent implements OnInit {
     this.location.back();
   }
 
-  eliminarAlumno(): void {
+  /*eliminarAlumno(): void {
     if (!this.student) return;
 
     const title = `Eliminar alumno`;
@@ -85,21 +85,26 @@ export class ViewStudent implements OnInit {
         if (!this.student) return;
         const eliminado = this.studentService.deleteStudent(this.student.id);
         if (eliminado) {
-          this.showFloating('Eliminado', `${this.student!.name} ha sido eliminado exitosamente.`, 'success');
+          this.showFloating(
+            'Eliminado',
+            `${this.student!.name} ha sido eliminado exitosamente.`,
+            'success'
+          );
           this.router.navigate(['/teacher/students']);
         } else {
           this.showFloating('Error', 'Error al eliminar el estudiante. Intenta de nuevo.', 'error');
         }
       },
-      () => { /* cancel */ }
+      () => {
+      }
     );
-  }
+  }*/
 
   ingresarComoAlumno(): void {
     if (!this.student) return;
 
     const title = `Ingresar como alumno`;
-    const message = `¿Deseas ingresar como ${this.student.name}?\n\nEsto te permitirá ver la plataforma desde su perspectiva.`;
+    const message = `¿Deseas ingresar como ${this.student.nombre}?\n\nEsto te permitirá ver la plataforma desde su perspectiva.`;
 
     this.showFloating(
       title,
@@ -111,7 +116,9 @@ export class ViewStudent implements OnInit {
         sessionStorage.setItem('current_student', JSON.stringify(this.student));
         this.router.navigate(['/student']);
       },
-      () => { /* cancel */ }
+      () => {
+        /* cancel */
+      }
     );
   }
 

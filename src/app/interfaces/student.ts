@@ -1,7 +1,7 @@
 export interface Student {
   id: string;
   teacherId: string; 
-  name: string;
+  nombre: string;
   apellidoP: string;
   apellidoM: string;
   password: string;

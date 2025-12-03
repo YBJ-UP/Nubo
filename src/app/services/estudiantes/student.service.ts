@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Student } from '../../interfaces/student';
+import { ApiConfigService } from '../utilidades/api-config.service';
+import { TeacherAuthService } from '../authentication/teacher-auth.service';
+import { StudentResponse } from '../../interfaces/teacher/students/student-response';
 
 interface StudentProgress {
   modulo1: number;
@@ -12,50 +15,57 @@ interface StudentProgress {
   providedIn: 'root'
 })
 export class StudentService {
+  
+  constructor(private teacher: TeacherAuthService, private api: ApiConfigService){}
+
   private readonly STORAGE_KEY = 'students';
   private readonly PROGRESS_PREFIX = 'progreso_';
   // Emit events when the students list changes so UI can react in real-time
   private studentsChanged = new Subject<void>();
 
-  getAllStudents(): Student[] {
-    const stored = localStorage.getItem(this.STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
+  async getAllStudents(): Promise<{success: boolean, message: string, body?: Student[]}> {
+
+    if (!this.teacher){
+      return {
+        success: false,
+        message: "No se encontró el profesor."
+      }
+    }
+
+    try {
+
+      const response = await fetch(this.api.getEndpoint(`/teacher/${this.teacher.currentTeacher?.id}/students`));
+
+        if (!response.ok){
+          return {
+            success: false,
+            message: "Error al conseguir los datos."
+          }
+        }
+
+        const studentList: Student[] = await response.json()
+
+        return {
+          success: true,
+          message: "Se han traído los datos con éxito",
+          body: studentList
+        }
+    } catch (e) {
+      console.error(e)
+      return {
+        success: false,
+        message: "Ha ocurrido un error al hacer la petición"
+      }
+    }
   }
 
   getStudentById(id: string): Student | undefined {
     const students = this.getAllStudents();
-    return students.find(s => s.id === id);
+    return undefined //students.find(s => s.id === id);
   }
 
-  createStudent(studentData: Omit<Student, 'id'>): Student {
-    const students = this.getAllStudents();
-    
-    const newStudent: Student = {
-      ...studentData,
-      id: Date.now().toString()
-    };
 
-    students.push(newStudent);
-    this.saveStudents(students);
-    this.studentsChanged.next();
-    
-    return newStudent;
-  }
-
-  updateStudent(id: string, updates: Partial<Student>): boolean {
-    const students = this.getAllStudents();
-    const index = students.findIndex(s => s.id === id);
-    
-    if (index === -1) return false;
-    
-    students[index] = { ...students[index], ...updates };
-    this.saveStudents(students);
-    this.studentsChanged.next();
-    
-    return true;
-  }
-
-  deleteStudent(id: string): boolean {
+  /*deleteStudent(id: string): boolean {
     const students = this.getAllStudents();
     const filtered = students.filter(s => s.id !== id);
     
@@ -66,7 +76,7 @@ export class StudentService {
     this.studentsChanged.next();
     
     return true;
-  }
+  }*/
 
   private saveStudents(students: Student[]): void {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(students));
