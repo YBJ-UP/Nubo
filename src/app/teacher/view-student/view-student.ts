@@ -43,8 +43,8 @@ export class ViewStudent implements OnInit {
     }
   }
 
-  cargarEstudiante(id: string): void {
-    this.student = this.studentService.getStudentById(id);
+  async cargarEstudiante(id: string) {
+    this.student = await this.studentService.getStudentById(id);
 
     if (!this.student) {
       console.error('Estudiante no encontrado');

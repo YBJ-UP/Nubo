@@ -20,8 +20,7 @@ export class StudentService {
 
   private readonly STORAGE_KEY = 'students';
   private readonly PROGRESS_PREFIX = 'progreso_';
-  // Emit events when the students list changes so UI can react in real-time
-  private studentsChanged = new Subject<void>();
+  nonAsyncStudentList: Student[] = []
 
   async getAllStudents(): Promise<{success: boolean, message: string, body?: Student[]}> {
 
@@ -44,6 +43,7 @@ export class StudentService {
         }
 
         const studentList: Student[] = await response.json()
+        this.nonAsyncStudentList = studentList
 
         return {
           success: true,
@@ -59,13 +59,19 @@ export class StudentService {
     }
   }
 
-  getStudentById(id: string): Student | undefined {
-    const students = this.getAllStudents();
-    return undefined //students.find(s => s.id === id);
+  async getStudentById(id: string) {
+    console.log(id)
+    const students = await this.nonAsyncStudentList;
+    if (students){
+      return students.find(s => s.id === id);
+    }
+    else {
+      return undefined
+    }
   }
 
 
-  /*deleteStudent(id: string): boolean {
+  /*async deleteStudent(id: string) {
     const students = this.getAllStudents();
     const filtered = students.filter(s => s.id !== id);
     
@@ -77,10 +83,6 @@ export class StudentService {
     
     return true;
   }*/
-
-  private saveStudents(students: Student[]): void {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(students));
-  }
 
   getProgress(studentId: string): StudentProgress {
     const key = `${this.PROGRESS_PREFIX}${studentId}`;
@@ -109,25 +111,10 @@ export class StudentService {
     localStorage.setItem(key, JSON.stringify(progressWithDate));
   }
 
-  /** Observable para suscribirse cuando la lista de estudiantes cambia */
-  onStudentsChanged() {
-    return this.studentsChanged.asObservable();
-  }
-
   updateProgress(studentId: string, module: 'modulo1' | 'modulo2', value: number): void {
     const current = this.getProgress(studentId);
     current[module] = Math.max(0, Math.min(100, value));
     this.saveProgress(studentId, current);
-  }
-
-  private deleteProgress(studentId: string): void {
-    const key = `${this.PROGRESS_PREFIX}${studentId}`;
-    localStorage.removeItem(key);
-  }
-
-  generatePassword(firstName: string): string {
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
-    return `${firstName.toLowerCase()}${randomNum}`;
   }
 
   validateStudentData(name: string, firstName: string, lastName: string): string | null {
