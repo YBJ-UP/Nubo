@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from "@angular/router";
 import { LoadingScreenOverlay } from '../../shared/loading-screen-overlay/loading-screen-overlay';
 import { NavigationService } from '../../services/navigation/navigation-service';
@@ -8,7 +8,7 @@ import { Student } from '../../interfaces/student';
 
 @Component({
   selector: 'app-create-student',
-  imports: [CommonModule, RouterModule, LoadingScreenOverlay],
+  imports: [CommonModule, RouterModule, LoadingScreenOverlay, NgIf],
   templateUrl: './create-student.html',
   styleUrl: './create-student.css'
 })
