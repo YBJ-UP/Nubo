@@ -69,7 +69,7 @@ export class StudentService {
   }
 
 
-  /*async deleteStudent(id: string) {
+  /*async deleteStudent(id: string) { //no implementé este ahora q veo
     const students = this.getAllStudents();
     const filtered = students.filter(s => s.id !== id);
     
