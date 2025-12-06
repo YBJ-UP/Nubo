@@ -8,10 +8,10 @@
 
     <div class="student-profile-card">
         <div class="profile-header">
-            <img [src]="student.pfp" [alt]="student.name" class="profile-avatar">
+            <img src="raul.jpg" [alt]="student.nombre" class="profile-avatar">
             <div class="profile-info">
-                <h3 class="profile-name">{{student.name}}</h3>
-                <p class="profile-fullname">{{student.firstName}} {{student.lastName}}</p>
+                <h3 class="profile-name">{{student.nombre}}</h3>
+                <p class="profile-fullname">{{student.nombre}} {{student.apellidoP}} {{student.apellidoM}}</p>
             </div>
         </div>
 
@@ -31,7 +31,7 @@
             </div>
 
             <div class="action-buttons">
-                <button class="btn-delete" (click)="eliminarAlumno()">
+                <button class="btn-delete" > <!--(click)="eliminarAlumno()"-->
                     <i class="fa-solid fa-trash-can"></i>
                     Eliminar alumno
                 </button>
@@ -62,3 +62,7 @@
     (secondary)="onFloatingSecondary()"
     (closed)="onFloatingClosed()"
 ></app-floating-message>
+
+@if (isLoading) {
+    <app-loading-screen-overlay />
+}

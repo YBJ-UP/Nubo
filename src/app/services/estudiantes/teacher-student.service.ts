@@ -1,19 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ApiConfigService } from '../utilidades/api-config.service';
-import { TeacherAuthService } from '../autenticacion/teacher-auth.service';
-
-interface StudentResponse {
-  studentId: string;
-  teacherId: string;
-  fullName: string;
-}
-
-interface CreateStudentRequest {
-  teacherId: string;
-  nombre: string;
-  apellidoP: string;
-  apellidoM: string;
-}
+import { TeacherAuthService } from '../authentication/teacher-auth.service';
+import { CreateStudentRequest } from '../../interfaces/teacher/students/create-student-request';
+import { StudentResponse } from '../../interfaces/teacher/students/student-response';
 
 @Injectable({
   providedIn: 'root'
@@ -24,12 +13,8 @@ export class TeacherStudentService {
     private authService: TeacherAuthService
   ) {}
 
-  async createStudent(studentData: {
-    nombre: string;
-    apellidoP: string;
-    apellidoM: string;
-  }): Promise<{ success: boolean; message: string; student?: StudentResponse }> {
-    const teacher = this.authService.getCurrentTeacher();
+  async createStudent(studentData: CreateStudentRequest): Promise<{ success: boolean; message: string; student?: StudentResponse }> {
+    const teacher = this.authService.currentTeacher;
     
     if (!teacher) {
       return {
@@ -59,7 +44,7 @@ export class TeacherStudentService {
         const error = await response.json();
         return {
           success: false,
-          message: error.message || 'Error al crear estudiante'
+          message: `Error al crear el estudiante:\n${error.message}`
         };
       }
 

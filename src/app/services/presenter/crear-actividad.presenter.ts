@@ -10,7 +10,7 @@ import { ActivitySyncService, SyncResult } from '../actividades/activity-sync.se
 import { NotificationService } from '../utilidades/notification.service';
 import { WordManagerService } from '../utilidades/word-manager.service';
 import { ImageUploadService } from '../utilidades/image-upload.service';
-import { TeacherAuthService } from '../autenticacion/teacher-auth.service';
+import { TeacherAuthService } from '../authentication/teacher-auth.service';
 
 @Injectable()
 export class CrearActividadPresenter implements OnDestroy {

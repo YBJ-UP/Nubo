@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiConfigService } from '../utilidades/api-config.service';
-import { StudentAuthService } from '../autenticacion/student-auth.service';
+import { StudentAuthService } from '../authentication/student-auth.service';
 
 interface ActivityContent {
   id?: string;

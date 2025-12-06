@@ -133,3 +133,9 @@ button[type="submit"]:hover {
 .selected {
     background-color: #FFD0A7;
 }
+
+form .errorMessage{
+  max-width: 320px;
+  text-align: center;
+  color: red;
+}

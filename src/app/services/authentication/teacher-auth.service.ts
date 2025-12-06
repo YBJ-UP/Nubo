@@ -1,38 +1,16 @@
 import { Injectable } from '@angular/core';
 import { ApiConfigService } from '../utilidades/api-config.service';
-import { Teacher } from '../../interfaces/teacher';
-
-interface TeacherAuthResponse {
-  id: string;
-  fullname: string;
-  email: string;
-  escuela?: string;
-}
-
-
-interface AuthApiResponse {
-  token: string;
-  teacher: TeacherAuthResponse;
-}
-
-interface LoginCredentials {
-  email: string;
-  contraseña: string;
-}
-
-interface RegisterData {
-  nombre: string;
-  apellidos: string;
-  email: string;
-  contraseña: string;
-  escuela?: string;
-}
+import { TeacherAuthResponse } from '../../interfaces/teacher/auth/teacher-auth-response';
+import { ApiAuthResponse } from '../../interfaces/teacher/auth/api-auth-response';
+import { TeacherLoginRequest } from '../../interfaces/teacher/auth/teacher-login-request';
+import { TeacherSignupRequest } from '../../interfaces/teacher/auth/teacher-signup-request';
+import { Teacher } from '../../interfaces/teacher/teacher';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TeacherAuthService {
-  private currentTeacher: TeacherAuthResponse | null = null;
+  currentTeacher: TeacherAuthResponse | null = null;
   private authToken: string | null = null;
 
   private readonly TEACHER_KEY = 'currentTeacher';
@@ -42,7 +20,7 @@ export class TeacherAuthService {
     this.loadFromStorage();
   }
 
-  async register(data: RegisterData): Promise<{ 
+  async register(data: TeacherSignupRequest): Promise<{ 
     success: boolean; 
     message: string; 
     teacher?: TeacherAuthResponse;
@@ -66,7 +44,7 @@ export class TeacherAuthService {
         };
       }
 
-      const result: AuthApiResponse = await response.json();
+      const result: ApiAuthResponse = await response.json();
 
       this.saveToStorage(result.teacher, result.token);
       
@@ -80,12 +58,12 @@ export class TeacherAuthService {
       console.error('Error en registro:', error);
       return {
         success: false,
-        message: 'Error de conexión con el servidor. Verifica que la API esté ejecutándose.'
+        message: 'Error de conexión con el servidor. Verifique que la API esté ejecutándose.'
       };
     }
   }
 
-  async login(credentials: LoginCredentials): Promise<{ 
+  async login(credentials: TeacherLoginRequest): Promise<{ 
     success: boolean; 
     message: string; 
     teacher?: TeacherAuthResponse;
@@ -109,8 +87,7 @@ export class TeacherAuthService {
         };
       }
 
-      const result: AuthApiResponse = await response.json();
-     
+      const result: ApiAuthResponse = await response.json();
       this.saveToStorage(result.teacher, result.token);
       
       return {
@@ -123,7 +100,7 @@ export class TeacherAuthService {
       console.error('Error en login:', error);
       return {
         success: false,
-        message: 'Error de conexión con el servidor. Verifica que la API esté ejecutándose.'
+        message: 'Error de conexión con el servidor. Verifique que la API esté ejecutándose.'
       };
     }
   }
@@ -133,6 +110,7 @@ export class TeacherAuthService {
     this.authToken = null;
     localStorage.removeItem(this.TEACHER_KEY);
     localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem("currentTeacher")
     console.log('Sesión cerrada');
   }
 

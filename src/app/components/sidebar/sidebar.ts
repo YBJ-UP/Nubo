@@ -1,6 +1,6 @@
-import { Component, input } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, RouterLink } from "@angular/router";
-import { NgClass } from "@angular/common";
+import { TeacherAuthService } from '../../services/authentication/teacher-auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,7 +9,7 @@ import { NgClass } from "@angular/common";
   styleUrl: './sidebar.css'
 })
 export class Sidebar {
-  constructor(private router: Router){}
+  constructor(private router: Router, private teacher: TeacherAuthService){}
   choices = {
     home: 1,
     students: 2
@@ -21,5 +21,9 @@ export class Sidebar {
   }
   toHome(): void {
     if (this.selected == this.choices.students) { this.selected = this.choices.home; this.router.navigate(["../teacher"]) }
+  }
+
+  logout(): void {
+    this.teacher.logout()
   }
 }

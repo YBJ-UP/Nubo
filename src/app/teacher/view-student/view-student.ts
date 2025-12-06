@@ -3,21 +3,26 @@ import { CommonModule } from '@angular/common';
 import { FloatingMessage } from '../../shared/floating-message/floating-message';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { LoadingScreenOverlay } from '../../shared/loading-screen-overlay/loading-screen-overlay';
 import { Student } from '../../interfaces/student';
-import { StudentService } from '../../services/estudiantes/sstudent.service';
+import { StudentService } from '../../services/estudiantes/student.service';
+import { TeacherAuthService } from '../../services/authentication/teacher-auth.service';
+import { StudentAuthService } from '../../services/authentication/student-auth.service';
+import { StudentLoginRequest } from '../../interfaces/students/auth/student-login-request';
 
 @Component({
   selector: 'app-view-student',
-  imports: [CommonModule, FloatingMessage],
+  imports: [CommonModule, FloatingMessage, LoadingScreenOverlay],
   templateUrl: './view-student.html',
-  styleUrl: './view-student.css'
+  styleUrl: './view-student.css',
 })
 export class ViewStudent implements OnInit {
   student: Student | undefined;
   progresoModulo1: number = 0;
   progresoModulo2: number = 0;
-  
+
   private readonly TOTAL_ACTIVIDADES = 10;
+  isLoading: boolean = false
 
   // FloatingMessage state
   fmVisible = false;
@@ -33,19 +38,21 @@ export class ViewStudent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private studentService: StudentService
+    private studentService: StudentService,
+    private teacher: TeacherAuthService,
+    private studentAuth: StudentAuthService
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.cargarEstudiante(parseInt(id));
+      this.cargarEstudiante(id);
     }
   }
 
-  cargarEstudiante(id: number): void {
-    this.student = this.studentService.getStudentById(id);
-    
+  async cargarEstudiante(id: string) {
+    this.student = await this.studentService.getStudentById(id);
+
     if (!this.student) {
       console.error('Estudiante no encontrado');
       return;
@@ -68,7 +75,7 @@ export class ViewStudent implements OnInit {
     this.location.back();
   }
 
-  eliminarAlumno(): void {
+  /*eliminarAlumno(): void {
     if (!this.student) return;
 
     const title = `Eliminar alumno`;
@@ -85,21 +92,26 @@ export class ViewStudent implements OnInit {
         if (!this.student) return;
         const eliminado = this.studentService.deleteStudent(this.student.id);
         if (eliminado) {
-          this.showFloating('Eliminado', `${this.student!.name} ha sido eliminado exitosamente.`, 'success');
+          this.showFloating(
+            'Eliminado',
+            `${this.student!.name} ha sido eliminado exitosamente.`,
+            'success'
+          );
           this.router.navigate(['/teacher/students']);
         } else {
           this.showFloating('Error', 'Error al eliminar el estudiante. Intenta de nuevo.', 'error');
         }
       },
-      () => { /* cancel */ }
+      () => {
+      }
     );
-  }
+  }*/
 
-  ingresarComoAlumno(): void {
+  async ingresarComoAlumno() {
     if (!this.student) return;
 
     const title = `Ingresar como alumno`;
-    const message = `¿Deseas ingresar como ${this.student.name}?\n\nEsto te permitirá ver la plataforma desde su perspectiva.`;
+    const message = `¿Deseas ingresar como ${this.student.nombre}?\n\nEsto te permitirá ver la plataforma desde su perspectiva.`;
 
     this.showFloating(
       title,
@@ -107,11 +119,22 @@ export class ViewStudent implements OnInit {
       'info',
       'Ingresar',
       'Cancelar',
-      () => {
-        sessionStorage.setItem('current_student', JSON.stringify(this.student));
-        this.router.navigate(['/student']);
+      async () => {
+        if (this.student) {
+          const loginRequest: StudentLoginRequest = {
+            nombre: this.student.nombre,
+            apellidoP: this.student.apellidoP,
+            apellidoM: this.student.apellidoM
+          }
+          this.isLoading = true
+          this.teacher.logout();
+          const login = await this.studentAuth.login(loginRequest)
+          this.router.navigate(['/student']);
+        }
       },
-      () => { /* cancel */ }
+      () => {
+        /* cancel */
+      }
     );
   }
 

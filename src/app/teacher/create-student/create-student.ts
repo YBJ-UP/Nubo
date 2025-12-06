@@ -1,21 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from "@angular/router";
-import { StudentService } from '../../services/estudiantes/sstudent.service';
+import { LoadingScreenOverlay } from '../../shared/loading-screen-overlay/loading-screen-overlay';
+import { NavigationService } from '../../services/navigation/navigation-service';
+import { StudentService } from '../../services/estudiantes/student.service';
 import { Student } from '../../interfaces/student';
-import studentData from '../../../../public/placeholderData/studentData.json';
 
 @Component({
   selector: 'app-create-student',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, LoadingScreenOverlay, NgIf],
   templateUrl: './create-student.html',
   styleUrl: './create-student.css'
 })
 export class CreateStudent implements OnInit {
   data: Student[] = [];
   mostrarVistaHija: boolean = false;
+  isLoading: boolean = false
 
-  constructor(private router: Router, private studentService: StudentService) {
+  constructor(private router: Router, private studentService: StudentService, private nav: NavigationService) {
+    this.nav.currentView.set("Alumnos")
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.actualizarVistaHija();
@@ -39,26 +42,20 @@ export class CreateStudent implements OnInit {
         }
       }
     });
-
-    // Suscribirse a cambios en la lista para actualizar en tiempo real
-    this.studentService.onStudentsChanged().subscribe(() => {
-      this.cargarEstudiantes();
-    });
   }
 
   ngOnInit(): void {
+    this.isLoading = true
     this.cargarEstudiantes();
     this.actualizarVistaHija();
   }
 
-  cargarEstudiantes(): void {
-    const estudiantesGuardados = localStorage.getItem('students');
-    if (estudiantesGuardados) {
-      this.data = JSON.parse(estudiantesGuardados);
-    } else {
-      this.data = [...studentData];
-      localStorage.setItem('students', JSON.stringify(this.data));
+  async cargarEstudiantes() {
+    const estudiantesGuardados = (await this.studentService.getAllStudents()).body;
+    if (estudiantesGuardados){
+      this.data = estudiantesGuardados
     }
+    this.isLoading = false
   }
 
   actualizarVistaHija(): void {
@@ -71,7 +68,7 @@ export class CreateStudent implements OnInit {
     this.router.navigate(['/teacher/students/new']);
   }
 
-  verDetalleAlumno(id: number): void {
+  verDetalleAlumno(id: string): void {
     this.router.navigate(['/teacher/students/view', id]);
   }
 }

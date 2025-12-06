@@ -37,6 +37,10 @@
                 <input type="password" name="cPsw" id="signupConf" placeholder="Confirmar contraseña" ngModel>
             </p>
 
+            @if (errorMessage != '') {
+                <p class="errorMessage">{{errorMessage}}</p>
+            }
+
             <button type="submit">Regístrate.</button>
         </form>
         <div class="redireccion"> <p>¿Ya tienes cuenta? <span routerLink="../login">Inicia sesión.</span></p>
@@ -45,3 +49,7 @@
 </section>
 
 <app-nube />
+
+@if (isLoading) {
+    <app-loading-screen-overlay />
+}

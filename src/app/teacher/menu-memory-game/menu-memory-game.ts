@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Header } from '../../components/header/header';
 import { MemoryGameService, MemoryGame } from '../../services/utilidades/memory-game.service';
+import { NavigationService } from '../../services/navigation/navigation-service';
 
 @Component({
   selector: 'app-menu-memory-game',
@@ -20,9 +20,11 @@ export class MenuMemoryGame implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private gameService: MemoryGameService
+    private gameService: MemoryGameService,
+    private nav: NavigationService
   ) {
     this.isTeacherView = this.router.url.startsWith('/teacher');
+    this.nav.currentView.set("Memorama")
   }
 
   ngOnInit() {

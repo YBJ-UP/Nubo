@@ -4,13 +4,16 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Location } from '@angular/common';
+import { TeacherAuthService } from '../../services/authentication/teacher-auth.service';
 import { ImageService } from '../../services/utilidades/image.service';
-import { StudentService } from '../../services/estudiantes/sstudent.service';
+import { StudentService } from '../../services/estudiantes/student.service';
+import { TeacherStudentService } from '../../services/estudiantes/teacher-student.service';
 import { FloatingMessage } from '../../shared/floating-message/floating-message';
+import { LoadingScreenOverlay } from '../../shared/loading-screen-overlay/loading-screen-overlay';
 
 @Component({
   selector: 'app-new-student',
-  imports: [CommonModule, FormsModule, RouterModule, FloatingMessage],
+  imports: [CommonModule, FormsModule, RouterModule, FloatingMessage, LoadingScreenOverlay],
   templateUrl: './new-student.html',
   styleUrls: ['./new-student.css']
 })
@@ -38,7 +41,9 @@ export class NewStudent implements OnInit, AfterViewInit {
     private router: Router,
     private location: Location,
     private imageService: ImageService,
-    private studentService: StudentService
+    private studentService: StudentService,
+    private teacherStudentService: TeacherStudentService,
+    private teacher: TeacherAuthService
   ) {
     this.imagenPreview = this.imageService.getDefaultAvatar();
   }
@@ -94,8 +99,9 @@ export class NewStudent implements OnInit, AfterViewInit {
     }
   }
 
-  submit(form: NgForm): void {
+  async submit(form: NgForm) {
     const { newName, newFirstName, newLastName } = form.value;
+    this.isUploading = true
 
     const validationError = this.studentService.validateStudentData(
       newName,
@@ -105,79 +111,48 @@ export class NewStudent implements OnInit, AfterViewInit {
 
     if (validationError) {
       this.showFloating('Error', validationError, 'error');
+      this.isUploading = false;
       return;
     }
 
-    const password = this.studentService.generatePassword(newName.trim());
+    let nuevoEstudiante
+    if (this.teacher.currentTeacher?.id) {
+      nuevoEstudiante = await this.teacherStudentService.createStudent({
+        teacherId: this.teacher.currentTeacher.id,
+        nombre: newName.trim(),
+        apellidoP: newFirstName.trim(),
+        apellidoM: newLastName.trim()
+      });
+    }
 
-    const nuevoEstudiante = this.studentService.createStudent({
-      teacher_id: 1,
-      pfp: this.imagenPreview,
-      name: newName.trim(),
-      firstName: newFirstName.trim(),
-      lastName: newLastName.trim(),
-      password
-    });
+    const message = `Alumno ${nuevoEstudiante} creado exitosamente.`;
+    console.log(message)
+    console.log(nuevoEstudiante?.success)
 
-    const message = `Alumno ${nuevoEstudiante.name} creado exitosamente\n\nContraseña generada: ${password}\n\nGuarda esta contraseña para que el alumno pueda ingresar.`;
-
-    this.showFloating(
-      'Alumno creado',
-      message,
-      'success',
-      'Ir a la lista',
-      'Copiar contraseña',
-      () => this.router.navigate(['/teacher/students'], { queryParams: { scroll: 'bottom' } }),
-      () => this.copyPasswordAndGo(password),
-      false
-    );
-  }
-
-  private fallbackCopy(text: string): void {
-    try {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      // Instead of navigating immediately, show the floating message and let user choose
+    if (nuevoEstudiante?.success){
       this.showFloating(
-        'Copiado',
-        'Contraseña copiada al portapapeles',
+        'Alumno creado',
+        nuevoEstudiante.message,
         'success',
-        'Volver a la lista',
+        'Ir a la lista',
         undefined,
-        () => this.goToList(),
+        () => this.router.navigate(['/teacher/students'], { queryParams: { scroll: 'bottom' } }),
         undefined,
         false
       );
-    } catch (err) {
-      console.error('Copy failed', err);
-      this.showFloating('Error', 'No se pudo copiar la contraseña automáticamente. Selecciona y copia manualmente.', 'error');
+    }else if (nuevoEstudiante?.success == false){
+      this.showFloating(
+        'Error',
+        nuevoEstudiante.message,
+        'error',
+        'Ir a la lista',
+        undefined,
+        () => this.router.navigate(['/teacher/students'], { queryParams: { scroll: 'bottom' } }),
+        undefined,
+        false
+      );
     }
-  }
-
-  private copyPasswordAndGo(text: string): void {
-    if (navigator && (navigator as any).clipboard && (navigator as any).clipboard.writeText) {
-      (navigator as any).clipboard.writeText(text).then(() => {
-        // Show dialog offering to go back to list (less abrupt)
-        this.showFloating(
-          'Copiado',
-          'Contraseña copiada al portapapeles',
-          'success',
-          'Volver a la lista',
-          undefined,
-          () => this.goToList(),
-          undefined,
-          false
-        );
-      }).catch(() => {
-        this.fallbackCopy(text);
-      });
-    } else {
-      this.fallbackCopy(text);
-    }
+    this.isUploading = false
   }
 
   goToList(): void {
