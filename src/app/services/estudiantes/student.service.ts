@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
 import { Student } from '../../interfaces/student';
 import { ApiConfigService } from '../utilidades/api-config.service';
 import { TeacherAuthService } from '../authentication/teacher-auth.service';
-import { StudentResponse } from '../../interfaces/teacher/students/student-response';
 
 interface StudentProgress {
   modulo1: number;

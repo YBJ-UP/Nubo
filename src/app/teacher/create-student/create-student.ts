@@ -1,19 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from "@angular/router";
+import { LoadingScreenOverlay } from '../../shared/loading-screen-overlay/loading-screen-overlay';
 import { NavigationService } from '../../services/navigation/navigation-service';
 import { StudentService } from '../../services/estudiantes/student.service';
 import { Student } from '../../interfaces/student';
 
 @Component({
   selector: 'app-create-student',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, LoadingScreenOverlay],
   templateUrl: './create-student.html',
   styleUrl: './create-student.css'
 })
 export class CreateStudent implements OnInit {
   data: Student[] = [];
   mostrarVistaHija: boolean = false;
+  isLoading: boolean = false
 
   constructor(private router: Router, private studentService: StudentService, private nav: NavigationService) {
     this.nav.currentView.set("Alumnos")
@@ -43,6 +45,7 @@ export class CreateStudent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isLoading = true
     this.cargarEstudiantes();
     this.actualizarVistaHija();
   }
@@ -52,6 +55,7 @@ export class CreateStudent implements OnInit {
     if (estudiantesGuardados){
       this.data = estudiantesGuardados
     }
+    this.isLoading = false
   }
 
   actualizarVistaHija(): void {
