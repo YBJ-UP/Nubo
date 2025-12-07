@@ -1,4 +1,4 @@
-// src/app/teacher/new-student/new-student.ts
+
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -177,6 +177,9 @@ export class NewStudent implements OnInit, AfterViewInit {
       this.location.back();
     }
   }
+  
+
+
 
   showFloating(
     title: string,
@@ -222,9 +225,7 @@ export class NewStudent implements OnInit, AfterViewInit {
       if (el && typeof el.getBoundingClientRect === 'function') {
         const rect = el.getBoundingClientRect();
         const vwHeight = window.innerHeight || document.documentElement.clientHeight;
-        // Only scroll minimally if the element is not fully visible
         if (rect.bottom > vwHeight || rect.top < 0) {
-          // Use 'nearest' so the element is brought into view without centering
           if (typeof el.scrollIntoView === 'function') {
             el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           } else {
@@ -232,7 +233,7 @@ export class NewStudent implements OnInit, AfterViewInit {
           }
         }
       } else {
-        // fallback: do nothing to avoid forcing center
+       
       }
     } catch (err) {
       // ignore

@@ -67,20 +67,48 @@ export class StudentService {
       return undefined
     }
   }
+  
+  async deleteStudent(studentId: string): Promise<{ success: boolean; message: string }> {
+    const teacher = this.teacher.currentTeacher;
+    if (!teacher) {
+      return {
+        success: false,
+        message: 'No tienes permisos para eliminar (No hay sesión de maestro).'
+      };
+    }
+    try {
+      const response = await fetch(
+        this.api.getEndpoint(`/teacher/${teacher.id}/students/${studentId}`),
+        {
+          method: 'DELETE',
+          headers: this.api.getAuthHeaders() 
+        }
+      );
 
+      if (!response.ok) {
+        const error = await response.json();
+        return {
+          success: false,
+          message: error.message || 'Error al eliminar el estudiante.'
+        };
+      }
+      this.nonAsyncStudentList = this.nonAsyncStudentList.filter(
+        student => student.id !== studentId
+      );
 
-  /*async deleteStudent(id: string) { //no implementé este ahora q veo
-    const students = this.getAllStudents();
-    const filtered = students.filter(s => s.id !== id);
-    
-    if (filtered.length === students.length) return false;
-    
-    this.saveStudents(filtered);
-    this.deleteProgress(id);
-    this.studentsChanged.next();
-    
-    return true;
-  }*/
+      return {
+        success: true,
+        message: 'Estudiante eliminado correctamente.'
+      };
+
+    } catch (error) {
+      console.error('Error al eliminar:', error);
+      return {
+        success: false,
+        message: 'Error de conexión con el servidor.'
+      };
+    }
+  }
 
   getProgress(studentId: string): StudentProgress {
     const key = `${this.PROGRESS_PREFIX}${studentId}`;
