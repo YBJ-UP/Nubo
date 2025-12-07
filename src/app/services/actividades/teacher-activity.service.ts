@@ -4,13 +4,9 @@ import { ApiConfigService } from '../utilidades/api-config.service';
 import { TeacherAuthService } from '../authentication/teacher-auth.service';
 import { ActivityMapperService } from '../mappers/activity-mapper.service';
 
-/**
- * Identificadores de módulos en el sistema
- * Estos UUIDs deben coincidir exactamente con los de la base de datos
- */
 interface ModuleIds {
-  COGNITIVE: string;  // Módulo de actividades cognitivas
-  LUDIC: string;      // Módulo de juegos lúdicos
+  COGNITIVE: string;  
+  LUDIC: string;      
 }
 
 interface ContentItem {
@@ -40,19 +36,11 @@ interface ActivityResponse {
   content: ContentItem[];
 }
 
-/**
- * Servicio para gestionar actividades de maestros
- * Maneja la comunicación con la API para CRUD de actividades
- */
 @Injectable({
   providedIn: 'root'
 })
 export class TeacherActivityService {
-  
-  /**
-   * IDs de módulos del sistema
-   * IMPORTANTE: Estos deben coincidir con los UUIDs en tu base de datos
-   */
+
   private readonly MODULE_IDS: ModuleIds = {
     COGNITIVE: '14387d49-4a1a-47d1-aa47-5a700db3493a',
     LUDIC: '6297d1fa-a65f-43cd-8070-5960bd89215b'
@@ -64,9 +52,6 @@ export class TeacherActivityService {
     private mapper: ActivityMapperService
   ) {}
 
-  /**
-   * Crea una actividad cognitiva (Módulo 1)
-   */
   async createCognitiveActivity(activityData: {
     title: string;
     thumbnail: string;
@@ -78,10 +63,6 @@ export class TeacherActivityService {
       moduleId: this.MODULE_IDS.COGNITIVE
     });
   }
-
-  /**
-   * Crea una actividad de memorama (Módulo 2)
-   */
   async createMemoramaActivity(activityData: {
     title: string;
     thumbnail: string;
@@ -93,10 +74,6 @@ export class TeacherActivityService {
       moduleId: this.MODULE_IDS.LUDIC
     });
   }
-
-  /**
-   * Método privado para crear cualquier tipo de actividad
-   */
   private async createActivity(activityData: {
     title: string;
     thumbnail: string;
@@ -156,9 +133,6 @@ export class TeacherActivityService {
     }
   }
 
-  /**
-   * Obtiene todas las actividades del maestro autenticado
-   */
   async getMyActivities(): Promise<{ 
     success: boolean; 
     message: string; 
@@ -209,10 +183,6 @@ export class TeacherActivityService {
     }
   }
 
-  /**
-   * Elimina una actividad específica
-   * Verifica que el maestro sea el dueño de la actividad
-   */
   async deleteActivity(activityId: string): Promise<{ 
     success: boolean; 
     message: string 
@@ -256,18 +226,10 @@ export class TeacherActivityService {
     }
   }
 
-  /**
-   * Convierte contenido local al formato de la API
-   * Delega al servicio mapper
-   */
   convertContentToApiFormat(localContent: any[]): ContentItem[] {
     return this.mapper.convertToApiFormat(localContent);
   }
 
-  /**
-   * Convierte actividad de API a formato local
-   * Delega al servicio mapper
-   */
   convertToLocalFormat(activity: ActivityResponse): any {
     return this.mapper.convertToLocalFormat(activity);
   }
