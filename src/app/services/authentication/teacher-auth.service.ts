@@ -4,7 +4,6 @@ import { TeacherAuthResponse } from '../../interfaces/teacher/auth/teacher-auth-
 import { ApiAuthResponse } from '../../interfaces/teacher/auth/api-auth-response';
 import { TeacherLoginRequest } from '../../interfaces/teacher/auth/teacher-login-request';
 import { TeacherSignupRequest } from '../../interfaces/teacher/auth/teacher-signup-request';
-import { Teacher } from '../../interfaces/teacher/teacher';
 
 @Injectable({
   providedIn: 'root'
