@@ -1,4 +1,4 @@
-// src/app/services/mappers/activity-mapper.service.ts
+
 import { Injectable } from '@angular/core';
 import { PalabraCompleta } from '../actividades/actividad.service';
 
