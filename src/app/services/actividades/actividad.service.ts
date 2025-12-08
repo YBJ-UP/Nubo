@@ -20,7 +20,7 @@ export interface PalabraCompleta {
 
 export interface ActividadCompleta {
   sincronizado: boolean;
-  id: number;
+  id: string | number;
   titulo: string;
   imagenPortada: string;
   palabrasCompletas: PalabraCompleta[];
@@ -155,7 +155,7 @@ export class ActividadFormService {
 
     const file = input.files[0];
     const validacion = this.validarImagen(file);
-    
+
     if (!validacion.exito) {
       return validacion;
     }
@@ -198,7 +198,7 @@ export class ActividadFormService {
     return {
       id: this.generarId(),
       titulo: titulo.trim(),
-      imagenPortada: imagenPortada, 
+      imagenPortada: imagenPortada,
       palabrasCompletas: palabrasCompletas.map(p => this.limpiarPalabraCompleta(p)),
       fechaCreacion: new Date(),
       sincronizado: false // <--- CORRECCIÓN AQUÍ: Faltaba esta propiedad
@@ -209,10 +209,10 @@ export class ActividadFormService {
     try {
       const actividadesGuardadas = localStorage.getItem(this.STORAGE_KEY);
       const actividades = actividadesGuardadas ? JSON.parse(actividadesGuardadas) : [];
-      
+
       actividades.push(actividad);
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(actividades));
-      
+
       console.log('Actividad guardada exitosamente:', {
         id: actividad.id,
         titulo: actividad.titulo,
@@ -246,8 +246,8 @@ export class ActividadFormService {
     const guardado = this.guardarEnStorage(actividad);
 
     if (guardado) {
-      return { 
-        exito: true, 
+      return {
+        exito: true,
         mensaje: `Actividad creada exitosamente con ${palabrasCompletas.length} palabra(s)`,
         data: actividad
       };
@@ -264,31 +264,35 @@ export class ActividadFormService {
     return stored ? JSON.parse(stored) : [];
   }
 
-  getActividadById(id: number): ActividadCompleta | undefined {
+  getActividadById(id: string | number): ActividadCompleta | undefined {
     const actividades = this.getAllActividades();
-   
+
     let actividad = actividades.find(a => a.id === id);
-    
+
     if (!actividad) {
       actividad = actividades.find(a => String(a.id) === String(id));
     }
-    
-    if (!actividad) {
-      actividad = actividades.find(a => Math.floor(a.id) === Math.floor(id));
+
+    if (!actividad && !isNaN(Number(id))) {
+      const idNum = Number(id);
+      actividad = actividades.find(a => {
+        const aIdNum = Number(a.id);
+        return !isNaN(aIdNum) && Math.floor(aIdNum) === Math.floor(idNum);
+      });
     }
-    
+
     return actividad;
   }
 
-  deleteActividad(id: number): boolean {
+  deleteActividad(id: string | number): boolean {
     try {
       const actividades = this.getAllActividades();
       const filtered = actividades.filter(a => a.id !== id);
-      
+
       if (filtered.length === actividades.length) {
         return false;
       }
-      
+
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(filtered));
       console.log('Actividad eliminada:', id);
       return true;
@@ -305,8 +309,8 @@ export class ActividadFormService {
   ): boolean {
     if (titulo.trim() !== '') return true;
     if (imagenPortada !== this.IMAGEN_DEFAULT) return true;
-    
-    return palabrasCompletas.some(p => 
+
+    return palabrasCompletas.some(p =>
       p.palabra.trim() !== '' ||
       p.imagenUrl !== this.IMAGEN_DEFAULT ||
       p.syllables.some(s => s.texto.trim()) ||

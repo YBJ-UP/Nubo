@@ -6,16 +6,16 @@ import { ProgressData } from '../utilidades/progress.service';
   providedIn: 'root'
 })
 export class ActividadStateService {
-  private actividadId: number = 0;
+  private actividadId: string | number = 0;
   private tituloActividad: string = '';
   private palabras: PalabraCompleta[] = [];
   private palabraActualIndex: number = 0;
   private progreso: number = 0;
   private progressData: ProgressData | null = null;
 
-  constructor() {}
+  constructor() { }
 
-  getActividadId(): number {
+  getActividadId(): string | number {
     return this.actividadId;
   }
 
@@ -50,7 +50,7 @@ export class ActividadStateService {
     return this.progressData;
   }
 
-  setActividadId(id: number): void {
+  setActividadId(id: string | number): void {
     this.actividadId = id;
   }
 
