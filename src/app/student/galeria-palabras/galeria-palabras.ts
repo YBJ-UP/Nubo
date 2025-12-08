@@ -57,6 +57,7 @@ export class GaleriaPalabras implements OnInit {
       try {
         const result = await this.studentActivityService.getCognitiveActivities();
         if (result.success && result.activities) {
+          console.log(result.activities)
           this.palabras = result.activities.map(act => ({
             id: act.id,
             titulo: act.titulo,
@@ -64,12 +65,14 @@ export class GaleriaPalabras implements OnInit {
             imagenUrl: act.thumbnail || '/crds.webp',
             enlace: `/cognitive-abilities/actividad/${act.id}`
           }));
-          return;
+          console.log(this.palabras)
         }
       } catch (error) {
         console.error('Error al cargar actividades de alumno:', error);
+      }finally{
+        this.isLoading = false
+        return;
       }
-      return;
     }
 
     try {

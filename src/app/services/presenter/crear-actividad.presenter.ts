@@ -101,7 +101,7 @@ export class CrearActividadPresenter implements OnDestroy {
     this.stateService.updatePalabraAt(wordIndex, updatedWord);
   }
 
-  removeSyllable(wordIndex: number, syllableId: number, currentWords: PalabraCompleta[]): void {
+  removeSyllable(wordIndex: number, syllableId: number | string, currentWords: PalabraCompleta[]): void {
     const result = this.wordManager.removeSyllable(currentWords[wordIndex], syllableId);
     if (result.success && result.palabra) {
       this.stateService.updatePalabraAt(wordIndex, result.palabra);
@@ -113,7 +113,7 @@ export class CrearActividadPresenter implements OnDestroy {
     this.stateService.updatePalabraAt(wordIndex, updatedWord);
   }
 
-  removePhoneme(wordIndex: number, phonemeId: number, currentWords: PalabraCompleta[]): void {
+  removePhoneme(wordIndex: number, phonemeId: number | string, currentWords: PalabraCompleta[]): void {
     const result = this.wordManager.removePhoneme(currentWords[wordIndex], phonemeId);
     if (result.success && result.palabra) {
       this.stateService.updatePalabraAt(wordIndex, result.palabra);

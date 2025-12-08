@@ -26,7 +26,7 @@ export class WordManagerService {
     };
   }
 
-  removeSyllable(palabra: PalabraCompleta, silabaId: number): WordOperationResult {
+  removeSyllable(palabra: PalabraCompleta, silabaId: number | string): WordOperationResult {
     if (!this.actividadFormService.puedeEliminarItem(palabra.syllables.length)) {
       return {
         success: false,
@@ -49,7 +49,7 @@ export class WordManagerService {
     };
   }
 
-  removePhoneme(palabra: PalabraCompleta, fonemaId: number): WordOperationResult {
+  removePhoneme(palabra: PalabraCompleta, fonemaId: number | string): WordOperationResult {
     if (!this.actividadFormService.puedeEliminarItem(palabra.fonemas.length)) {
       return {
         success: false,

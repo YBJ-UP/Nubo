@@ -44,7 +44,7 @@ export class StudentActivityService {
       }
 
       const activities: ActivityResponse[] = await response.json();
-
+      console.log(activities)
       return {
         success: true,
         message: 'Actividades obtenidas exitosamente',
@@ -113,7 +113,7 @@ export class StudentActivityService {
       const filteredActivities = result.activities.filter(
         activity => activity.moduleId === moduleId
       );
-
+      console.log(filteredActivities)
       return {
         success: true,
         message: 'Actividades filtradas exitosamente',

@@ -1,15 +1,15 @@
 export interface Palabra {
-    id: number;
+    id: string;
     texto: string;
 }
 
 export interface Fonema {
-    id: number;
+    id: string;
     texto: string;
 }
 
 export interface PalabraCompleta {
-    id: number;
+    id: string;
     palabra: string;
     imagenUrl: string;
     syllables: Palabra[];
@@ -18,7 +18,7 @@ export interface PalabraCompleta {
 
 export interface ActividadCompleta {
     sincronizado: boolean;
-    id: string | number;
+    id: string;
     titulo: string;
     imagenPortada: string;
     palabrasCompletas: PalabraCompleta[];

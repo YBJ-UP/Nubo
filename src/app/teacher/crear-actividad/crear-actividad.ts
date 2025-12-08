@@ -105,7 +105,7 @@ export class CrearActividadComponent implements OnInit, OnDestroy {
     this.presenter.addSyllable(palabraIndex, this.palabrasCompletas);
   }
 
-  eliminarSilaba(palabraIndex: number, silabaId: number): void {
+  eliminarSilaba(palabraIndex: number, silabaId: string): void {
     this.presenter.removeSyllable(palabraIndex, silabaId, this.palabrasCompletas);
   }
 
@@ -113,7 +113,7 @@ export class CrearActividadComponent implements OnInit, OnDestroy {
     this.presenter.addPhoneme(palabraIndex, this.palabrasCompletas);
   }
 
-  eliminarFonema(palabraIndex: number, fonemaId: number): void {
+  eliminarFonema(palabraIndex: number, fonemaId: string): void {
     this.presenter.removePhoneme(palabraIndex, fonemaId, this.palabrasCompletas);
   }
 

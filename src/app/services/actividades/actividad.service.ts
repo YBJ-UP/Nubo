@@ -15,16 +15,16 @@ export class ActividadFormService {
   }
 
   crearPalabraVacia(): Palabra {
-    return { id: this.generarId(), texto: '' };
+    return { id: '', texto: '' };
   }
 
   crearFonemaVacio(): Fonema {
-    return { id: this.generarId(), texto: '' };
+    return { id: '', texto: '' };
   }
 
   crearPalabraCompleta(): PalabraCompleta {
     return {
-      id: this.generarId(),
+      id: '',
       palabra: '',
       imagenUrl: this.IMAGEN_DEFAULT,
       syllables: this.inicializarPalabras(3),
@@ -164,7 +164,7 @@ export class ActividadFormService {
     palabrasCompletas: PalabraCompleta[]
   ): ActividadCompleta {
     return {
-      id: this.generarId(),
+      id: '',
       titulo: titulo.trim(),
       imagenPortada: imagenPortada,
       palabrasCompletas: palabrasCompletas.map(p => this.limpiarPalabraCompleta(p)),
