@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiConfigService } from '../utilidades/api-config.service';
 import { StudentAuthService } from '../authentication/student-auth.service';
+import { ActivityResponse } from '../../interfaces/activity/activity-response';
 
 interface ActivityContent {
   id?: string;
@@ -8,16 +9,6 @@ interface ActivityContent {
   imagenUrl: string;
   syllables: string[];
   graphemes: string[];
-}
-
-interface ActivityResponse {
-  id: string;
-  teacherId: string;
-  moduleId: string;
-  title: string;
-  thumbnail: string;
-  isPublic: boolean;
-  content: ActivityContent[];
 }
 
 @Injectable({
@@ -141,7 +132,7 @@ export class StudentActivityService {
   convertToLocalFormat(activity: ActivityResponse): any {
     return {
       id: activity.id,
-      titulo: activity.title,
+      titulo: activity.titulo,
       imagenPortada: activity.thumbnail,
       palabrasCompletas: activity.content.map((item, index) => ({
         id: index + 1,

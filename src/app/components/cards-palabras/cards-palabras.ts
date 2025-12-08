@@ -13,7 +13,7 @@ export class CardsPalabras implements OnInit{
   
   @Input() palabraData!: PalabraData;
   constructor(private router: Router) { }
-  ngOnInit(): void { }
+  ngOnInit(): void {}
   
   navegar(): void {
     const rutaActual = this.router.url;

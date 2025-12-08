@@ -2,33 +2,9 @@ import { Injectable } from '@angular/core';
 import { ApiConfigService } from '../../utilidades/api-config.service';
 import { TeacherAuthService } from '../../authentication/teacher-auth.service';
 import { ActivityMapperService } from '../../mappers/activity-mapper.service';
-
-export interface ContentItem {
-  id?: string;
-  texto: string;
-  imagenUrl: string;
-  syllables: string[];
-  graphemes: string[]; 
-}
-
-export interface CreateActivityRequest {
-  teacherId: string;
-  moduleId: string;
-  title: string;
-  thumbnail: string;
-  isPublic: boolean;
-  content: ContentItem[];
-}
-
-export interface ActivityResponse {
-  id: string;
-  teacherId: string;
-  moduleId: string;
-  title: string;
-  thumbnail: string; 
-  isPublic: boolean;
-  content: ContentItem[];
-}
+import { ContentItem } from '../../../interfaces/activity/content-item';
+import { CreateActivityRequest } from '../../../interfaces/activity/create-activity-request';
+import { ActivityResponse } from '../../../interfaces/activity/activity-response';
 
 @Injectable({
   providedIn: 'root'

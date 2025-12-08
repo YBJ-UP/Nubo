@@ -7,11 +7,12 @@ import { FloatingMessage } from '../../shared/floating-message/floating-message'
 import { StudentActivityService } from '../../services/actividades/student-activity.service';
 import { NavigationService } from '../../services/navigation/navigation-service';
 import { TeacherActivityService } from "../../services/actividades/CRUD ActivityTeacher/teacher-activity.service";
+import { LoadingScreenOverlay } from '../../shared/loading-screen-overlay/loading-screen-overlay';
 
 @Component({
   selector: 'app-galeria-palabras',
   standalone: true,
-  imports: [CardsPalabras, CommonModule, RouterModule, FloatingMessage],
+  imports: [CardsPalabras, CommonModule, RouterModule, FloatingMessage, LoadingScreenOverlay],
   templateUrl: './galeria-palabras.html',
   styleUrls: ['./galeria-palabras.css']
 })
@@ -20,6 +21,7 @@ export class GaleriaPalabras implements OnInit {
   modoEliminar: boolean = false;
   actividadesSeleccionadas: Set<string | number> = new Set();
   esProfesor: boolean = false;
+  isLoading = false
 
   notice = {
     visible: false,
@@ -50,13 +52,14 @@ export class GaleriaPalabras implements OnInit {
   }
 
   async cargarActividades(): Promise<void> {
+    this.isLoading = true
     if (!this.esProfesor) {
       try {
         const result = await this.studentActivityService.getCognitiveActivities();
         if (result.success && result.activities) {
-          this.palabras = result.activities.map((act) => ({
+          this.palabras = result.activities.map(act => ({
             id: act.id,
-            titulo: act.title,
+            titulo: act.titulo,
             colorFondo: this.obtenerColorAleatorio(),
             imagenUrl: act.thumbnail || '/crds.webp',
             enlace: `/cognitive-abilities/actividad/${act.id}`
@@ -75,7 +78,7 @@ export class GaleriaPalabras implements OnInit {
       if (response.success && response.activities) {
         this.palabras = response.activities.map(activity => ({
           id: activity.id,
-          titulo: activity.title,
+          titulo: activity.titulo,
           imagenUrl: activity.thumbnail || '/crds.webp',
           colorFondo: this.obtenerColorAleatorio(),
           enlace: `/teacher/cognitive-abilities/actividad/${activity.id}`
@@ -87,6 +90,7 @@ export class GaleriaPalabras implements OnInit {
       console.error('Error al cargar actividades:', error);
       this.showNotice('Error', 'No se pudieron cargar las actividades.', 'error');
     }
+    this.isLoading = false
   }
 
   irACrearActividad(): void {

@@ -1,16 +1,14 @@
-
-
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TeacherAuthService } from '../../authentication/teacher-auth.service';
 import { PalabraCompleta } from '../../../interfaces/actividad-completa';
 import { ApiConfigService } from '../../utilidades/api-config.service';
+import { ActivityResponse } from '../../../interfaces/activity/activity-response';
 
 interface ActivityDTO {
   teacherId: string;
   moduleId: string;
-  title: string;
+  titulo: string;
   thumbnail: string;
   isPublic: boolean;
   content: ContentItemDTO[];
@@ -21,15 +19,6 @@ interface ContentItemDTO {
   imagenUrl: string;
   syllables: string[];
   graphemes: string[];
-}
-
-export interface ActivityResponse {
-  id: string;
-  teacherId: string;
-  moduleId: string;
-  title: string;
-  thumbnail: string;
-  isPublic: boolean;
 }
 
 @Injectable({
@@ -59,7 +48,7 @@ export class ActivityService {
     const requestBody: ActivityDTO = {
       teacherId: teacher.id,
       moduleId: moduleId,
-      title: titulo,
+      titulo: titulo,
       thumbnail: imagenPortada,
       isPublic: true,
       content: palabrasCompletas.map(p => ({

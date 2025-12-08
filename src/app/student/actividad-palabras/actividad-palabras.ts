@@ -340,7 +340,7 @@ export class ActividadPalabras implements OnInit, OnDestroy {
     this.notificationService.confirm(
       '¡Felicidades!',
       'Has completado la actividad exitosamente.',
-      () => this.router.navigate(['/student/galeria-palabras']),
+      () => this.router.navigate(['./teacher/cognitive-abilities']),
       undefined,
       'Finalizar',
       undefined
