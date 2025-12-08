@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SpeechService } from '../audio/service.spech';
-import { PalabraCompleta } from '../actividades/actividad.service';
+import { PalabraCompleta } from '../../interfaces/actividad-completa';
 export interface AudioState {
   isPlaying: boolean;
   error: string | null;
@@ -15,7 +15,7 @@ export class AudioPlaybackService {
     error: null
   };
 
-  constructor(private speechService: SpeechService) {}
+  constructor(private speechService: SpeechService) { }
 
   getAudioState(): AudioState {
     return { ...this.audioState };

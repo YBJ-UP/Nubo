@@ -4,7 +4,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TeacherAuthService } from '../../authentication/teacher-auth.service';
-import { PalabraCompleta } from '../actividad.service';
+import { PalabraCompleta } from '../../../interfaces/actividad-completa';
 import { ApiConfigService } from '../../utilidades/api-config.service';
 
 interface ActivityDTO {

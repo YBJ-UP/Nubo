@@ -6,7 +6,7 @@ import { CrearActividadPresenter } from '../../services/presenter/crear-activida
 import { ActivityFormStateService } from '../../services/actividades/activity-form-state.service';
 import { NotificationService } from '../../services/utilidades/notification.service';
 import { FloatingMessage } from '../../shared/floating-message/floating-message';
-import { PalabraCompleta } from '../../services/actividades/actividad.service';
+import { PalabraCompleta } from '../../interfaces/actividad-completa';
 
 @Component({
   selector: 'app-crear-actividad',
@@ -21,7 +21,7 @@ export class CrearActividadComponent implements OnInit, OnDestroy {
   imagenPortada = 'perfil.jpg';
   palabrasCompletas: PalabraCompleta[] = [];
   mostrarInstrucciones = false;
-  
+
   notice = {
     visible: false,
     title: '',
@@ -30,7 +30,7 @@ export class CrearActividadComponent implements OnInit, OnDestroy {
     primaryLabel: 'Aceptar',
     secondaryLabel: undefined as string | undefined
   };
-  
+
   private _primaryCb?: () => void;
   private _secondaryCb?: () => void;
 
@@ -38,7 +38,7 @@ export class CrearActividadComponent implements OnInit, OnDestroy {
     private presenter: CrearActividadPresenter,
     private stateService: ActivityFormStateService,
     private notificationService: NotificationService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.presenter.initialize();
@@ -69,7 +69,7 @@ export class CrearActividadComponent implements OnInit, OnDestroy {
           this.showNotice(
             state.config.title,
             state.config.message,
-            state.config.type, 
+            state.config.type,
             state.config.primaryLabel,
             state.config.secondaryLabel,
             state.config.primaryAction,

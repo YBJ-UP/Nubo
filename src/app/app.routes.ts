@@ -28,76 +28,76 @@ import { ludicshell } from './student/ludic-shell';
 import { Memorama } from './components/cardGameMemorama/memorama';
 
 export const routes: Routes = [
-   {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full'
-   },
-   {
-    path: 'login',
-    component: Login
-   },
-   {
-    path: 'register',
-    component: Register
-   },
-   {
-    path: 'teacher',
-    component: Home,
-    children: [
-        { path: '', component: CardsHome },
-        { path: 'menu-memory-game', component: MenuMemoryGame },
-        { path: 'new-memory-game', component: NewMemoryGame },
-        { path: 'students', component: CreateStudent, children: [ { path: 'new', component: NewStudent }, { path: 'view/:id', component: ViewStudent } ] },
-        {
-            path: 'cognitive-abilities',
-            component: Shell,
-            children: [
-                { path: '', component: GaleriaPalabras },
-                { path: 'actividad/:id', component: ActividadPalabras }
-            ]
-        },
-        { path: 'crear-actividad', component: CrearActividadComponent }
-    ]
-   },
-   {
-    path: 'teacher/memory-game',
-    component: MemoryGame
-   },
-   {
-    path: 'student',
-    component: StudentHome,
-    children: [
-        { path: '', component: CardsHome },
-        { path: 'menu-memory-game', component: MenuMemoryGame },
-        { 
-            path: 'students', 
-            component: CreateStudent,
-            children: [
-                { path: 'new', component: NewStudent },
-                { path: 'view/:id', component: ViewStudent }
-            ]
-        },
-        { 
-            path: 'cognitive-abilities', 
-            component: Shell,
-            children: [
-                { path: '', component: GaleriaPalabras },
-                { path: 'actividad/:id', component: ActividadPalabras }
-            ]
-        },
-        {
-            path:'juego-ludico', 
-            component: ludicshell,
-            children:[
-              {path: '', component: GaleriaJuegos},
-              {path: 'memorama/:id', component: Memorama}
-            ]
-        }
-    ]
-   },
-   {
-    path: 'student/memory-game',
-    component: MemoryGame
-   }
+    {
+        path: '',
+        redirectTo: 'login',
+        pathMatch: 'full'
+    },
+    {
+        path: 'login',
+        component: Login
+    },
+    {
+        path: 'register',
+        component: Register
+    },
+    {
+        path: 'teacher',
+        component: Home,
+        children: [
+            { path: '', component: CardsHome },
+            { path: 'menu-memory-game', component: MenuMemoryGame },
+            { path: 'new-memory-game', component: NewMemoryGame },
+            { path: 'students', component: CreateStudent, children: [{ path: 'new', component: NewStudent }, { path: 'view/:id', component: ViewStudent }] },
+            {
+                path: 'cognitive-abilities',
+                component: Shell,
+                children: [
+                    { path: '', component: GaleriaPalabras },
+                    { path: 'actividad/:id', component: ActividadPalabras }
+                ]
+            },
+            { path: 'crear-actividad', component: CrearActividadComponent }
+        ]
+    },
+    {
+        path: 'teacher/memory-game',
+        component: MemoryGame
+    },
+    {
+        path: 'student',
+        component: StudentHome,
+        children: [
+            { path: '', component: CardsHome },
+            { path: 'menu-memory-game', component: MenuMemoryGame },
+            {
+                path: 'students',
+                component: CreateStudent,
+                children: [
+                    { path: 'new', component: NewStudent },
+                    { path: 'view/:id', component: ViewStudent }
+                ]
+            },
+            {
+                path: 'cognitive-abilities',
+                component: Shell,
+                children: [
+                    { path: '', component: GaleriaPalabras },
+                    { path: 'actividad/:id', component: ActividadPalabras }
+                ]
+            },
+            {
+                path: 'juego-ludico',
+                component: ludicshell,
+                children: [
+                    { path: '', component: GaleriaJuegos },
+                    { path: 'memorama/:id', component: Memorama }
+                ]
+            }
+        ]
+    },
+    {
+        path: 'student/memory-game',
+        component: MemoryGame
+    }
 ];

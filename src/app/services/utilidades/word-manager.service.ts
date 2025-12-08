@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ActividadFormService, PalabraCompleta, Palabra, Fonema } from '../actividades/actividad.service';
+import { ActividadFormService } from '../actividades/actividad.service';
+import { PalabraCompleta, Palabra, Fonema } from '../../interfaces/actividad-completa';
 
 export interface WordOperationResult {
   success: boolean;
@@ -11,7 +12,7 @@ export interface WordOperationResult {
   providedIn: 'root'
 })
 export class WordManagerService {
-  constructor(private actividadFormService: ActividadFormService) {}
+  constructor(private actividadFormService: ActividadFormService) { }
 
   createEmptyWord(): PalabraCompleta {
     return this.actividadFormService.crearPalabraCompleta();
@@ -66,7 +67,7 @@ export class WordManagerService {
   updateWordImage(palabra: PalabraCompleta, imageUrl: string): PalabraCompleta {
     return { ...palabra, imagenUrl: imageUrl };
   }
-  
+
   canRemoveWord(totalWords: number): boolean {
     return totalWords > 1;
   }

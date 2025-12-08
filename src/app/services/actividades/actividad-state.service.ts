@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PalabraCompleta } from './actividad.service';
+import { PalabraCompleta } from '../../interfaces/actividad-completa';
 import { ProgressData } from '../utilidades/progress.service';
 
 @Injectable({

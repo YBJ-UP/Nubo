@@ -1,38 +1,6 @@
 import { Injectable } from '@angular/core';
-
-export interface Palabra {
-  id: number;
-  texto: string;
-}
-
-export interface Fonema {
-  id: number;
-  texto: string;
-}
-
-export interface PalabraCompleta {
-  id: number;
-  palabra: string;
-  imagenUrl: string;
-  syllables: Palabra[];
-  fonemas: Fonema[];
-}
-
-export interface ActividadCompleta {
-  sincronizado: boolean;
-  id: string | number;
-  titulo: string;
-  imagenPortada: string;
-  palabrasCompletas: PalabraCompleta[];
-  fechaCreacion: Date;
-}
-
-interface ResultadoOperacion {
-  exito: boolean;
-  mensaje: string;
-  url?: string;
-  data?: any;
-}
+import { PalabraCompleta } from '../../interfaces/actividad-completa';
+import { ActividadCompleta, Fonema, Palabra, ResultadoOperacion } from '../../interfaces/actividad-completa';
 
 @Injectable({
   providedIn: 'root'

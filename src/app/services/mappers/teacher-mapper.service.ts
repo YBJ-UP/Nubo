@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PalabraCompleta } from '../actividades/actividad.service';
+import { PalabraCompleta } from '../../interfaces/actividad-completa';
 
 @Injectable({
   providedIn: 'root'

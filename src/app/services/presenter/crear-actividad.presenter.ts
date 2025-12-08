@@ -8,7 +8,7 @@ import { ActivityFormStateService } from '../actividades/activity-form-state.ser
 import { NotificationService } from '../utilidades/notification.service';
 import { WordManagerService } from '../utilidades/word-manager.service';
 import { TeacherAuthService } from '../authentication/teacher-auth.service';
-import { PalabraCompleta } from '../actividades/actividad.service';
+import { PalabraCompleta } from '../../interfaces/actividad-completa';
 
 @Injectable()
 export class CrearActividadPresenter implements OnDestroy {
@@ -22,8 +22,8 @@ export class CrearActividadPresenter implements OnDestroy {
     private notificationService: NotificationService,
     private wordManager: WordManagerService,
     private authService: TeacherAuthService,
-    private activityService: ActivityService 
-  ) {}
+    private activityService: ActivityService
+  ) { }
 
   ngOnDestroy(): void {
     this.cleanup();
@@ -47,7 +47,7 @@ export class CrearActividadPresenter implements OnDestroy {
   }
 
   cleanup(): void {
-    this.stateService.resetState(); 
+    this.stateService.resetState();
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -70,7 +70,7 @@ export class CrearActividadPresenter implements OnDestroy {
       this.stateService.updateImagenPortada(base64);
     } catch (error) {
       console.error(error);
-      this.notificationService.error('Error','Error al procesar la imagen de portada');
+      this.notificationService.error('Error', 'Error al procesar la imagen de portada');
     }
   }
 
@@ -92,7 +92,7 @@ export class CrearActividadPresenter implements OnDestroy {
       this.stateService.updatePalabraAt(wordIndex, updatedWord);
     } catch (error) {
       console.error(error);
-      this.notificationService.error('Error','Error al procesar la imagen');
+      this.notificationService.error('Error', 'Error al procesar la imagen');
     }
   }
 
@@ -128,7 +128,7 @@ export class CrearActividadPresenter implements OnDestroy {
 
   removeWord(index: number, currentWords: PalabraCompleta[]): void {
     if (!this.wordManager.canRemoveWord(currentWords.length)) {
-      this.notificationService.error('Error','Debe haber al menos una palabra.');
+      this.notificationService.error('Error', 'Debe haber al menos una palabra.');
       return;
     }
     this.stateService.removePalabraCompleta(index);
@@ -143,7 +143,7 @@ export class CrearActividadPresenter implements OnDestroy {
     this.stateService.setSubmitting(true)
 
     try {
-      const moduleIdFijo = "14387d49-4a1a-47d1-aa47-5a700db3493a"; 
+      const moduleIdFijo = "14387d49-4a1a-47d1-aa47-5a700db3493a";
 
       const result = await this.activityService.createActivity(
         titulo,
@@ -154,8 +154,8 @@ export class CrearActividadPresenter implements OnDestroy {
       this.stateService.setSubmitting(false);
       if (result.success) {
         this.notificationService.activityCreatedSuccess(
-            titulo, 
-            () => this.navigateToActivities()
+          titulo,
+          () => this.navigateToActivities()
         );
         this.stateService.resetState();
       } else {
@@ -192,7 +192,7 @@ export class CrearActividadPresenter implements OnDestroy {
   }
 
   private navigateToActivities(): void {
-    this.router.navigate(['/teacher/activities']); 
+    this.router.navigate(['/teacher/activities']);
   }
 
   private scrollToBottom(): void {

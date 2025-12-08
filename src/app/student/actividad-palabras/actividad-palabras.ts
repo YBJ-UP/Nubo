@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { ActividadFormService, PalabraCompleta } from '../../services/actividades/actividad.service';
+import { ActividadFormService } from '../../services/actividades/actividad.service';
+import { PalabraCompleta } from '../../interfaces/actividad-completa';
 import { ActividadNavigationService } from '../../services/actividades/actividad.navegation.service';
 import { ProgressService, ProgressData } from '../../services/utilidades/progress.service';
 import { AudioPlaybackService } from '../../services/audio/audio-playback.service';
@@ -117,7 +118,6 @@ export class ActividadPalabras implements OnInit, OnDestroy {
     const idStr = String(id);
 
     try {
-      // Intentar cargar directamente por ID
       let apiResult = await this.studentActivityService.getActivityById(idStr);
 
       if (apiResult.success && apiResult.activity) {
@@ -311,7 +311,6 @@ export class ActividadPalabras implements OnInit, OnDestroy {
     const totalPalabras = this.stateService.getTotalPalabras();
 
     if (this.actividadCompletada()) {
-      // Si ya está completada, confirmamos que quiere salir a la galería
       this.notificationService.confirm(
         'Actividad Completada',
         '¿Deseas volver al menú de actividades?',
@@ -350,8 +349,6 @@ export class ActividadPalabras implements OnInit, OnDestroy {
 
   onNoticePrimary(): void {
     if (this._primaryCb) this._primaryCb();
-    // No ocultamos manualmente, el servicio maneja lógica si es necesario, pero usualmente 
-    // el usuario espera que al hacer click se cierre.
     this.notificationService.hide();
   }
 
