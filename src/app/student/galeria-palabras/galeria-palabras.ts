@@ -6,10 +6,11 @@ import { PalabraData } from '../../interfaces/PalabraData';
 import { FloatingMessage } from '../../shared/floating-message/floating-message';
 import { StudentActivityService } from '../../services/actividades/student-activity.service';
 import { NavigationService } from '../../services/navigation/navigation-service';
-import {TeacherActivityService}from"../../services/actividades/CRUD ActivityTeacher/teacher-activity.service";
+import { TeacherActivityService } from "../../services/actividades/CRUD ActivityTeacher/teacher-activity.service";
 
 @Component({
   selector: 'app-galeria-palabras',
+  standalone: true,
   imports: [CardsPalabras, CommonModule, RouterModule, FloatingMessage],
   templateUrl: './galeria-palabras.html',
   styleUrls: ['./galeria-palabras.css']
@@ -18,7 +19,7 @@ export class GaleriaPalabras implements OnInit {
   palabras: PalabraData[] = [];
   modoEliminar: boolean = false;
   actividadesSeleccionadas: Set<string | number> = new Set();
-  esProfesor: boolean = false; 
+  esProfesor: boolean = false;
 
   notice = {
     visible: false,
@@ -35,7 +36,7 @@ export class GaleriaPalabras implements OnInit {
     private router: Router,
     private studentActivityService: StudentActivityService,
     private nav: NavigationService,
-    private teacherService: TeacherActivityService, 
+    private teacherService: TeacherActivityService,
   ) { this.nav.currentView.set("Palabras") }
 
   ngOnInit(): void {
@@ -57,7 +58,7 @@ export class GaleriaPalabras implements OnInit {
             id: act.id,
             titulo: act.title,
             colorFondo: this.obtenerColorAleatorio(),
-            imagenUrl: act.thumbnail || '/crds.webp', 
+            imagenUrl: act.thumbnail || '/crds.webp',
             enlace: `/cognitive-abilities/actividad/${act.id}`
           }));
           return;
@@ -73,11 +74,11 @@ export class GaleriaPalabras implements OnInit {
 
       if (response.success && response.activities) {
         this.palabras = response.activities.map(activity => ({
-          id: activity.id, 
+          id: activity.id,
           titulo: activity.title,
           imagenUrl: activity.thumbnail || '/crds.webp',
           colorFondo: this.obtenerColorAleatorio(),
-          enlace: `/teacher/cognitive-abilities/actividad/${activity.id}` 
+          enlace: `/teacher/cognitive-abilities/actividad/${activity.id}`
         }));
       } else {
         this.palabras = [];
@@ -123,7 +124,7 @@ export class GaleriaPalabras implements OnInit {
     const mensaje = `¿Estás seguro de que deseas eliminar ${cantidad} actividad(es)?\nEsta acción eliminará permanentemente la actividad y sus contenidos.`;
 
     this.showNotice('Confirmar Eliminación', mensaje, 'info', 'Eliminar', 'Cancelar', async () => {
-      
+
       const idsAEliminar = Array.from(this.actividadesSeleccionadas);
       let eliminadasCount = 0;
       let erroresCount = 0;
@@ -142,7 +143,7 @@ export class GaleriaPalabras implements OnInit {
         this.actividadesSeleccionadas.clear();
         this.modoEliminar = false;
         await this.cargarActividades();
-        
+
         if (erroresCount === 0) {
           this.showNotice('Éxito', `${eliminadasCount} actividad(es) eliminada(s) correctamente.`, 'success');
         } else {
