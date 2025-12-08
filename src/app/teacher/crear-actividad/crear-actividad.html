@@ -118,7 +118,7 @@
               
               <label class="form-label-small" style="margin-top: 20px;">Sílabas:</label>
               <div class="palabras-list">
-                <div *ngFor="let silaba of palabraCompleta.silabas; let i = index" class="palabra-row">
+                <div *ngFor="let silaba of palabraCompleta.syllables; let i = index" class="palabra-row">
                   <input 
                     type="text" 
                     [(ngModel)]="silaba.texto"
@@ -137,7 +137,7 @@
                     class="btn-delete-circle"
                     (click)="eliminarSilaba(palabraIndex, silaba.id)"
                     type="button"
-                    [disabled]="palabraCompleta.silabas.length === 1"
+                    [disabled]="palabraCompleta.syllables.length === 1"
                   >
                     <i class="fa-solid fa-trash-can"></i>
                   </button>

@@ -216,11 +216,11 @@ export class ActividadPalabras implements OnInit, OnDestroy {
     }
   }
 
-  async reproducirSecuenciaSilabas(): Promise<void> {
+  async reproducirSecuenciasyllables(): Promise<void> {
     if (!this.palabraActual) return;
     
     try {
-      await this.audioService.reproducirSecuenciaSilabas(this.palabraActual);
+      await this.audioService.reproducirSecuenciasyllables(this.palabraActual);
     } catch (error) {
       console.error('Error al reproducir secuencia de sílabas:', error);
       const msg = (error && (error as any).message) ? (error as any).message : String(error || 'Error al reproducir la secuencia de sílabas');

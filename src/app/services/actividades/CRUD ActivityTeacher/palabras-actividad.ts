@@ -2,24 +2,34 @@
 
 
 import { Injectable } from '@angular/core';
-import { ApiConfigService } from '../utilidades/api-config.service';
-import { TeacherAuthService } from '../authentication/teacher-auth.service';
-import { PalabraCompleta } from '../actividades/actividad.service';
+import { HttpClient } from '@angular/common/http';
+import { TeacherAuthService } from '../../authentication/teacher-auth.service';
+import { PalabraCompleta } from '../actividad.service';
+import { ApiConfigService } from '../../utilidades/api-config.service';
 
 interface ActivityDTO {
   teacherId: string;
-  moduleId: string;      
-  title: string;         
-  thumbnail: string;     
-  isPublic: boolean;     
+  moduleId: string;
+  title: string;
+  thumbnail: string;
+  isPublic: boolean;
   content: ContentItemDTO[];
 }
 
 interface ContentItemDTO {
-  texto: string;         
+  texto: string;
   imagenUrl: string;
-  silabas: string[];
-  grafemas: string[];   
+  syllables: string[];
+  graphemes: string[];
+}
+
+export interface ActivityResponse {
+  id: string;
+  teacherId: string;
+  moduleId: string;
+  title: string;
+  thumbnail: string;
+  isPublic: boolean;
 }
 
 @Injectable({
@@ -30,13 +40,13 @@ export class ActivityService {
   constructor(
     private apiConfig: ApiConfigService,
     private teacherAuth: TeacherAuthService
-  ) {}
+  ) { }
 
   async createActivity(
-    titulo: string, 
-    imagenPortada: string, 
+    titulo: string,
+    imagenPortada: string,
     palabrasCompletas: PalabraCompleta[],
-    moduleId: string = "3fa85f64-5717-4562-b3fc-2c963f66afa6" // ID TEMPORAL O POR DEFECTO
+    moduleId: string = "3fa85f64-5717-4562-b3fc-2c963f66afa6"
   ): Promise<{ success: boolean; message: string }> {
 
     const teacher = this.teacherAuth.getCurrentTeacher();
@@ -48,22 +58,22 @@ export class ActivityService {
 
     const requestBody: ActivityDTO = {
       teacherId: teacher.id,
-      moduleId: moduleId, 
+      moduleId: moduleId,
       title: titulo,
       thumbnail: imagenPortada,
-      isPublic: true, 
+      isPublic: true,
       content: palabrasCompletas.map(p => ({
-        texto: p.palabra,     
+        texto: p.palabra,
         imagenUrl: p.imagenUrl,
-        silabas: p.silabas.map(s => s.texto), 
-        grafemas: p.fonemas.map(f => f.texto) 
+        syllables: p.syllables.map(s => s.texto),
+        graphemes: p.fonemas.map(f => f.texto)
       }))
     };
 
     console.log("Enviando DTO:", requestBody);
     try {
       const response = await fetch(
-        this.apiConfig.getEndpoint(`/teacher/${teacher.id}/activities`),
+        this.apiConfig.getFullUrl(`/teacher/${teacher.id}/activities`),
         {
           method: 'POST',
           headers: {
@@ -76,9 +86,9 @@ export class ActivityService {
 
       if (!response.ok) {
         const error = await response.json();
-        return { 
-          success: false, 
-          message: error.error || error.message || 'Error al guardar la actividad' 
+        return {
+          success: false,
+          message: error.error || error.message || 'Error al guardar la actividad'
         };
       }
 
@@ -88,5 +98,8 @@ export class ActivityService {
       console.error('Error creando actividad:', error);
       return { success: false, message: 'Error de conexión con el servidor' };
     }
+
   }
+
+
 }

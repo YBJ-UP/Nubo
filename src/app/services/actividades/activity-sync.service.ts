@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PalabraCompleta } from './actividad.service';
-import { TeacherActivityService } from './teacher-activity.service';
+import { TeacherActivityService } from './CRUD ActivityTeacher/teacher-activity.service';
 import { ActividadFormService } from './actividad.service';
 
 export interface SyncResult {
@@ -78,12 +78,7 @@ export class ActivitySyncService {
   ): Promise<any> {
     const contentForApi = this.teacherActivityService.convertContentToApiFormat(palabrasCompletas);
 
-    return await this.teacherActivityService.createCognitiveActivity({
-      title: titulo,
-      thumbnail: imagenPortada,
-      isPublic: true,
-      content: contentForApi
-    });
+  
   }
 
   async saveLocalOnly(

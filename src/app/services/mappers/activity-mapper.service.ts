@@ -11,8 +11,8 @@ export class ActivityMapperService {
     return localContent.map(item => ({
       texto: item.palabra || item.texto,
       imagenUrl: item.imagenUrl,
-      silabas: item.silabas?.map((s: any) => s.texto) || [],
-      grafemas: item.fonemas?.map((f: any) => f.texto) || []
+      syllables: item.syllables?.map((s: any) => s.texto) || [],
+      graphemes: item.fonemas?.map((f: any) => f.texto) || []
     }));
   }
 
@@ -25,8 +25,8 @@ export class ActivityMapperService {
         id: index + 1,
         palabra: item.texto,
         imagenUrl: item.imagenUrl,
-        silabas: item.silabas.map((s: string, i: number) => ({ id: i, texto: s })),
-        fonemas: item.grafemas.map((g: string, i: number) => ({ id: i, texto: g }))
+        syllables: item.syllables.map((s: string, i: number) => ({ id: i, texto: s })),
+        fonemas: item.graphemes.map((g: string, i: number) => ({ id: i, texto: g }))
       })),
       fechaCreacion: new Date(),
       sincronizado: true

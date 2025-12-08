@@ -1,5 +1,5 @@
 export interface PalabraData {
-  id: number;
+  id: string | number;
   titulo: string;
   colorFondo: string; 
   imagenUrl?: string; 

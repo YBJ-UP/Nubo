@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiConfigService } from '../utilidades/api-config.service';
+import { HttpClient } from '@angular/common/http';
 import { TeacherAuthResponse } from '../../interfaces/teacher/auth/teacher-auth-response';
 import { ApiAuthResponse } from '../../interfaces/teacher/auth/api-auth-response';
 import { TeacherLoginRequest } from '../../interfaces/teacher/auth/teacher-login-request';
@@ -15,44 +16,34 @@ export class TeacherAuthService {
   private readonly TEACHER_KEY = 'currentTeacher';
   private readonly TOKEN_KEY = 'teacher_token';
 
-  constructor(private apiConfig: ApiConfigService) {
+  constructor(private apiConfig: ApiConfigService, private http: HttpClient) {
     this.loadFromStorage();
   }
 
-  async register(data: TeacherSignupRequest): Promise<{ 
-    success: boolean; 
-    message: string; 
+  async register(data: TeacherSignupRequest): Promise<{
+    success: boolean;
+    message: string;
     teacher?: TeacherAuthResponse;
     token?: string;
   }> {
     try {
-      const response = await fetch(
-        this.apiConfig.getEndpoint('/teacher/register'), 
-        {
-          method: 'POST',
-          headers: this.apiConfig.getCommonHeaders(),
-          body: JSON.stringify(data)
-        }
-      );
+      const result = await this.http.post<ApiAuthResponse>(
+        this.apiConfig.getFullUrl('/teacher/register'),
+        data,
+        { headers: this.apiConfig.getHttpHeaders() }
+      ).toPromise();
 
-      if (!response.ok) {
-        const error = await response.json();
-        return {
-          success: false,
-          message: error.error || 'Error al registrar maestro'
-        };
+      if (!result) {
+        return { success: false, message: 'Respuesta vacía del servidor' };
       }
-
-      const result: ApiAuthResponse = await response.json();
-
       this.saveToStorage(result.teacher, result.token);
-      
       return {
         success: true,
         message: 'Maestro registrado exitosamente',
         teacher: result.teacher,
         token: result.token
       };
+
     } catch (error) {
       console.error('Error en registro:', error);
       return {
@@ -62,39 +53,30 @@ export class TeacherAuthService {
     }
   }
 
-  async login(credentials: TeacherLoginRequest): Promise<{ 
-    success: boolean; 
-    message: string; 
+  async login(credentials: TeacherLoginRequest): Promise<{
+    success: boolean;
+    message: string;
     teacher?: TeacherAuthResponse;
     token?: string;
   }> {
     try {
-      const response = await fetch(
-        this.apiConfig.getEndpoint('/teacher/login'), 
-        {
-          method: 'POST',
-          headers: this.apiConfig.getCommonHeaders(),
-          body: JSON.stringify(credentials)
-        }
-      );
+      const result = await this.http.post<ApiAuthResponse>(
+        this.apiConfig.getFullUrl('/teacher/login'),
+        credentials,
+        { headers: this.apiConfig.getHttpHeaders() }
+      ).toPromise();
 
-      if (!response.ok) {
-        const error = await response.json();
-        return {
-          success: false,
-          message: error.error || 'Credenciales inválidas'
-        };
+      if (!result) {
+        return { success: false, message: 'Respuesta vacía del servidor' };
       }
-
-      const result: ApiAuthResponse = await response.json();
       this.saveToStorage(result.teacher, result.token);
-      
       return {
         success: true,
         message: 'Inicio de sesión exitoso',
         teacher: result.teacher,
         token: result.token
       };
+
     } catch (error) {
       console.error('Error en login:', error);
       return {
@@ -129,10 +111,10 @@ export class TeacherAuthService {
   private saveToStorage(teacher: TeacherAuthResponse, token: string): void {
     this.currentTeacher = teacher;
     this.authToken = token;
-    
+
     localStorage.setItem(this.TOKEN_KEY, token);
     localStorage.setItem(this.TEACHER_KEY, JSON.stringify(teacher));
-    
+
     console.log('Maestro guardado:', teacher);
   }
 
@@ -140,7 +122,7 @@ export class TeacherAuthService {
     try {
       const teacherData = localStorage.getItem(this.TEACHER_KEY);
       const token = localStorage.getItem(this.TOKEN_KEY);
-      
+
       if (teacherData && token) {
         this.currentTeacher = JSON.parse(teacherData);
         this.authToken = token;
@@ -159,7 +141,7 @@ export class TeacherAuthService {
 
   isTokenExpired(): boolean {
     if (!this.authToken) return true;
-    
+
     try {
       const payload = JSON.parse(atob(this.authToken.split('.')[1]));
       const exp = payload.exp * 1000;

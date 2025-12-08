@@ -32,7 +32,7 @@ export class TeacherStudentService {
       };
 
       const response = await fetch(
-        this.apiConfig.getEndpoint(`/teacher/${teacher.id}/students`),
+        this.apiConfig.getFullUrl(`/teacher/${teacher.id}/students`),
         {
           method: 'POST',
           headers: this.apiConfig.getAuthHeaders(),
@@ -77,7 +77,7 @@ export class TeacherStudentService {
 
     try {
       const response = await fetch(
-        this.apiConfig.getEndpoint(`/teacher/${teacher.id}/students`),
+        this.apiConfig.getFullUrl(`/teacher/${teacher.id}/students`),
         {
           method: 'GET',
           headers: this.apiConfig.getAuthHeaders()
@@ -122,7 +122,7 @@ export class TeacherStudentService {
 
     try {
       const response = await fetch(
-        this.apiConfig.getEndpoint(`/teacher/${teacher.id}/students/${studentId}`),
+        this.apiConfig.getFullUrl(`/teacher/${teacher.id}/students/${studentId}`),
         {
           method: 'DELETE',
           headers: this.apiConfig.getAuthHeaders()

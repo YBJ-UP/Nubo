@@ -14,7 +14,7 @@ export interface PalabraCompleta {
   id: number;
   palabra: string;
   imagenUrl: string;
-  silabas: Palabra[];
+  syllables: Palabra[];
   fonemas: Fonema[];
 }
 
@@ -59,7 +59,7 @@ export class ActividadFormService {
       id: this.generarId(),
       palabra: '',
       imagenUrl: this.IMAGEN_DEFAULT,
-      silabas: this.inicializarPalabras(3),
+      syllables: this.inicializarPalabras(3),
       fonemas: this.inicializarFonemas(4)
     };
   }
@@ -99,8 +99,8 @@ export class ActividadFormService {
       return 'La palabra principal no puede estar vacía';
     }
 
-    const silabasCompletas = palabraCompleta.silabas.filter(s => s.texto.trim());
-    if (silabasCompletas.length === 0) {
+    const syllablesCompletas = palabraCompleta.syllables.filter(s => s.texto.trim());
+    if (syllablesCompletas.length === 0) {
       return 'Debes agregar al menos una sílaba';
     }
 
@@ -185,7 +185,7 @@ export class ActividadFormService {
     return {
       ...palabra,
       palabra: palabra.palabra.trim(),
-      silabas: palabra.silabas.filter(s => s.texto.trim()),
+      syllables: palabra.syllables.filter(s => s.texto.trim()),
       fonemas: palabra.fonemas.filter(f => f.texto.trim())
     };
   }
@@ -309,7 +309,7 @@ export class ActividadFormService {
     return palabrasCompletas.some(p => 
       p.palabra.trim() !== '' ||
       p.imagenUrl !== this.IMAGEN_DEFAULT ||
-      p.silabas.some(s => s.texto.trim()) ||
+      p.syllables.some(s => s.texto.trim()) ||
       p.fonemas.some(f => f.texto.trim())
     );
   }

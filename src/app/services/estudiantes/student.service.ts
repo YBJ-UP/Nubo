@@ -31,7 +31,7 @@ export class StudentService {
 
     try {
 
-      const response = await fetch(this.api.getEndpoint(`/teacher/${this.teacher.currentTeacher?.id}/students`));
+      const response = await fetch(this.api.getFullUrl(`/teacher/${this.teacher.currentTeacher?.id}/students`));
 
         if (!response.ok){
           return {
@@ -78,7 +78,7 @@ export class StudentService {
     }
     try {
       const response = await fetch(
-        this.api.getEndpoint(`/teacher/${teacher.id}/students/${studentId}`),
+        this.api.getFullUrl(`/teacher/${teacher.id}/students/${studentId}`),
         {
           method: 'DELETE',
           headers: this.api.getAuthHeaders() 

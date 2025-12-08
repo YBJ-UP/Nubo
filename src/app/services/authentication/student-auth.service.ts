@@ -20,10 +20,10 @@ export class StudentAuthService {
   }> {
     try {
       const response = await fetch(
-        this.apiConfig.getEndpoint('/students/login'),
+        this.apiConfig.getFullUrl('/students/login'),
         {
           method: 'POST',
-          headers: this.apiConfig.getCommonHeaders(),
+          headers: this.apiConfig.getAuthHeaders(),
           body: JSON.stringify(credentials)
         }
       );

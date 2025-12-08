@@ -6,8 +6,8 @@ interface ActivityContent {
   id?: string;
   texto: string;
   imagenUrl: string;
-  silabas: string[];
-  grafemas: string[];
+  syllables: string[];
+  graphemes: string[];
 }
 
 interface ActivityResponse {
@@ -36,10 +36,10 @@ export class StudentActivityService {
   }> {
     try {
       const response = await fetch(
-        this.apiConfig.getEndpoint('/activities'),
+        this.apiConfig.getFullUrl('/activities'),
         {
           method: 'GET',
-          headers: this.apiConfig.getCommonHeaders()
+          headers: this.apiConfig.getAuthHeaders()
         }
       );
 
@@ -76,10 +76,10 @@ export class StudentActivityService {
   }> {
     try {
       const response = await fetch(
-        this.apiConfig.getEndpoint(`/activities/${activityId}`),
+        this.apiConfig.getFullUrl(`/activities/${activityId}`),
         {
           method: 'GET',
-          headers: this.apiConfig.getCommonHeaders()
+          headers: this.apiConfig.getAuthHeaders()
         }
       );
 
@@ -147,8 +147,8 @@ export class StudentActivityService {
         id: index + 1,
         palabra: item.texto,
         imagenUrl: item.imagenUrl,
-        silabas: item.silabas.map((s, i) => ({ id: i, texto: s })),
-        fonemas: item.grafemas.map((g, i) => ({ id: i, texto: g }))
+        syllables: item.syllables.map((s, i) => ({ id: i, texto: s })),
+        fonemas: item.graphemes.map((g, i) => ({ id: i, texto: g }))
       })),
       fechaCreacion: new Date()
     };

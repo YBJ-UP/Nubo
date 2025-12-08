@@ -103,7 +103,7 @@ export class AudioPlaybackService {
     }
   }
 
-  async reproducirSecuenciaSilabas(palabraCompleta: PalabraCompleta): Promise<void> {
+  async reproducirSecuenciasyllables(palabraCompleta: PalabraCompleta): Promise<void> {
     if (!palabraCompleta || this.audioState.isPlaying) {
       return;
     }
@@ -112,7 +112,7 @@ export class AudioPlaybackService {
       this.setPlaying(true);
       this.clearError();
 
-      for (const silaba of palabraCompleta.silabas) {
+      for (const silaba of palabraCompleta.syllables) {
         if (silaba.texto.trim()) {
           await this.speechService.speakSyllable(silaba.texto);
           await this.delay(300);

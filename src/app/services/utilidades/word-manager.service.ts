@@ -21,22 +21,22 @@ export class WordManagerService {
     const nuevaSilaba = this.actividadFormService.crearPalabraVacia();
     return {
       ...palabra,
-      silabas: [...palabra.silabas, nuevaSilaba]
+      syllables: [...palabra.syllables, nuevaSilaba]
     };
   }
 
   removeSyllable(palabra: PalabraCompleta, silabaId: number): WordOperationResult {
-    if (!this.actividadFormService.puedeEliminarItem(palabra.silabas.length)) {
+    if (!this.actividadFormService.puedeEliminarItem(palabra.syllables.length)) {
       return {
         success: false,
         message: 'Debe haber al menos una sílaba'
       };
     }
 
-    const silabas = palabra.silabas.filter(s => s.id !== silabaId);
+    const syllables = palabra.syllables.filter(s => s.id !== silabaId);
     return {
       success: true,
-      palabra: { ...palabra, silabas }
+      palabra: { ...palabra, syllables }
     };
   }
 

@@ -57,7 +57,7 @@
 
         <div class="syllable-buttons">
             <button 
-                *ngFor="let silaba of palabraActual.silabas; let i = index"
+                *ngFor="let silaba of palabraActual.syllables; let i = index"
                 class="syllable-button"
                 [ngClass]="obtenerColorSilaba(i)"
                 (click)="reproducirSilaba(silaba.texto)"
@@ -69,7 +69,7 @@
             
             <button 
                 class="audio-button sequence-button" 
-                (click)="reproducirSecuenciaSilabas()"
+                (click)="reproducirSecuenciasyllables()"
                 [disabled]="isPlayingAudio"
                 [title]="isPlayingAudio ? 'Reproduciendo...' : 'Reproducir todas las sílabas'"
             >

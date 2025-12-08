@@ -2,17 +2,13 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Subject } from 'rxjs';
-
-// IMPORTANTE: Asegúrate de importar el nuevo ActivityService
-import { ActivityService } from '../CrearActividad/palabras-actividad';
+import { ActivityService } from '../actividades/CRUD ActivityTeacher/palabras-actividad';
 import { ActivityValidationService } from '../actividades/activity-validation.service';
 import { ActivityFormStateService } from '../actividades/activity-form-state.service';
 import { NotificationService } from '../utilidades/notification.service';
 import { WordManagerService } from '../utilidades/word-manager.service';
 import { TeacherAuthService } from '../authentication/teacher-auth.service';
 import { PalabraCompleta } from '../actividades/actividad.service';
-
-
 
 @Injectable()
 export class CrearActividadPresenter implements OnDestroy {
