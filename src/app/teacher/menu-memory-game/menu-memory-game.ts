@@ -5,6 +5,7 @@ import { LoadingScreenOverlay } from '../../shared/loading-screen-overlay/loadin
 import { MemoryGame } from '../../interfaces/activity/memory-game';
 import { MemoryGameService } from '../../services/utilidades/memory-game.service';
 import { NavigationService } from '../../services/navigation/navigation-service';
+import { TeacherAuthService } from '../../services/authentication/teacher-auth.service';
 
 @Component({
   selector: 'app-menu-memory-game',
@@ -24,7 +25,8 @@ export class MenuMemoryGame implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private gameService: MemoryGameService,
-    private nav: NavigationService
+    private nav: NavigationService,
+    private teacher: TeacherAuthService
   ) {
     this.isTeacherView = this.router.url.startsWith('/teacher');
     this.nav.currentView.set("Memorama")
@@ -36,7 +38,7 @@ export class MenuMemoryGame implements OnInit, OnDestroy {
 
   async getGames(){
     this.isLoading = true
-    const gamesResponse = (await this.gameService.getGames()).games
+    const gamesResponse = (await this.gameService.getGames()).memoryGames
 
     if (gamesResponse){
       this.games = gamesResponse
@@ -55,7 +57,7 @@ export class MenuMemoryGame implements OnInit, OnDestroy {
     }
   }
 
-  createGame() {
+  async createGame() {
     const route = this.isTeacherView ? '/teacher/new-memory-game' : '/student/new-memory-game';
     this.router.navigate([route]);
   }
