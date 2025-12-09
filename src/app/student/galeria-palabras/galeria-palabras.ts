@@ -3,22 +3,25 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CardsPalabras } from "../../components/cards-palabras/cards-palabras";
 import { PalabraData } from '../../interfaces/PalabraData';
-import { ActividadFormService } from '../../services/actividades/actividad.service';
 import { FloatingMessage } from '../../shared/floating-message/floating-message';
 import { StudentActivityService } from '../../services/actividades/student-activity.service';
 import { NavigationService } from '../../services/navigation/navigation-service';
+import { TeacherActivityService } from "../../services/actividades/CRUD ActivityTeacher/teacher-activity.service";
+import { LoadingScreenOverlay } from '../../shared/loading-screen-overlay/loading-screen-overlay';
 
 @Component({
   selector: 'app-galeria-palabras',
-  imports: [CardsPalabras, CommonModule, RouterModule, FloatingMessage],
+  standalone: true,
+  imports: [CardsPalabras, CommonModule, RouterModule, FloatingMessage, LoadingScreenOverlay],
   templateUrl: './galeria-palabras.html',
   styleUrls: ['./galeria-palabras.css']
 })
 export class GaleriaPalabras implements OnInit {
   palabras: PalabraData[] = [];
   modoEliminar: boolean = false;
-  actividadesSeleccionadas: Set<number> = new Set();
-  esProfesor: boolean = false; 
+  actividadesSeleccionadas: Set<string | number> = new Set();
+  esProfesor: boolean = false;
+  isLoading = false
 
   notice = {
     visible: false,
@@ -33,9 +36,9 @@ export class GaleriaPalabras implements OnInit {
 
   constructor(
     private router: Router,
-    private actividadService: ActividadFormService,
     private studentActivityService: StudentActivityService,
-    private nav: NavigationService
+    private nav: NavigationService,
+    private teacherService: TeacherActivityService,
   ) { this.nav.currentView.set("Palabras") }
 
   ngOnInit(): void {
@@ -46,58 +49,51 @@ export class GaleriaPalabras implements OnInit {
   detectarRol(): void {
     const rutaActual = this.router.url;
     this.esProfesor = rutaActual.includes('/teacher');
-    console.log('👤 Es profesor:', this.esProfesor);
   }
 
   async cargarActividades(): Promise<void> {
+    this.isLoading = true
     if (!this.esProfesor) {
       try {
         const result = await this.studentActivityService.getCognitiveActivities();
-        
         if (result.success && result.activities) {
-          this.palabras = result.activities.map((act) => ({
-            id: Number(act.id),
-            titulo: act.title,
+          console.log(result.activities)
+          this.palabras = result.activities.map(act => ({
+            id: act.id,
+            titulo: act.titulo,
             colorFondo: this.obtenerColorAleatorio(),
-            imagenUrl: act.thumbnail || '/crds.webp', 
+            imagenUrl: act.thumbnail || '/crds.webp',
             enlace: `/cognitive-abilities/actividad/${act.id}`
           }));
-          
-          console.log('Actividades cargadas desde API:', this.palabras.length);
-          return;
-        } else {
-          console.warn('No se pudieron cargar actividades de la API:', result.message);
+          console.log(this.palabras)
         }
       } catch (error) {
-        console.error('Error al cargar actividades de la API:', error);
+        console.error('Error al cargar actividades de alumno:', error);
+      }finally{
+        this.isLoading = false
+        return;
       }
-      return;
     }
 
-    const actividadesGuardadas = this.actividadService.getAllActividades();
-    console.log('Actividades guardadas en localStorage:', actividadesGuardadas);
-    
-    if (actividadesGuardadas.length > 0) {
-      const actividadesConvertidas: PalabraData[] = actividadesGuardadas.map((act: any) => {
-        const idLimpio = Math.floor(Number(act.id));
-        console.log(`Convirtiendo actividad: "${act.titulo}" con ID: ${idLimpio}`);
-        
-        return {
-          id: idLimpio,
-          titulo: act.titulo,
+    try {
+      const response = await this.teacherService.getMyActivities();
+
+      if (response.success && response.activities) {
+        this.palabras = response.activities.map(activity => ({
+          id: activity.id,
+          titulo: activity.titulo,
+          imagenUrl: activity.thumbnail || '/crds.webp',
           colorFondo: this.obtenerColorAleatorio(),
-          imagenUrl: act.imagenPortada || act.palabrasCompletas?.[0]?.imagenUrl || '/crds.webp',
-          enlace: `/cognitive-abilities/actividad/${idLimpio}`
-        };
-      });
-
-      this.palabras = actividadesConvertidas;
-      console.log('Actividades manuales cargadas:', this.palabras.length);
-      console.log('IDs finales (manuales):', this.palabras.map(p => ({ id: p.id, titulo: p.titulo })));
-    } else {
-      console.log('No hay actividades guardadas manualmente; sin actividades para mostrar');
-      this.palabras = [];
+          enlace: `/teacher/cognitive-abilities/actividad/${activity.id}`
+        }));
+      } else {
+        this.palabras = [];
+      }
+    } catch (error) {
+      console.error('Error al cargar actividades:', error);
+      this.showNotice('Error', 'No se pudieron cargar las actividades.', 'error');
     }
+    this.isLoading = false
   }
 
   irACrearActividad(): void {
@@ -108,57 +104,60 @@ export class GaleriaPalabras implements OnInit {
 
   toggleModoEliminar(): void {
     if (!this.esProfesor) return;
-    
     this.modoEliminar = !this.modoEliminar;
-    
     if (!this.modoEliminar) {
       this.actividadesSeleccionadas.clear();
     }
-    
-    console.log("Modo eliminar:", this.modoEliminar);
   }
 
-  toggleSeleccion(id: number): void {
+  toggleSeleccion(id: string | number): void {
     if (!this.modoEliminar || !this.esProfesor) return;
 
     if (this.actividadesSeleccionadas.has(id)) {
       this.actividadesSeleccionadas.delete(id);
-      console.log('Deseleccionada actividad:', id);
     } else {
       this.actividadesSeleccionadas.add(id);
-      console.log('Seleccionada actividad:', id);
     }
   }
 
-  isSeleccionada(id: number): boolean {
+  isSeleccionada(id: string | number): boolean {
     return this.actividadesSeleccionadas.has(id);
   }
 
   eliminarSeleccionadas(): void {
-    if (!this.esProfesor || this.actividadesSeleccionadas.size === 0) {
-      return;
-    }
+    if (!this.esProfesor || this.actividadesSeleccionadas.size === 0) return;
+
     const cantidad = this.actividadesSeleccionadas.size;
-    const mensaje = `¿Estás seguro de que deseas eliminar ${cantidad} actividad(es)?\n\n` +
-                    `Esta acción no se puede deshacer.`;
+    const mensaje = `¿Estás seguro de que deseas eliminar ${cantidad} actividad(es)?\nEsta acción eliminará permanentemente la actividad y sus contenidos.`;
 
-    this.showNotice('Confirmar', mensaje, 'info', 'Eliminar', 'Cancelar', () => {
-      let eliminadas = 0;
-      this.actividadesSeleccionadas.forEach(id => {
-        if (this.actividadService.deleteActividad(id)) {
-          eliminadas++;
+    this.showNotice('Confirmar Eliminación', mensaje, 'info', 'Eliminar', 'Cancelar', async () => {
+
+      const idsAEliminar = Array.from(this.actividadesSeleccionadas);
+      let eliminadasCount = 0;
+      let erroresCount = 0;
+      for (const id of idsAEliminar) {
+        const idString = String(id);
+        const resultado = await this.teacherService.deleteActivity(idString);
+
+        if (resultado.success) {
+          eliminadasCount++;
+        } else {
+          console.error(`Error al eliminar actividad ${id}:`, resultado.message);
+          erroresCount++;
         }
-      });
-
-      if (eliminadas > 0) {
+      }
+      if (eliminadasCount > 0) {
         this.actividadesSeleccionadas.clear();
         this.modoEliminar = false;
-        this.cargarActividades();
-        console.log('Actividades eliminadas exitosamente:', eliminadas);
-        this.showNotice('Éxito', `${eliminadas} actividad(es) eliminada(s) exitosamente`, 'success', 'Aceptar');
+        await this.cargarActividades();
+
+        if (erroresCount === 0) {
+          this.showNotice('Éxito', `${eliminadasCount} actividad(es) eliminada(s) correctamente.`, 'success');
+        } else {
+          this.showNotice('Aviso', `Se eliminaron ${eliminadasCount} actividades, pero ${erroresCount} fallaron.`, 'info');
+        }
       } else {
-        console.error('Error al eliminar actividades');
-        this.showNotice('Error', 'Error al eliminar las actividades', 'error', 'Aceptar');
+        this.showNotice('Error', 'No se pudieron eliminar las actividades seleccionadas.', 'error');
       }
     });
   }

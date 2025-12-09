@@ -1,23 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ApiConfigService } from '../utilidades/api-config.service';
 import { StudentAuthService } from '../authentication/student-auth.service';
+import { ActivityResponse } from '../../interfaces/activity/activity-response';
 
 interface ActivityContent {
   id?: string;
   texto: string;
   imagenUrl: string;
-  silabas: string[];
-  grafemas: string[];
-}
-
-interface ActivityResponse {
-  id: string;
-  teacherId: string;
-  moduleId: string;
-  title: string;
-  thumbnail: string;
-  isPublic: boolean;
-  content: ActivityContent[];
+  syllables: string[];
+  graphemes: string[];
 }
 
 @Injectable({
@@ -36,10 +27,10 @@ export class StudentActivityService {
   }> {
     try {
       const response = await fetch(
-        this.apiConfig.getEndpoint('/activities'),
+        this.apiConfig.getFullUrl('/activities'),
         {
           method: 'GET',
-          headers: this.apiConfig.getCommonHeaders()
+          headers: this.apiConfig.getAuthHeaders()
         }
       );
 
@@ -53,7 +44,7 @@ export class StudentActivityService {
       }
 
       const activities: ActivityResponse[] = await response.json();
-
+      console.log(activities)
       return {
         success: true,
         message: 'Actividades obtenidas exitosamente',
@@ -76,10 +67,10 @@ export class StudentActivityService {
   }> {
     try {
       const response = await fetch(
-        this.apiConfig.getEndpoint(`/activities/${activityId}`),
+        this.apiConfig.getFullUrl(`/activities/${activityId}`),
         {
           method: 'GET',
-          headers: this.apiConfig.getCommonHeaders()
+          headers: this.apiConfig.getAuthHeaders()
         }
       );
 
@@ -122,7 +113,7 @@ export class StudentActivityService {
       const filteredActivities = result.activities.filter(
         activity => activity.moduleId === moduleId
       );
-
+      console.log(filteredActivities)
       return {
         success: true,
         message: 'Actividades filtradas exitosamente',
@@ -141,14 +132,14 @@ export class StudentActivityService {
   convertToLocalFormat(activity: ActivityResponse): any {
     return {
       id: activity.id,
-      titulo: activity.title,
+      titulo: activity.titulo,
       imagenPortada: activity.thumbnail,
       palabrasCompletas: activity.content.map((item, index) => ({
         id: index + 1,
         palabra: item.texto,
         imagenUrl: item.imagenUrl,
-        silabas: item.silabas.map((s, i) => ({ id: i, texto: s })),
-        fonemas: item.grafemas.map((g, i) => ({ id: i, texto: g }))
+        syllables: item.syllables.map((s, i) => ({ id: i, texto: s })),
+        fonemas: item.graphemes.map((g, i) => ({ id: i, texto: g }))
       })),
       fechaCreacion: new Date()
     };

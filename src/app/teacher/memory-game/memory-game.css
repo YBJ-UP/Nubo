@@ -183,6 +183,7 @@
     backface-visibility: hidden;
     border-radius: 14px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background: white;

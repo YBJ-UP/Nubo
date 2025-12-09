@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 
+
 export interface NotificationConfig {
   title: string;
   message: string;

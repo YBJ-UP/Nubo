@@ -3,60 +3,49 @@
         <a routerLink="../" class="back-link">
             <i class="fa-solid fa-arrow-left"></i>
         </a>
-        <div class="action-buttons" *ngIf="esProfesor">
+        @if (esProfesor) {
+        <div class="action-buttons">
             <button class="btn-create" (click)="irACrearActividad()">
                 <i class="fa-solid fa-circle-plus"></i>
                 Crear
             </button>
-            <button 
-                class="btn-delete" 
-                [class.active]="modoEliminar" 
-                (click)="toggleModoEliminar()"
-            >
+            <button class="btn-delete" [class.active]="modoEliminar" (click)="toggleModoEliminar()">
                 <i class="fa-solid fa-trash"></i>
                 {{ modoEliminar ? 'Cancelar' : 'Eliminar' }}
             </button>
-            <button 
-                *ngIf="modoEliminar && actividadesSeleccionadas.size > 0"
-                class="btn-confirmar-eliminar"
-                (click)="eliminarSeleccionadas()"
-            >
+            @if (modoEliminar && actividadesSeleccionadas.size > 0) {
+            <button class="btn-confirmar-eliminar" (click)="eliminarSeleccionadas()">
                 <i class="fa-solid fa-check"></i>
                 Eliminar ({{ actividadesSeleccionadas.size }})
             </button>
+            }
         </div>
+        }
     </div>
 
-        <app-floating-message
-            [visible]="notice.visible"
-            [title]="notice.title"
-            [message]="notice.message"
-            [type]="notice.type"
-            [primaryLabel]="notice.primaryLabel"
-            [secondaryLabel]="notice.secondaryLabel"
-            (primary)="onNoticePrimary()"
-            (secondary)="onNoticeSecondary()"
-            (closed)="notice.visible = false"
-        ></app-floating-message>
+    <app-floating-message [visible]="notice.visible" [title]="notice.title" [message]="notice.message"
+        [type]="notice.type" [primaryLabel]="notice.primaryLabel" [secondaryLabel]="notice.secondaryLabel"
+        (primary)="onNoticePrimary()" (secondary)="onNoticeSecondary()"
+        (closed)="notice.visible = false"></app-floating-message>
 
     <div class="grid-cards">
-        <div 
-            *ngFor="let palabra of palabras"
-            class="card-wrapper"
-            [class.selectable]="modoEliminar"
-            [class.selected]="isSeleccionada(palabra.id)"
-            (click)="modoEliminar ? toggleSeleccion(palabra.id) : null"
-        >
-            <div class="selection-overlay" *ngIf="modoEliminar">
+        @for (palabra of palabras; track palabra.id) {
+        <div class="card-wrapper" [class.selectable]="modoEliminar" [class.selected]="isSeleccionada(palabra.id)"
+            (click)="modoEliminar ? toggleSeleccion(palabra.id) : null">
+            @if (modoEliminar) {
+            <div class="selection-overlay">
                 <div class="checkbox-container">
                     <i class="fa-solid" [ngClass]="isSeleccionada(palabra.id) ? 'fa-check-circle' : 'fa-circle'"></i>
                 </div>
             </div>
-            <app-cards-palabras 
-                [palabraData]="palabra"
-                [class.disabled]="modoEliminar"
-            >
+            }
+            <app-cards-palabras [palabraData]="palabra" [class.disabled]="modoEliminar">
             </app-cards-palabras>
         </div>
+        }
     </div>
 </div>
+
+@if (isLoading) {
+    <app-loading-screen-overlay />
+}

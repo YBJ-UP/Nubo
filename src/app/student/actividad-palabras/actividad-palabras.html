@@ -1,26 +1,34 @@
-<div class="actividad-container" *ngIf="palabraActual">
+<div class="loading-container" *ngIf="isLoading">
+    <div class="spinner">
+        <i class="fa-solid fa-spinner fa-spin fa-3x"></i>
+    </div>
+    <p>Cargando actividad...</p>
+</div>
+
+<div class="actividad-container" *ngIf="!isLoading && palabraActual">
     <header class="actividad-header">
         <button (click)="regresar()" class="back-button">
             <i class="fa-solid fa-arrow-left"></i>
         </button>
         <div class="progress-area">
             <span class="progress-title">
-                Progreso: {{progressData?.palabraActual || 0}} de {{progressData?.totalPalabras || 0}} palabras 
+                Progreso: {{progressData?.palabraActual || 0}} de {{progressData?.totalPalabras || 0}} palabras
                 ({{progreso.toFixed(0)}}%)
             </span>
             <div class="progress-bar-container">
-                <div 
-                    class="progress-bar-fill" 
-                    [style.width.%]="progreso"
-                    [style.background-color]="obtenerColorBarra()"
-                >
-                </div> 
+                <div class="progress-bar-fill" [style.width.%]="progreso"
+                    [style.background-color]="obtenerColorBarra()">
+                </div>
             </div>
             <span class="progress-subtitle" *ngIf="progressData">
-                Completadas: {{progressData.palabrasCompletadas}} | 
+                Completadas: {{progressData.palabrasCompletadas}} |
                 Faltantes: {{progressData.palabrasFaltantes}}
             </span>
         </div>
+        <button class="finish-button" *ngIf="actividadCompletada()" (click)="terminarActividad()">
+            <i class="fa-solid fa-check-circle"></i>
+            <span>Terminar</span>
+        </button>
     </header>
 
     <div class="audio-error-message" *ngIf="audioError">
@@ -30,80 +38,52 @@
 
     <div class="content-area">
         <div class="image-navigation">
-            <button 
-                class="nav-arrow left-arrow"
-                (click)="anteriorPalabra()"
-                [disabled]="!puedeIrAnterior()"
+            <button class="nav-arrow left-arrow" (click)="anteriorPalabra()" [disabled]="!puedeIrAnterior()"
                 [class.disabled]="!puedeIrAnterior()"
-                [title]="puedeIrAnterior() ? 'Palabra anterior' : 'Esta es la primera palabra'"
-            >
+                [title]="puedeIrAnterior() ? 'Palabra anterior' : 'Esta es la primera palabra'">
                 <i class="fa-solid fa-arrow-left"></i>
             </button>
-            
+
             <div class="main-image-card" [style.background-color]="mainCardBgColor">
                 <img [src]="palabraActual.imagenUrl" [alt]="palabraActual.palabra" class="main-image">
             </div>
-            
-            <button 
-                class="nav-arrow right-arrow"
-                (click)="siguientePalabra()"
-                [disabled]="!puedeirSiguiente()"
+
+            <button class="nav-arrow right-arrow" (click)="siguientePalabra()" [disabled]="!puedeirSiguiente()"
                 [class.disabled]="!puedeirSiguiente()"
-                [title]="puedeirSiguiente() ? 'Siguiente palabra' : 'Esta es la última palabra'"
-            >
+                [title]="puedeirSiguiente() ? 'Siguiente palabra' : 'Esta es la última palabra'">
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
 
         <div class="syllable-buttons">
-            <button 
-                *ngFor="let silaba of palabraActual.silabas; let i = index"
-                class="syllable-button"
-                [ngClass]="obtenerColorSilaba(i)"
-                (click)="reproducirSilaba(silaba.texto)"
-                [disabled]="isPlayingAudio"
-                [title]="'Reproducir: ' + silaba.texto"
-            >
+            <button *ngFor="let silaba of palabraActual.syllables; let i = index" class="syllable-button"
+                [ngClass]="obtenerColorSilaba(i)" (click)="reproducirSilaba(silaba.texto)" [disabled]="isPlayingAudio"
+                [title]="'Reproducir: ' + silaba.texto">
                 {{silaba.texto}}
             </button>
-            
-            <button 
-                class="audio-button sequence-button" 
-                (click)="reproducirSecuenciaSilabas()"
+
+            <button class="audio-button sequence-button" (click)="reproducirSecuenciasyllables()"
                 [disabled]="isPlayingAudio"
-                [title]="isPlayingAudio ? 'Reproduciendo...' : 'Reproducir todas las sílabas'"
-            >
+                [title]="isPlayingAudio ? 'Reproduciendo...' : 'Reproducir todas las sílabas'">
                 <i class="fa-solid" [ngClass]="isPlayingAudio ? 'fa-spinner fa-spin' : 'fa-play'"></i>
             </button>
 
-            <button 
-                class="audio-button stop-button" 
-                (click)="detenerAudio()"
-                *ngIf="isPlayingAudio"
-                title="Detener audio"
-            >
+            <button class="audio-button stop-button" (click)="detenerAudio()" *ngIf="isPlayingAudio"
+                title="Detener audio">
                 <i class="fa-solid fa-stop"></i>
             </button>
         </div>
 
         <div class="phoneme-buttons">
-            <button 
-                *ngFor="let fonema of palabraActual.fonemas; let i = index"
-                class="phoneme-button"
-                [ngClass]="obtenerColorFonema(i)"
-                (click)="reproducirFonema(fonema.texto)"
-                [disabled]="isPlayingAudio"
-                [title]="'Reproducir fonema: ' + fonema.texto"
-            >
+            <button *ngFor="let fonema of palabraActual.fonemas; let i = index" class="phoneme-button"
+                [ngClass]="obtenerColorFonema(i)" (click)="reproducirFonema(fonema.texto)" [disabled]="isPlayingAudio"
+                [title]="'Reproducir fonema: ' + fonema.texto">
                 {{fonema.texto}}
             </button>
 
-            <button 
-                class="phoneme-button audio-phoneme-button" 
-                (click)="reproducirSecuenciaFonemas()"
+            <button class="phoneme-button audio-phoneme-button" (click)="reproducirSecuenciaFonemas()"
                 [disabled]="isPlayingAudio"
-                [title]="isPlayingAudio ? 'Reproduciendo...' : 'Reproducir todos los fonemas'"
-            >
+                [title]="isPlayingAudio ? 'Reproduciendo...' : 'Reproducir todos los fonemas'">
                 <i class="fa-solid" [ngClass]="isPlayingAudio ? 'fa-spinner fa-spin' : 'fa-volume-high'"></i>
             </button>
         </div>
@@ -111,16 +91,16 @@
         <div class="palabra-info">
             <div class="palabra-completa-container">
                 <p class="palabra-completa">{{palabraActual.palabra}}</p>
-                <button 
-                    class="palabra-audio-button"
-                    (click)="reproducirPalabraCompleta()"
-                    [disabled]="isPlayingAudio"
-                    [title]="'Reproducir palabra: ' + palabraActual.palabra"
-                >
+                <button class="palabra-audio-button" (click)="reproducirPalabraCompleta()" [disabled]="isPlayingAudio"
+                    [title]="'Reproducir palabra: ' + palabraActual.palabra">
                     <i class="fa-solid" [ngClass]="isPlayingAudio ? 'fa-spinner fa-spin' : 'fa-volume-high'"></i>
                 </button>
             </div>
-            
+            <button class="play-word-button" (click)="playWord(palabraActual.palabra)" [disabled]="isPlayingAudio"
+                title="Reproducir palabra completa">
+                <i class="fa-solid" [ngClass]="isPlayingAudio ? 'fa-spinner fa-spin' : 'fa-volume-high'"></i>
+            </button>
+
             <p class="palabra-contador">
                 {{obtenerTextoProgreso()}}
                 <span *ngIf="actividadCompletada()" class="completado-badge">
@@ -131,21 +111,13 @@
     </div>
 </div>
 
-<div class="no-data" *ngIf="!palabraActual">
+<div class="no-data" *ngIf="!isLoading && !palabraActual">
     <i class="fa-solid fa-exclamation-triangle"></i>
     <h3>No hay datos disponibles</h3>
     <p>No se pudo cargar la actividad</p>
     <button (click)="regresar()" class="btn-regresar">Volver</button>
 </div>
 
-<app-floating-message
-    [visible]="notice.visible"
-    [title]="notice.title"
-    [message]="notice.message"
-    [type]="notice.type"
-    [primaryLabel]="notice.primaryLabel"
-    [secondaryLabel]="notice.secondaryLabel"
-    (primary)="onNoticePrimary()"
-    (secondary)="onNoticeSecondary()"
-    (closed)="notice.visible = false"
-></app-floating-message>
+<app-floating-message [visible]="notice.visible" [title]="notice.title" [message]="notice.message" [type]="notice.type"
+    [primaryLabel]="notice.primaryLabel" [secondaryLabel]="notice.secondaryLabel" (primary)="onNoticePrimary()"
+    (secondary)="onNoticeSecondary()" (closed)="notice.visible = false"></app-floating-message>

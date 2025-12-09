@@ -1,26 +1,108 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-
-export interface MemoryGame {
-  title: string;
-  cards: any[];
-  color: string;
-}
+import { ApiConfigService } from './api-config.service';
+import { MemoryGame } from '../../interfaces/activity/memory-game';
+import { ActivityResponse } from '../../interfaces/activity/activity-response';
+import { CreateActivityRequest } from '../../interfaces/activity/create-activity-request';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MemoryGameService {
   private games: MemoryGame[] = [];
+  selectedGame: MemoryGame = {title:'', cards:[], color:''}
   private gamesSubject = new BehaviorSubject<MemoryGame[]>([]);
 
-  constructor() {
+  constructor(private api: ApiConfigService ) {
     console.log('MemoryGameService iniciado');
   }
 
-  getGames() {
-    console.log('Obteniendo juegos:', this.games);
-    return this.gamesSubject.asObservable();
+  async getGames(): Promise<{ succes: boolean, message: string, memoryGames?: MemoryGame[] }> {
+    console.log('Obteniendo juegos...');
+    try{
+      const response = await fetch( this.api.getFullUrl('/activities') )
+
+      if (!response.ok){
+        const error = await response.json()
+        return {
+          succes: false,
+          message: error,
+          memoryGames: []
+        }
+      }
+
+      const mGames: ActivityResponse[] = await response.json()
+
+      const games: MemoryGame[] = mGames
+        .filter(activity => activity.moduleId == '6297d1fa-a65f-43cd-8070-5960bd89215b')
+        .map(activity => {
+          
+          const cards = activity.content.map(contentItem => ({
+            imagenUrl: contentItem.imagenUrl,
+            texto: contentItem.texto
+          }));
+
+          return {
+            title: activity.titulo,
+            cards: cards,
+            color: this.getRandomColor()
+          } as MemoryGame;
+        });
+
+        console.log(games)
+
+      return {
+        succes: true,
+        message: 'Memoramas conseguidos con éxito',
+        memoryGames: games
+      }
+
+    }catch(e){
+      return{
+        succes: false,
+        message: `Error al traer los memoramas: ${e}`,
+        memoryGames: []
+      }
+    }
+  }
+
+  async createGame(game: MemoryGame, teacherId: string): Promise<{ success: boolean, message: string }>{
+    const moduleId = '6297d1fa-a65f-43cd-8070-5960bd89215b'
+
+    const activity: CreateActivityRequest = {
+      teacherId: teacherId,
+      moduleId: moduleId,
+      title: game.title,
+      thumbnail: game.cards[0].imagenUrl,
+      isPublic: true,
+      content: game.cards.map(card => ({ texto:card.texto, imagenUrl: card.imagenUrl, syllables:[], graphemes:[] }))
+    }
+
+    try {
+      const response = await fetch(this.api.getFullUrl(`/teacher/${teacherId}/activities`), {
+        method: 'POST',
+        headers: this.api.getAuthHeaders(),
+        body: JSON.stringify(activity)})
+
+      if (!response.ok){
+        const error = await response.json()
+        return {
+          success: false,
+          message: error
+        }
+      }
+
+      return{
+        success: true,
+        message: "Actividad creada con éxito"
+      }
+
+    } catch (error) {
+      return {
+        success: false,
+        message: `Error al crear la actividad: ${error}`
+      }
+    }
   }
 
   addGame(game: MemoryGame) {
@@ -38,5 +120,10 @@ export class MemoryGameService {
   clearGames() {
     this.games = [];
     this.gamesSubject.next([]);
+  }
+
+  private getRandomColor(): string {
+    const colors = ['#EF9A9A', '#90CAF9', '#FFE082', '#A5D6A7', '#CE93D8', '#80DEEA'];
+    return colors[Math.floor(Math.random() * colors.length)];
   }
 }

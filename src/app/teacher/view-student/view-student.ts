@@ -75,37 +75,41 @@ export class ViewStudent implements OnInit {
     this.location.back();
   }
 
-  /*eliminarAlumno(): void {
+  //evento
+  eliminarAlumno(): void {
     if (!this.student) return;
 
     const title = `Eliminar alumno`;
-    const message = `¿Estás seguro de que deseas eliminar a ${this.student.name}?\n\nEsta acción eliminará:\n• El perfil del estudiante\n• Todo su progreso\n• Sus datos de acceso\n\nEsta acción no se puede deshacer.`;
-
+    const message = `¿Estás seguro de que deseas eliminar a ${this.student.nombre}?\n\nEsta acción eliminará:\n• El perfil del estudiante\n• Todo su progreso\n• Sus datos de acceso\n\nEsta acción no se puede deshacer.`;
     this.showFloating(
       title,
       message,
       'info',
       'Eliminar',
       'Cancelar',
-      () => {
-        // primary: proceed to delete
+      async () => { 
         if (!this.student) return;
-        const eliminado = this.studentService.deleteStudent(this.student.id);
-        if (eliminado) {
+        this.isLoading = true;
+        const resultado = await this.studentService.deleteStudent(this.student.id);
+        this.isLoading = false; 
+
+        if (resultado.success) {
           this.showFloating(
             'Eliminado',
-            `${this.student!.name} ha sido eliminado exitosamente.`,
-            'success'
+            `${this.student!.nombre} ha sido eliminado exitosamente.`,
+            'success',
+            'Aceptar',
+            undefined,
+            () => {
+              this.router.navigate(['/teacher/students']); 
+            }
           );
-          this.router.navigate(['/teacher/students']);
         } else {
-          this.showFloating('Error', 'Error al eliminar el estudiante. Intenta de nuevo.', 'error');
+          this.showFloating('Error', resultado.message, 'error');
         }
-      },
-      () => {
       }
     );
-  }*/
+  }
 
   async ingresarComoAlumno() {
     if (!this.student) return;

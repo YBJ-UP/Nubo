@@ -21,10 +21,10 @@
 
 .back-link {
     text-decoration: none;
-    color: var(--color-font); 
+    color: var(--color-font);
     font-size: 1.9rem;
     padding: 10px;
-    display: inline-flex; 
+    display: inline-flex;
     align-items: center;
     cursor: pointer;
     transition: transform 0.2s ease;
@@ -36,7 +36,7 @@
 
 .action-buttons {
     display: flex;
-    gap: 20px; /* match menu-memory-game spacing */
+    gap: 20px;
     align-items: center;
 }
 
@@ -98,9 +98,11 @@
 }
 
 @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.05);
     }
@@ -112,9 +114,9 @@
     font-size: 1.1rem;
 }
 
-.grid-cards { 
+.grid-cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); 
+    grid-template-columns: repeat(3, 1fr);
     gap: 100px;
     max-width: 1200px;
     margin: 0 auto;
@@ -209,7 +211,6 @@
     }
 }
 
-/* Styles copied/adapted from menu-memory-game to match ludic area buttons */
 .btn-create {
     background: #90CAF9;
     border: none;
@@ -223,12 +224,12 @@
     font-size: 1rem;
     font-weight: 600;
     transition: all 0.2s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-create:hover {
     transform: scale(1.05);
-    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 
 .btn-delete {
@@ -244,12 +245,12 @@
     font-size: 1rem;
     font-weight: 600;
     transition: all 0.2s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-delete:hover {
     transform: scale(1.05);
-    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 
 .btn-delete:disabled {

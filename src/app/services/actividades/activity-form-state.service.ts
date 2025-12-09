@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { PalabraCompleta } from './actividad.service';
+import { PalabraCompleta } from '../../interfaces/actividad-completa';
 
 export interface ActivityFormState {
   titulo: string;

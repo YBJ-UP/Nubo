@@ -3,31 +3,22 @@
     <button (click)="regresar()" class="back-button">
       <i class="fa-solid fa-arrow-left"></i>
     </button>
-    
+
     <div class="content-card">
       <div class="card-header">
         <h2>Actividad Cognitiva</h2>
       </div>
-      
+
       <div class="portada-section">
         <label class="form-label">Imagen de portada de la actividad</label>
         <div class="portada-upload-container">
-          <button 
-            class="portada-upload-button"
-            (click)="triggerPortadaInput()"
-            type="button"
-          >
+          <button class="portada-upload-button" (click)="triggerPortadaInput()" type="button">
             <i class="fa-solid fa-image"></i>
           </button>
-          <input 
-            type="file" 
-            id="portadaInput"
-            (change)="onPortadaSeleccionada($event)"
-            accept="image/*"
-            style="display: none;"
-          />
+          <input type="file" id="portadaInput" (change)="onPortadaSeleccionada($event)" accept="image/*"
+            style="display: none;" />
           <span class="upload-label-portada">Subir imagen de portada</span>
-          
+
           <div class="portada-preview" *ngIf="imagenPortada && imagenPortada !== 'perfil.jpg'">
             <img [src]="imagenPortada" alt="Vista previa portada">
           </div>
@@ -42,7 +33,7 @@
           ¿Cómo crear una actividad?
           <i class="fa-solid" [ngClass]="mostrarInstrucciones ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
         </button>
-        
+
         <div class="instrucciones-content" *ngIf="mostrarInstrucciones">
           <ol>
             <li>Sube una imagen de portada para tu actividad</li>
@@ -58,18 +49,13 @@
 
       <div class="form-group">
         <label class="form-label">Título de la actividad</label>
-        <input 
-          type="text" 
-          [(ngModel)]="titulo"
-          placeholder="Ej: Animales acuáticos"
-          class="form-input"
-        />
+        <input type="text" [(ngModel)]="titulo" placeholder="Ej: Animales acuáticos" class="form-input" />
       </div>
 
       <hr class="divider">
 
       <div *ngFor="let palabraCompleta of palabrasCompletas; let palabraIndex = index" class="palabra-completa-section">
-        
+
         <div class="palabra-header" *ngIf="palabraIndex > 0">
           <h3>Palabra {{palabraIndex + 1}}</h3>
           <button class="btn-eliminar-palabra" (click)="eliminarPalabraCompleta(palabraIndex)" type="button">
@@ -86,59 +72,33 @@
 
           <div class="palabras-container">
             <div class="imagen-upload-container">
-              <button 
-                class="imagen-upload-button"
-                (click)="triggerImagenInput(palabraIndex)"
-                type="button"
-              >
+              <button class="imagen-upload-button" (click)="triggerImagenInput(palabraIndex)" type="button">
                 <i class="fa-solid fa-arrow-up-from-bracket"></i>
               </button>
-              <input 
-                type="file" 
-                [id]="'imagenInput-' + palabraIndex"
-                (change)="onImagenSeleccionada($event, palabraIndex)"
-                accept="image/*"
-                style="display: none;"
-              />
+              <input type="file" [id]="'imagenInput-' + palabraIndex"
+                (change)="onImagenSeleccionada($event, palabraIndex)" accept="image/*" style="display: none;" />
               <span class="upload-label">Subir imagen</span>
-              
-              <div class="imagen-preview" *ngIf="palabraCompleta.imagenUrl && palabraCompleta.imagenUrl !== 'perfil.jpg'">
+
+              <div class="imagen-preview"
+                *ngIf="palabraCompleta.imagenUrl && palabraCompleta.imagenUrl !== 'perfil.jpg'">
                 <img [src]="palabraCompleta.imagenUrl" alt="Vista previa">
               </div>
             </div>
 
             <div class="palabra-principal-container">
               <label class="form-label-small">Palabra principal:</label>
-              <input 
-                type="text" 
-                [(ngModel)]="palabraCompleta.palabra"
-                placeholder="Escribe la palabra completa"
-                class="palabra-principal-input"
-              />
-              
+              <input type="text" [(ngModel)]="palabraCompleta.palabra" placeholder="Escribe la palabra completa"
+                class="palabra-principal-input" />
+
               <label class="form-label-small" style="margin-top: 20px;">Sílabas:</label>
               <div class="palabras-list">
-                <div *ngFor="let silaba of palabraCompleta.silabas; let i = index" class="palabra-row">
-                  <input 
-                    type="text" 
-                    [(ngModel)]="silaba.texto"
-                    placeholder="sí"
-                    class="palabra-input"
-                    maxlength="3"
-                  />
-                  <button 
-                    class="btn-add-circle"
-                    (click)="agregarSilaba(palabraIndex)"
-                    type="button"
-                  >
+                <div *ngFor="let silaba of palabraCompleta.syllables; let i = index" class="palabra-row">
+                  <input type="text" [(ngModel)]="silaba.texto" placeholder="sí" class="palabra-input" maxlength="3" />
+                  <button class="btn-add-circle" (click)="agregarSilaba(palabraIndex)" type="button">
                     <i class="fa-solid fa-circle-plus"></i>
                   </button>
-                  <button 
-                    class="btn-delete-circle"
-                    (click)="eliminarSilaba(palabraIndex, silaba.id)"
-                    type="button"
-                    [disabled]="palabraCompleta.silabas.length === 1"
-                  >
+                  <button class="btn-delete-circle" (click)="eliminarSilaba(palabraIndex, silaba.id)" type="button"
+                    [disabled]="palabraCompleta.syllables.length === 1">
                     <i class="fa-solid fa-trash-can"></i>
                   </button>
                 </div>
@@ -148,32 +108,18 @@
 
           <div class="fonemas-section">
             <label class="form-label fonemas-title">Fonemas</label>
-            
+
             <div class="fonemas-container">
               <div *ngFor="let fonema of palabraCompleta.fonemas; let i = index" class="fonema-item">
                 <div class="fonema-circle">
-                  <input 
-                    type="text" 
-                    [(ngModel)]="fonema.texto"
-                    placeholder="/"
-                    class="fonema-input"
-                    maxlength="2"
-                  />
+                  <input type="text" [(ngModel)]="fonema.texto" placeholder="/" class="fonema-input" maxlength="2" />
                 </div>
                 <div class="fonema-actions">
-                  <button 
-                    class="btn-add-fonema"
-                    (click)="agregarFonema(palabraIndex)"
-                    type="button"
-                  >
+                  <button class="btn-add-fonema" (click)="agregarFonema(palabraIndex)" type="button">
                     <i class="fa-solid fa-circle-plus"></i>
                   </button>
-                  <button 
-                    class="btn-delete-fonema"
-                    (click)="eliminarFonema(palabraIndex, fonema.id)"
-                    type="button"
-                    [disabled]="palabraCompleta.fonemas.length === 1"
-                  >
+                  <button class="btn-delete-fonema" (click)="eliminarFonema(palabraIndex, fonema.id)" type="button"
+                    [disabled]="palabraCompleta.fonemas.length === 1">
                     <i class="fa-solid fa-trash-can"></i>
                   </button>
                 </div>
@@ -200,14 +146,6 @@
   </div>
 </div>
 
-<app-floating-message
-  [visible]="notice.visible"
-  [title]="notice.title"
-  [message]="notice.message"
-  [type]="notice.type"
-  [primaryLabel]="notice.primaryLabel"
-  [secondaryLabel]="notice.secondaryLabel"
-  (primary)="onNoticePrimary()"
-  (secondary)="onNoticeSecondary()"
-  (closed)="notice.visible = false"
-></app-floating-message>
+<app-floating-message [visible]="notice.visible" [title]="notice.title" [message]="notice.message" [type]="notice.type"
+  [primaryLabel]="notice.primaryLabel" [secondaryLabel]="notice.secondaryLabel" (primary)="onNoticePrimary()"
+  (secondary)="onNoticeSecondary()" (closed)="notice.visible = false"></app-floating-message>

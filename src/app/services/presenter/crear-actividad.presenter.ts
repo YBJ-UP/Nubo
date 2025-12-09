@@ -2,15 +2,13 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Subject } from 'rxjs';
-
-import { PalabraCompleta } from '../actividades/actividad.service';
+import { ActivityService } from '../actividades/CRUD ActivityTeacher/palabras-actividad';
 import { ActivityValidationService } from '../actividades/activity-validation.service';
 import { ActivityFormStateService } from '../actividades/activity-form-state.service';
-import { ActivitySyncService, SyncResult } from '../actividades/activity-sync.service';
 import { NotificationService } from '../utilidades/notification.service';
 import { WordManagerService } from '../utilidades/word-manager.service';
-import { ImageUploadService } from '../utilidades/image-upload.service';
 import { TeacherAuthService } from '../authentication/teacher-auth.service';
+import { PalabraCompleta } from '../../interfaces/actividad-completa';
 
 @Injectable()
 export class CrearActividadPresenter implements OnDestroy {
@@ -21,17 +19,15 @@ export class CrearActividadPresenter implements OnDestroy {
     private location: Location,
     private validationService: ActivityValidationService,
     private stateService: ActivityFormStateService,
-    private syncService: ActivitySyncService,
     private notificationService: NotificationService,
     private wordManager: WordManagerService,
-    private imageUpload: ImageUploadService,
-    private authService: TeacherAuthService
-  ) {}
+    private authService: TeacherAuthService,
+    private activityService: ActivityService
+  ) { }
 
   ngOnDestroy(): void {
     this.cleanup();
   }
-
 
   initialize(): void {
     this.checkAuth();
@@ -40,11 +36,8 @@ export class CrearActividadPresenter implements OnDestroy {
 
   private checkAuth(): void {
     if (!this.authService.isAuthenticated()) {
-      this.notificationService.error(
-        'Error',
-        'Debes iniciar sesión para crear actividades',
-        () => this.router.navigate(['/login'])
-      );
+      console.warn('Usuario no autenticado');
+      this.router.navigate(['/login']);
     }
   }
 
@@ -64,34 +57,42 @@ export class CrearActividadPresenter implements OnDestroy {
   }
 
   triggerPortadaUpload(): void {
-    this.imageUpload.triggerFileInput(this.imageUpload.getPortadaInputId());
+    const input = document.getElementById('portadaInput') as HTMLInputElement;
+    if (input) input.click();
   }
 
   async handlePortadaUpload(event: Event): Promise<void> {
-    const result = await this.imageUpload.uploadImage(event);
-    
-    if (result.success && result.imageUrl) {
-      this.stateService.updateImagenPortada(result.imageUrl);
-    } else {
-      this.notificationService.error('Error', result.message);
+    const file = this.getFileFromEvent(event);
+    if (!file) return;
+
+    try {
+      const base64 = await this.convertFileToBase64(file);
+      this.stateService.updateImagenPortada(base64);
+    } catch (error) {
+      console.error(error);
+      this.notificationService.error('Error', 'Error al procesar la imagen de portada');
     }
   }
 
   triggerWordImageUpload(index: number): void {
-    this.imageUpload.triggerFileInput(this.imageUpload.getWordImageInputId(index));
+    const input = document.getElementById(`imagenInput-${index}`) as HTMLInputElement;
+    if (input) input.click();
   }
 
   async handleWordImageUpload(event: Event, wordIndex: number, currentWords: PalabraCompleta[]): Promise<void> {
-    const result = await this.imageUpload.uploadImage(event);
-    
-    if (result.success && result.imageUrl) {
+    const file = this.getFileFromEvent(event);
+    if (!file) return;
+
+    try {
+      const base64 = await this.convertFileToBase64(file);
       const updatedWord = this.wordManager.updateWordImage(
         currentWords[wordIndex],
-        result.imageUrl
+        base64
       );
       this.stateService.updatePalabraAt(wordIndex, updatedWord);
-    } else {
-      this.notificationService.error('Error', result.message);
+    } catch (error) {
+      console.error(error);
+      this.notificationService.error('Error', 'Error al procesar la imagen');
     }
   }
 
@@ -100,29 +101,22 @@ export class CrearActividadPresenter implements OnDestroy {
     this.stateService.updatePalabraAt(wordIndex, updatedWord);
   }
 
-  removeSyllable(wordIndex: number, syllableId: number, currentWords: PalabraCompleta[]): void {
+  removeSyllable(wordIndex: number, syllableId: number | string, currentWords: PalabraCompleta[]): void {
     const result = this.wordManager.removeSyllable(currentWords[wordIndex], syllableId);
-    
     if (result.success && result.palabra) {
       this.stateService.updatePalabraAt(wordIndex, result.palabra);
-    } else {
-      this.notificationService.error('Error', result.message || 'Error al eliminar sílaba');
     }
   }
-
 
   addPhoneme(wordIndex: number, currentWords: PalabraCompleta[]): void {
     const updatedWord = this.wordManager.addPhoneme(currentWords[wordIndex]);
     this.stateService.updatePalabraAt(wordIndex, updatedWord);
   }
 
-  removePhoneme(wordIndex: number, phonemeId: number, currentWords: PalabraCompleta[]): void {
+  removePhoneme(wordIndex: number, phonemeId: number | string, currentWords: PalabraCompleta[]): void {
     const result = this.wordManager.removePhoneme(currentWords[wordIndex], phonemeId);
-    
     if (result.success && result.palabra) {
       this.stateService.updatePalabraAt(wordIndex, result.palabra);
-    } else {
-      this.notificationService.error('Error', result.message || 'Error al eliminar fonema');
     }
   }
 
@@ -134,16 +128,10 @@ export class CrearActividadPresenter implements OnDestroy {
 
   removeWord(index: number, currentWords: PalabraCompleta[]): void {
     if (!this.wordManager.canRemoveWord(currentWords.length)) {
-      this.notificationService.error(
-        'Error',
-        'Debe haber al menos una palabra en la actividad.'
-      );
+      this.notificationService.error('Error', 'Debe haber al menos una palabra.');
       return;
     }
-
-    this.notificationService.confirmDeleteWord(index + 1, () => {
-      this.stateService.removePalabraCompleta(index);
-    });
+    this.stateService.removePalabraCompleta(index);
   }
 
   async saveActivity(
@@ -151,18 +139,33 @@ export class CrearActividadPresenter implements OnDestroy {
     imagenPortada: string,
     palabrasCompletas: PalabraCompleta[]
   ): Promise<void> {
-    const validation = this.validateActivity(titulo, imagenPortada, palabrasCompletas);
-    if (!validation) return;
-
-    this.stateService.setSubmitting(true);
+    if (!this.validateActivity(titulo, imagenPortada, palabrasCompletas)) return;
+    this.stateService.setSubmitting(true)
 
     try {
-      const result = await this.syncService.saveActivity(titulo, imagenPortada, palabrasCompletas);
-      this.handleSaveResult(result, titulo);
-    } catch (error) {
-      this.handleSaveError(titulo, imagenPortada, palabrasCompletas);
-    } finally {
+      const moduleIdFijo = "14387d49-4a1a-47d1-aa47-5a700db3493a";
+
+      const result = await this.activityService.createActivity(
+        titulo,
+        imagenPortada,
+        palabrasCompletas,
+        moduleIdFijo
+      );
       this.stateService.setSubmitting(false);
+      if (result.success) {
+        this.notificationService.activityCreatedSuccess(
+          titulo,
+          () => this.navigateToActivities()
+        );
+        this.stateService.resetState();
+      } else {
+        this.notificationService.error('Error al guardar', result.message);
+      }
+
+    } catch (error) {
+      this.stateService.setSubmitting(false);
+      console.error(error);
+      this.notificationService.error('Error de conexión', 'No se pudo conectar con el servidor');
     }
   }
 
@@ -181,65 +184,15 @@ export class CrearActividadPresenter implements OnDestroy {
       this.notificationService.showValidationErrors(validation.errors);
       return false;
     }
-
     return true;
   }
 
-  private handleSaveResult(result: SyncResult, activityName: string): void {
-    if (result.success && result.syncedToApi) {
-      this.notificationService.activityCreatedSuccess(
-        activityName,
-        () => this.navigateToActivities()
-      );
-    } else if (result.success && result.savedLocally) {
-      this.notificationService.activitySavedLocallyWarning(
-        () => this.navigateToActivities()
-      );
-    } else {
-      this.notificationService.error('Error', result.message);
-    }
-  }
-
-  private handleSaveError(
-    titulo: string,
-    imagenPortada: string,
-    palabrasCompletas: PalabraCompleta[]
-  ): void {
-    this.notificationService.confirmSaveLocalOnly(
-      async () => {
-        const result = await this.syncService.saveLocalOnly(
-          titulo,
-          imagenPortada,
-          palabrasCompletas
-        );
-
-        if (result.success) {
-          this.notificationService.activitySavedLocallyWarning(
-            () => this.navigateToActivities()
-          );
-        } else {
-          this.notificationService.error('Error', result.message);
-        }
-      }
-    );
-  }
-
   goBack(titulo: string, imagenPortada: string, palabrasCompletas: PalabraCompleta[]): void {
-    const hasChanges = this.validationService.hasUnsavedChanges(
-      titulo,
-      imagenPortada,
-      palabrasCompletas
-    );
-
-    if (hasChanges) {
-      this.notificationService.confirmDiscardChanges(() => this.location.back());
-    } else {
-      this.location.back();
-    }
+    this.location.back();
   }
 
   private navigateToActivities(): void {
-    this.router.navigate(['teacher', 'cognitive-abilities']);
+    this.router.navigate(['/teacher/activities']);
   }
 
   private scrollToBottom(): void {
@@ -249,5 +202,22 @@ export class CrearActividadPresenter implements OnDestroy {
 
   getDestroySubject(): Subject<void> {
     return this.destroy$;
+  }
+
+  private getFileFromEvent(event: Event): File | null {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      return input.files[0];
+    }
+    return null;
+  }
+
+  private convertFileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
   }
 }

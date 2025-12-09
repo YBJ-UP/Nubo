@@ -1,38 +1,6 @@
 import { Injectable } from '@angular/core';
-
-export interface Palabra {
-  id: number;
-  texto: string;
-}
-
-export interface Fonema {
-  id: number;
-  texto: string;
-}
-
-export interface PalabraCompleta {
-  id: number;
-  palabra: string;
-  imagenUrl: string;
-  silabas: Palabra[];
-  fonemas: Fonema[];
-}
-
-export interface ActividadCompleta {
-  sincronizado: boolean;
-  id: number;
-  titulo: string;
-  imagenPortada: string;
-  palabrasCompletas: PalabraCompleta[];
-  fechaCreacion: Date;
-}
-
-interface ResultadoOperacion {
-  exito: boolean;
-  mensaje: string;
-  url?: string;
-  data?: any;
-}
+import { PalabraCompleta } from '../../interfaces/actividad-completa';
+import { ActividadCompleta, Fonema, Palabra, ResultadoOperacion } from '../../interfaces/actividad-completa';
 
 @Injectable({
   providedIn: 'root'
@@ -47,19 +15,19 @@ export class ActividadFormService {
   }
 
   crearPalabraVacia(): Palabra {
-    return { id: this.generarId(), texto: '' };
+    return { id: '', texto: '' };
   }
 
   crearFonemaVacio(): Fonema {
-    return { id: this.generarId(), texto: '' };
+    return { id: '', texto: '' };
   }
 
   crearPalabraCompleta(): PalabraCompleta {
     return {
-      id: this.generarId(),
+      id: '',
       palabra: '',
       imagenUrl: this.IMAGEN_DEFAULT,
-      silabas: this.inicializarPalabras(3),
+      syllables: this.inicializarPalabras(3),
       fonemas: this.inicializarFonemas(4)
     };
   }
@@ -99,8 +67,8 @@ export class ActividadFormService {
       return 'La palabra principal no puede estar vacía';
     }
 
-    const silabasCompletas = palabraCompleta.silabas.filter(s => s.texto.trim());
-    if (silabasCompletas.length === 0) {
+    const syllablesCompletas = palabraCompleta.syllables.filter(s => s.texto.trim());
+    if (syllablesCompletas.length === 0) {
       return 'Debes agregar al menos una sílaba';
     }
 
@@ -155,7 +123,7 @@ export class ActividadFormService {
 
     const file = input.files[0];
     const validacion = this.validarImagen(file);
-    
+
     if (!validacion.exito) {
       return validacion;
     }
@@ -185,7 +153,7 @@ export class ActividadFormService {
     return {
       ...palabra,
       palabra: palabra.palabra.trim(),
-      silabas: palabra.silabas.filter(s => s.texto.trim()),
+      syllables: palabra.syllables.filter(s => s.texto.trim()),
       fonemas: palabra.fonemas.filter(f => f.texto.trim())
     };
   }
@@ -196,9 +164,9 @@ export class ActividadFormService {
     palabrasCompletas: PalabraCompleta[]
   ): ActividadCompleta {
     return {
-      id: this.generarId(),
+      id: '',
       titulo: titulo.trim(),
-      imagenPortada: imagenPortada, 
+      imagenPortada: imagenPortada,
       palabrasCompletas: palabrasCompletas.map(p => this.limpiarPalabraCompleta(p)),
       fechaCreacion: new Date(),
       sincronizado: false // <--- CORRECCIÓN AQUÍ: Faltaba esta propiedad
@@ -209,10 +177,10 @@ export class ActividadFormService {
     try {
       const actividadesGuardadas = localStorage.getItem(this.STORAGE_KEY);
       const actividades = actividadesGuardadas ? JSON.parse(actividadesGuardadas) : [];
-      
+
       actividades.push(actividad);
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(actividades));
-      
+
       console.log('Actividad guardada exitosamente:', {
         id: actividad.id,
         titulo: actividad.titulo,
@@ -246,8 +214,8 @@ export class ActividadFormService {
     const guardado = this.guardarEnStorage(actividad);
 
     if (guardado) {
-      return { 
-        exito: true, 
+      return {
+        exito: true,
         mensaje: `Actividad creada exitosamente con ${palabrasCompletas.length} palabra(s)`,
         data: actividad
       };
@@ -264,31 +232,35 @@ export class ActividadFormService {
     return stored ? JSON.parse(stored) : [];
   }
 
-  getActividadById(id: number): ActividadCompleta | undefined {
+  getActividadById(id: string | number): ActividadCompleta | undefined {
     const actividades = this.getAllActividades();
-   
+
     let actividad = actividades.find(a => a.id === id);
-    
+
     if (!actividad) {
       actividad = actividades.find(a => String(a.id) === String(id));
     }
-    
-    if (!actividad) {
-      actividad = actividades.find(a => Math.floor(a.id) === Math.floor(id));
+
+    if (!actividad && !isNaN(Number(id))) {
+      const idNum = Number(id);
+      actividad = actividades.find(a => {
+        const aIdNum = Number(a.id);
+        return !isNaN(aIdNum) && Math.floor(aIdNum) === Math.floor(idNum);
+      });
     }
-    
+
     return actividad;
   }
 
-  deleteActividad(id: number): boolean {
+  deleteActividad(id: string | number): boolean {
     try {
       const actividades = this.getAllActividades();
       const filtered = actividades.filter(a => a.id !== id);
-      
+
       if (filtered.length === actividades.length) {
         return false;
       }
-      
+
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(filtered));
       console.log('Actividad eliminada:', id);
       return true;
@@ -305,11 +277,11 @@ export class ActividadFormService {
   ): boolean {
     if (titulo.trim() !== '') return true;
     if (imagenPortada !== this.IMAGEN_DEFAULT) return true;
-    
-    return palabrasCompletas.some(p => 
+
+    return palabrasCompletas.some(p =>
       p.palabra.trim() !== '' ||
       p.imagenUrl !== this.IMAGEN_DEFAULT ||
-      p.silabas.some(s => s.texto.trim()) ||
+      p.syllables.some(s => s.texto.trim()) ||
       p.fonemas.some(f => f.texto.trim())
     );
   }

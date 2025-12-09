@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ActividadFormService, PalabraCompleta, Palabra, Fonema } from '../actividades/actividad.service';
+import { ActividadFormService } from '../actividades/actividad.service';
+import { PalabraCompleta, Palabra, Fonema } from '../../interfaces/actividad-completa';
 
 export interface WordOperationResult {
   success: boolean;
@@ -11,7 +12,7 @@ export interface WordOperationResult {
   providedIn: 'root'
 })
 export class WordManagerService {
-  constructor(private actividadFormService: ActividadFormService) {}
+  constructor(private actividadFormService: ActividadFormService) { }
 
   createEmptyWord(): PalabraCompleta {
     return this.actividadFormService.crearPalabraCompleta();
@@ -21,22 +22,22 @@ export class WordManagerService {
     const nuevaSilaba = this.actividadFormService.crearPalabraVacia();
     return {
       ...palabra,
-      silabas: [...palabra.silabas, nuevaSilaba]
+      syllables: [...palabra.syllables, nuevaSilaba]
     };
   }
 
-  removeSyllable(palabra: PalabraCompleta, silabaId: number): WordOperationResult {
-    if (!this.actividadFormService.puedeEliminarItem(palabra.silabas.length)) {
+  removeSyllable(palabra: PalabraCompleta, silabaId: number | string): WordOperationResult {
+    if (!this.actividadFormService.puedeEliminarItem(palabra.syllables.length)) {
       return {
         success: false,
         message: 'Debe haber al menos una sílaba'
       };
     }
 
-    const silabas = palabra.silabas.filter(s => s.id !== silabaId);
+    const syllables = palabra.syllables.filter(s => s.id !== silabaId);
     return {
       success: true,
-      palabra: { ...palabra, silabas }
+      palabra: { ...palabra, syllables }
     };
   }
 
@@ -48,7 +49,7 @@ export class WordManagerService {
     };
   }
 
-  removePhoneme(palabra: PalabraCompleta, fonemaId: number): WordOperationResult {
+  removePhoneme(palabra: PalabraCompleta, fonemaId: number | string): WordOperationResult {
     if (!this.actividadFormService.puedeEliminarItem(palabra.fonemas.length)) {
       return {
         success: false,
@@ -66,7 +67,7 @@ export class WordManagerService {
   updateWordImage(palabra: PalabraCompleta, imageUrl: string): PalabraCompleta {
     return { ...palabra, imagenUrl: imageUrl };
   }
-  
+
   canRemoveWord(totalWords: number): boolean {
     return totalWords > 1;
   }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SpeechService } from '../audio/service.spech';
-import { PalabraCompleta } from '../actividades/actividad.service';
+import { PalabraCompleta } from '../../interfaces/actividad-completa';
 export interface AudioState {
   isPlaying: boolean;
   error: string | null;
@@ -15,7 +15,7 @@ export class AudioPlaybackService {
     error: null
   };
 
-  constructor(private speechService: SpeechService) {}
+  constructor(private speechService: SpeechService) { }
 
   getAudioState(): AudioState {
     return { ...this.audioState };
@@ -103,7 +103,7 @@ export class AudioPlaybackService {
     }
   }
 
-  async reproducirSecuenciaSilabas(palabraCompleta: PalabraCompleta): Promise<void> {
+  async reproducirSecuenciasyllables(palabraCompleta: PalabraCompleta): Promise<void> {
     if (!palabraCompleta || this.audioState.isPlaying) {
       return;
     }
@@ -112,7 +112,7 @@ export class AudioPlaybackService {
       this.setPlaying(true);
       this.clearError();
 
-      for (const silaba of palabraCompleta.silabas) {
+      for (const silaba of palabraCompleta.syllables) {
         if (silaba.texto.trim()) {
           await this.speechService.speakSyllable(silaba.texto);
           await this.delay(300);

@@ -6,7 +6,8 @@ import { MemoryGameService } from '../../services/utilidades/memory-game.service
 
 interface Card {
   id: number;
-  imageUrl: string;
+  imagenUrl: string;
+  texto: string
   isFlipped: boolean;
   isMatched: boolean;
 }
@@ -30,7 +31,6 @@ export class MemoryGame implements OnInit, AfterViewInit {
   totalPairs: number = 0;
   isTeacherView: boolean = false;
   progress: number = 0;
-  private readonly COLOR_PALETTE: string[] = ['#EBE3C0', '#A2D8F2', '#FFC364', '#D0CDEA', '#FFD0A7', '#D6DC82', '#D96073'];
   progressGradient: string = '';
   @ViewChild('boardWrap', { static: false }) boardWrap!: ElementRef<HTMLDivElement>;
   @ViewChild('progressWrap', { static: false }) progressWrap!: ElementRef<HTMLDivElement>;
@@ -61,6 +61,10 @@ export class MemoryGame implements OnInit, AfterViewInit {
     private gameService: MemoryGameService
   ) {
     this.isTeacherView = this.router.url.startsWith('/teacher');
+    this.gameTitle = gameService.selectedGame.title
+    this.cards = gameService.selectedGame.cards
+    console.log(this.cards)
+    this.initializeGame(this.cards)
   }
 
 
@@ -73,16 +77,7 @@ export class MemoryGame implements OnInit, AfterViewInit {
     const gameIndex = this.route.snapshot.queryParams['index'];
     
     if (gameIndex !== undefined) {
-      this.gameService.getGames().subscribe(games => {
-        const game = games[parseInt(gameIndex)];
-        if (game) {
-          this.gameTitle = game.title;
-          this.gameColor = game.color;
-          this.progressGradient = `linear-gradient(to top, ${this.COLOR_PALETTE.join(', ')})`;
-          this.initializeGame(game.cards);
-          setTimeout(() => this.adjustProgressPosition(), 50);
-        }
-      });
+      this.gameService.getGames()
     }
   }
 
@@ -91,10 +86,13 @@ export class MemoryGame implements OnInit, AfterViewInit {
     
     this.cards = this.shuffleArray(duplicatedCards).map((card, index) => ({
       id: index,
-      imageUrl: card.imageUrl,
+      texto: card.texto,
+      imagenUrl: card.imagenUrl,
       isFlipped: false,
       isMatched: false
     }));
+
+    console.log(this.cards)
 
     this.totalPairs = gameCards.length;
     this.moves = 0;
@@ -139,7 +137,7 @@ export class MemoryGame implements OnInit, AfterViewInit {
     this.isChecking = true;
     const [card1, card2] = this.flippedCards;
 
-    if (card1.imageUrl === card2.imageUrl) {
+    if (card1.imagenUrl === card2.imagenUrl) {
       card1.isMatched = true;
       card2.isMatched = true;
       this.matches++;
@@ -238,12 +236,7 @@ export class MemoryGame implements OnInit, AfterViewInit {
 
   nextGame() {
     const currentIndex = parseInt(this.route.snapshot.queryParams['index'] || '0');
-    this.gameService.getGames().subscribe(games => {
-      if (currentIndex < games.length - 1) {
-        const route = this.router.url.startsWith('/teacher') ? '/teacher/memory-game' : '/student/memory-game';
-        this.router.navigate([route], { queryParams: { index: currentIndex + 1 } });
-      }
-    });
+    this.gameService.getGames()
   }
 
   playAudio() {

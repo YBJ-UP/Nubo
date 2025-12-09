@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { PalabraCompleta } from './actividad.service';
-import { TeacherActivityService } from './teacher-activity.service';
+import { PalabraCompleta } from '../../interfaces/actividad-completa';
+import { TeacherActivityService } from './CRUD ActivityTeacher/teacher-activity.service';
 import { ActividadFormService } from './actividad.service';
 
 export interface SyncResult {
@@ -18,7 +18,7 @@ export class ActivitySyncService {
   constructor(
     private teacherActivityService: TeacherActivityService,
     private actividadFormService: ActividadFormService
-  ) {}
+  ) { }
 
   async saveActivity(
     titulo: string,
@@ -78,12 +78,7 @@ export class ActivitySyncService {
   ): Promise<any> {
     const contentForApi = this.teacherActivityService.convertContentToApiFormat(palabrasCompletas);
 
-    return await this.teacherActivityService.createCognitiveActivity({
-      title: titulo,
-      thumbnail: imagenPortada,
-      isPublic: true,
-      content: contentForApi
-    });
+
   }
 
   async saveLocalOnly(
@@ -113,7 +108,7 @@ export class ActivitySyncService {
   markAsSynced(activityId: number): void {
     const actividades = this.actividadFormService.getAllActividades();
     const index = actividades.findIndex((act: any) => act.id === activityId);
-    
+
     if (index !== -1) {
       actividades[index].sincronizado = true;
       localStorage.setItem('actividades_cognitivas', JSON.stringify(actividades));

@@ -20,10 +20,10 @@ export class StudentAuthService {
   }> {
     try {
       const response = await fetch(
-        this.apiConfig.getEndpoint('students/login'),
+        this.apiConfig.getFullUrl('/students/login'),
         {
           method: 'POST',
-          headers: this.apiConfig.getCommonHeaders(),
+          headers: this.apiConfig.getAuthHeaders(),
           body: JSON.stringify(credentials)
         }
       );
@@ -35,8 +35,9 @@ export class StudentAuthService {
           message: error.message || 'Credenciales inválidas',
         };
       }
-
+      
       const studentJSON = await response.json()
+      console.log('DATOS RECIBIDOS DEL LOGIN:', studentJSON);
       const student: StudentAuthResponse = {
         id: studentJSON.id,
         teacherId: studentJSON.teacherId,

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PalabraCompleta } from './actividad.service';
+import { PalabraCompleta } from '../../interfaces/actividad-completa';
 
 export interface ValidationResult {
   isValid: boolean;
@@ -52,8 +52,8 @@ export class ActivityValidationService {
       errors.push(`Palabra ${position}: La palabra principal no puede estar vacía`);
     }
 
-    const silabasCompletas = palabra.silabas.filter(s => s.texto.trim());
-    if (silabasCompletas.length === 0) {
+    const syllablesCompletas = palabra.syllables.filter(s => s.texto.trim());
+    if (syllablesCompletas.length === 0) {
       errors.push(`Palabra ${position}: Debes agregar al menos una sílaba`);
     }
 
@@ -80,7 +80,7 @@ export class ActivityValidationService {
     return palabrasCompletas.some(p =>
       p.palabra.trim() !== '' ||
       p.imagenUrl !== this.DEFAULT_IMAGE ||
-      p.silabas.some(s => s.texto.trim()) ||
+      p.syllables.some(s => s.texto.trim()) ||
       p.fonemas.some(f => f.texto.trim())
     );
   }
