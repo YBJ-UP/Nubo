@@ -73,16 +73,7 @@ export class MemoryGame implements OnInit, AfterViewInit {
     const gameIndex = this.route.snapshot.queryParams['index'];
     
     if (gameIndex !== undefined) {
-      this.gameService.getGames().subscribe(games => {
-        const game = games[parseInt(gameIndex)];
-        if (game) {
-          this.gameTitle = game.title;
-          this.gameColor = game.color;
-          this.progressGradient = `linear-gradient(to top, ${this.COLOR_PALETTE.join(', ')})`;
-          this.initializeGame(game.cards);
-          setTimeout(() => this.adjustProgressPosition(), 50);
-        }
-      });
+      this.gameService.getGames()
     }
   }
 
@@ -238,12 +229,7 @@ export class MemoryGame implements OnInit, AfterViewInit {
 
   nextGame() {
     const currentIndex = parseInt(this.route.snapshot.queryParams['index'] || '0');
-    this.gameService.getGames().subscribe(games => {
-      if (currentIndex < games.length - 1) {
-        const route = this.router.url.startsWith('/teacher') ? '/teacher/memory-game' : '/student/memory-game';
-        this.router.navigate([route], { queryParams: { index: currentIndex + 1 } });
-      }
-    });
+    this.gameService.getGames()
   }
 
   playAudio() {

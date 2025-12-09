@@ -1,13 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MemoryGameService, MemoryGame } from '../../services/utilidades/memory-game.service';
+import { LoadingScreenOverlay } from '../../shared/loading-screen-overlay/loading-screen-overlay';
+import { MemoryGame } from '../../interfaces/activity/memory-game';
+import { MemoryGameService } from '../../services/utilidades/memory-game.service';
 import { NavigationService } from '../../services/navigation/navigation-service';
 
 @Component({
   selector: 'app-menu-memory-game',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoadingScreenOverlay],
   templateUrl: './menu-memory-game.html',
   styleUrl: './menu-memory-game.css'
 })
@@ -17,6 +19,7 @@ export class MenuMemoryGame implements OnInit, OnDestroy {
   isTeacherView: boolean = false;
   isDeleting: boolean = false;
   selectedGameIndex: number = -1;
+  isLoading: boolean = false
 
   constructor(
     private router: Router,
@@ -28,13 +31,18 @@ export class MenuMemoryGame implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      this.gameService.getGames().subscribe(games => {
-      console.log('Juegos actualizados:', games);
-      this.games = games.map((g, idx) => ({
-        ...g,
-        color: g.color || this.COLOR_PALETTE[idx % this.COLOR_PALETTE.length]
-      }));
-    });
+    this.getGames()
+  }
+
+  async getGames(){
+    this.isLoading = true
+    const gamesResponse = (await this.gameService.getGames()).games
+
+    if (gamesResponse){
+      this.games = gamesResponse
+    }
+
+    this.isLoading = false
   }
 
   ngOnDestroy() {}
