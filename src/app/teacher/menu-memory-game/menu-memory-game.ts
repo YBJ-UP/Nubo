@@ -77,6 +77,7 @@ export class MenuMemoryGame implements OnInit, OnDestroy {
   }
 
   selectGame(index: number) {
+    console.log(`${this.isDeleting} ${this.selectedGameIndex}`)
     if (this.isDeleting) {
       this.selectedGameIndex = index;
     }
@@ -97,6 +98,7 @@ export class MenuMemoryGame implements OnInit, OnDestroy {
   }
 
   playGame(index: number) {
+    this.gameService.selectedGame = this.games[index]
     const route = this.isTeacherView ? '/teacher/memory-game' : '/student/memory-game';
     this.router.navigate([route], { queryParams: { index } });
   }

@@ -10,6 +10,7 @@ import { CreateActivityRequest } from '../../interfaces/activity/create-activity
 })
 export class MemoryGameService {
   private games: MemoryGame[] = [];
+  selectedGame: MemoryGame = {title:'', cards:[], color:''}
   private gamesSubject = new BehaviorSubject<MemoryGame[]>([]);
 
   constructor(private api: ApiConfigService ) {
@@ -44,12 +45,11 @@ export class MemoryGameService {
           return {
             title: activity.titulo,
             cards: cards,
-            color: '#FFFFFF'
+            color: this.getRandomColor()
           } as MemoryGame;
         });
 
-      console.log('Respuesta:')
-      console.log(games)
+        console.log(games)
 
       return {
         succes: true,
@@ -81,9 +81,7 @@ export class MemoryGameService {
     try {
       const response = await fetch(this.api.getFullUrl(`/teacher/${teacherId}/activities`), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: this.api.getAuthHeaders(),
         body: JSON.stringify(activity)})
 
       if (!response.ok){
@@ -122,5 +120,10 @@ export class MemoryGameService {
   clearGames() {
     this.games = [];
     this.gamesSubject.next([]);
+  }
+
+  private getRandomColor(): string {
+    const colors = ['#EF9A9A', '#90CAF9', '#FFE082', '#A5D6A7', '#CE93D8', '#80DEEA'];
+    return colors[Math.floor(Math.random() * colors.length)];
   }
 }

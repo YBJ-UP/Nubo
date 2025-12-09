@@ -19,7 +19,8 @@
                         [class.matched]="card.isMatched">
                         <div class="card-face card-front"></div>
                         <div class="card-face card-back" [class.highlighted]="card.isFlipped && !card.isMatched">
-                            <img [src]="card.imageUrl" [alt]="'Carta ' + card.id">
+                            <img [src]="card.imagenUrl" [alt]="'Carta ' + card.id">
+                            <p>{{card.texto}}</p>
                         </div>
                     </div>
                 </div>

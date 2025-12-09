@@ -28,7 +28,7 @@
             <div class="card-stack">
                 <div class="card front" [style.background-color]="game.color">
                     <div class="card-title">{{ game.title }}</div>
-                    <img *ngIf="game.cards[0]?.imageUrl" [src]="game.cards[0].imageUrl" 
+                    <img *ngIf="game.cards[0]?.imagenUrl" [src]="game.cards[0].imagenUrl" 
                         class="card-preview" alt="Primera tarjeta">
                     <button class="btn-start" *ngIf="!isDeleting" (click)="playGame(i); $event.stopPropagation()">Comenzar</button>
                 </div>
