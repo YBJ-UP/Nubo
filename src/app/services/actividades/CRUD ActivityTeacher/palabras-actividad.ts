@@ -8,7 +8,7 @@ import { ActivityResponse } from '../../../interfaces/activity/activity-response
 interface ActivityDTO {
   teacherId: string;
   moduleId: string;
-  titulo: string;
+  title: string;
   thumbnail: string;
   isPublic: boolean;
   content: ContentItemDTO[];
@@ -48,7 +48,7 @@ export class ActivityService {
     const requestBody: ActivityDTO = {
       teacherId: teacher.id,
       moduleId: moduleId,
-      titulo: titulo,
+      title: titulo,
       thumbnail: imagenPortada,
       isPublic: true,
       content: palabrasCompletas.map(p => ({
