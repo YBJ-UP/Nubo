@@ -1,13 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MemoryGameService, MemoryGame } from '../../services/utilidades/memory-game.service';
+import { LoadingScreenOverlay } from '../../shared/loading-screen-overlay/loading-screen-overlay';
+import { MemoryGame } from '../../interfaces/activity/memory-game';
+import { MemoryGameService } from '../../services/utilidades/memory-game.service';
 import { NavigationService } from '../../services/navigation/navigation-service';
+import { TeacherAuthService } from '../../services/authentication/teacher-auth.service';
 
 @Component({
   selector: 'app-menu-memory-game',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoadingScreenOverlay],
   templateUrl: './menu-memory-game.html',
   styleUrl: './menu-memory-game.css'
 })
@@ -17,24 +20,31 @@ export class MenuMemoryGame implements OnInit, OnDestroy {
   isTeacherView: boolean = false;
   isDeleting: boolean = false;
   selectedGameIndex: number = -1;
+  isLoading: boolean = false
 
   constructor(
     private router: Router,
     private gameService: MemoryGameService,
-    private nav: NavigationService
+    private nav: NavigationService,
+    private teacher: TeacherAuthService
   ) {
     this.isTeacherView = this.router.url.startsWith('/teacher');
     this.nav.currentView.set("Memorama")
   }
 
   ngOnInit() {
-      this.gameService.getGames().subscribe(games => {
-      console.log('Juegos actualizados:', games);
-      this.games = games.map((g, idx) => ({
-        ...g,
-        color: g.color || this.COLOR_PALETTE[idx % this.COLOR_PALETTE.length]
-      }));
-    });
+    this.getGames()
+  }
+
+  async getGames(){
+    this.isLoading = true
+    const gamesResponse = (await this.gameService.getGames()).memoryGames
+
+    if (gamesResponse){
+      this.games = gamesResponse
+    }
+
+    this.isLoading = false
   }
 
   ngOnDestroy() {}
@@ -47,7 +57,7 @@ export class MenuMemoryGame implements OnInit, OnDestroy {
     }
   }
 
-  createGame() {
+  async createGame() {
     const route = this.isTeacherView ? '/teacher/new-memory-game' : '/student/new-memory-game';
     this.router.navigate([route]);
   }
@@ -67,6 +77,7 @@ export class MenuMemoryGame implements OnInit, OnDestroy {
   }
 
   selectGame(index: number) {
+    console.log(`${this.isDeleting} ${this.selectedGameIndex}`)
     if (this.isDeleting) {
       this.selectedGameIndex = index;
     }
@@ -87,6 +98,7 @@ export class MenuMemoryGame implements OnInit, OnDestroy {
   }
 
   playGame(index: number) {
+    this.gameService.selectedGame = this.games[index]
     const route = this.isTeacherView ? '/teacher/memory-game' : '/student/memory-game';
     this.router.navigate([route], { queryParams: { index } });
   }

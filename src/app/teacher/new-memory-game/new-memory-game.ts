@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MemoryGameService, MemoryGame } from '../../services/utilidades/memory-game.service';
+import { MemoryGame } from '../../interfaces/activity/memory-game';
+import { MemoryGameService } from '../../services/utilidades/memory-game.service';
+import { TeacherAuthService } from '../../services/authentication/teacher-auth.service';
 
 interface MemoryCard {
   imageUrl: string;
@@ -26,7 +28,8 @@ export class NewMemoryGame {
 
   constructor(
     private router: Router,
-    private gameService: MemoryGameService
+    private gameService: MemoryGameService,
+    private teacher: TeacherAuthService
   ) {}
 
   triggerFileInput() {
@@ -41,24 +44,52 @@ export class NewMemoryGame {
     this.showMaxCardsModal = false;
   }
 
-  saveMemoryGame() {
+  async saveMemoryGame() {
     if (this.cards.length === 0) {
       console.error('No hay tarjetas para guardar');
+      return;
+    }
+
+    // Validar que tengamos los IDs necesarios
+    const teacherId = this.teacher.currentTeacher?.id;
+    
+    if (!teacherId) {
+      console.error('Falta información del profesor');
       return;
     }
 
     const titleInput = document.querySelector<HTMLInputElement>('.title-input');
     const title = titleInput?.value?.trim() || 'Sin título';
 
+    // 7. Mapear tus 'cards' locales al formato que el servicio pueda entender.
+    // El componente usa 'word', pero si el servicio espera 'texto', hacemos el cambio aquí.
+    const mappedCards = this.cards.map(c => ({
+      texto: c.word,      // Mapeamos word -> texto
+      imagenUrl: c.imageUrl,
+      // file: c.file // El servicio no usa el archivo raw, solo la URL (base64 o http)
+    }));
+
     const newGame: MemoryGame = {
       title: title,
-      cards: [...this.cards],
+      cards: mappedCards, 
       color: this.getRandomColor()
     };
     
-    this.gameService.addGame(newGame);
-    const route = this.router.url.startsWith('/teacher') ? '/teacher/menu-memory-game' : '/student/menu-memory-game';
-    this.router.navigate([route]);
+    // 8. Llamar al servicio
+    // Pasamos el objeto, el moduleId y el teacherId
+    const success = await this.gameService.createGame(newGame, teacherId);
+
+    if (success) {
+      // Opcional: Actualizar el estado local solo si la BD respondió bien
+      this.gameService.addGame(newGame); 
+      
+      console.log('Juego guardado exitosamente');
+      const route = this.router.url.startsWith('/teacher') ? '/teacher/menu-memory-game' : '/student/menu-memory-game';
+      this.router.navigate([route]);
+    } else {
+      console.error('Error al guardar el juego en el servidor');
+      // Manejar el error visualmente (ej. un toast o alerta)
+    }
   }
 
   private getRandomColor(): string {
